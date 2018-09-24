@@ -101,11 +101,12 @@ C'est donc chez \textbf{\textit{Thales}} \textit{Telecommunication Belgium} que 
 L'objectif de ce stage était d'introduire l'ensemble des notions élémentaires, nécessaires pour la réalisation du \textit{Travail de Fin d'Étude} (TFE). Ce travail de fin d'étude qui allait se poursuivre durant 6 mois à compter du mois de Novembre 2018. Dans un premier temps, une définition des notions théoriques est abordée. Ensuite, un exemple ou une simulation est mise en oeuvre afin d'appuyer le concept théorique.\\ \\
 La liste ci-dessous reprend l'ensemble des objectifs fixés et réalisés durant les 6 semaines de stage : 
 \begin{description}
-\item[1. Notions  de chiffrement et de \textit{Side-Channel Attacks} (attaques par canal auxiliaire)] 
-\item[2. L'algorithme AES (\textit{Advanced})]
-\item[3. Simulation d'un tracé et d'une attaque par canal auxiliaire sur MATLAB] 
-\item[4. Notions de statistiques et de t-test] 
-\item[5. Simulation d'un t-test sur MATLAB] 
+\item[1. Chiffrement] 
+\item[2. L'algorithme AES (\textit{Advanced Encryption Standard})]
+\item[3. \textit{Side-Channel Attacks} (attaques par canal auxiliaire)]
+\item[4. Simulation d'un tracé et d'une attaque par canal auxiliaire sur MATLAB] 
+\item[5. Statistiques et t-test] 
+\item[6. Simulation d'un t-test sur MATLAB] 
 \end{description}
 Ces différents objectifs sont décrits dans la section \ref{sec:Projet} \textit{"Projet du stage"}.
 
@@ -116,15 +117,15 @@ Ces différents objectifs sont décrits dans la section \ref{sec:Projet} \textit
 Cette section décrit l'ensemble des objectifs, cités à la section \ref{sec:objectifs}, fixés pour le stage. 
 
 %%%% PARTIE 3.1
-\subsection{Notions  de chiffrement et de \textit{Side-Channel Attacks}}
+\subsection{Notions  de chiffrement}
 
 Les systèmes de sécurité modernes utilisent des algorithmes de chiffrement pour assurer la disponibilité, la confidentialité et l'intégrité de données. Ces algorithmes de chiffrement sont en réalité des fonctions mathématiques qui prennent typiquement : 
 \begin{itemize}
-\item  2 paramètres en entrée : un \textbf{\textit{message clair}} (nommé \textit{plaintext} en anglais) et une \textbf{\textit{clé de chiffrement}} (nommé \textit{key} en anglais).
+\item  2 paramètres en entrée : un \textbf{\textit{message clair}} (nommé \textit{plaintext} en anglais) et une \textbf{\textit{clé de chiffrement}} (nommée \textit{key} en anglais).
 \item 1 paramètre en sortie : le \textbf{\textit{message chiffré}} (nommé \textit{ciphertext} en anglais). \\
 \end{itemize}
 Le procédé transformant les données claires en entrée en données chiffrées en sortie est appelé le \textbf{\textit{chiffrement}}.
-Ce procédé est réalisé grâce à un \textbf{\textit{algorithme de chiffrement}} utilisant une clé de chiffrement et diverses opérations mathématiques. Il est important de préciser que tous les détails décrivant le fonctionnement d'un algorithme sont disponibles publiquement, seule la clé de chiffrement doit rester secrète. 
+Ce procédé est réalisé grâce à un \textbf{\textit{algorithme de chiffrement}} utilisant une clé de chiffrement et diverses opérations mathématiques. Il est important de préciser que tous les détails décrivant le fonctionnement d'un algorithme sont disponibles publiquement, seule la clé de chiffrement doit rester secrète. En effet, la sécurité offerte par un algorithme de chiffrement ne doit pas dépendre du secret de son implémentation. Un bon algorithme est un algorithme dont on ne parviendra pas à déchiffrer les données chiffrées. Lorsque la clé d'un algorithme est trouvée, le déchiffrement des données confidentielles peut être réalisé. On dit que l'algorithme de chiffrement est \textbf{\textit{cassé}}.
 
 La figure \ref{fig:chiffrement} ci-dessous présente le principe de fonctionnement d'un algorithme de chiffrement.
 
@@ -135,35 +136,96 @@ La figure \ref{fig:chiffrement} ci-dessous présente le principe de fonctionneme
     \label{fig:chiffrement}
 \end{figure}
 
+\newpage
+
 Nous distinguons 2 types d'algorithmes de chiffrements : 
 \begin{itemize}
 \item \textbf{\textit{Chiffrement symétrique}} : Le chiffrement est dit symétrique lorsque le procédé de chiffrement (algorithme) utilise une seule clé, appelée \textit{clé secrète}. Par convention, ce type de chiffrement permet à la fois de chiffrer et de déchiffrer des messages à partir d'une seule et unique clé. Le désavantage de ce typer de chiffrement est que si une personne parvient à subtiliser la clé publique, elle sera en mesure de déchiffrer tout message qu'elle intercepte.  \\
-\textit{Exemple} : L'algorithme AES.
+\textit{Exemple} : L'algorithme AES. Une explication plus détaillée de cet algorithme est reprise à la section \ref{sec:AES}
 \item \textbf{\textit{Chiffrement asymétrique}} : Le chiffrement est dit asymétrique lorsque le procédé de chiffrement (algorithme) utilise 2 clés : une \textit{clé publique} et une \textit{clé privée}. Par convention, la clé publique est la clé de chiffrement du message clair, elle peut être communiquée sans aucune restriction tandis que la clé privée est la clé de déchiffrement du message chiffré, elle ne doit être communiquée sous aucun prétexte. Le fonctionnement est le suivant : Avec une clé publique, l'expéditeur code, dans un algorithme de chiffrement donné, un message. Ce message, une fois transmis, ne pourra être déchiffré que par le destinataire, détenteur de la clé privée. \\
 \textit{Exemple} : L'algorithme RSA. \\
 \end{itemize}
 
-Les figures \ref{fig:symétrique} et \ref{fig:asymétrique} ci-dessous présentent les principes de fonctionnement des chiffrements symétriques et asymétriques.
+Les figures \ref{fig:symétrique} et \ref{fig:asymétrique} ci-dessous présentent les principes de fonctionnement des chiffrements symétriques et asymétriques respectivement.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{image/chiffrement}
+    \includegraphics[width=0.65\textwidth]{image/symetrique}
     \caption{Chiffrement symétrique : Une seule clé est utilisée pour chiffrer et déchiffrer les messages.}
     \label{fig:symétrique}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{image/chiffrement}
+    \includegraphics[width=0.38\textwidth]{image/cle_asymetrique}
+    \includegraphics[width=0.7\textwidth]{image/asymetrique}
     \caption{Chiffrement asymétrique : Un clé publique est utilisée pour chiffrer le message et une clé privée est utilisée pour le déchiffrer.}
     \label{fig:asymétrique}
 \end{figure}
 
-\subsection{Algorithme AES}
+
+Que ce soit pour un algorithme de chiffrement symétrique ou asymétrique, la clé de chiffrement doit être stockée sur un support physique. Ce support, appelé \textit{device cryptographique}, doit être suffisamment sécurisé que pour contenir de manière protégée la clé. Ainsi, un \textbf{\textit{device cryptographique}} est un device qui implémente des algorithmes de chiffrement et qui stocke des clés de chiffrement.
+
+\subsection{Algorithme \textit{AES} (\textit{Advanced Encryption Standard})}
+\label{sec:AES}
+
+En 1997, le NIST (\textit{National Institute of Standards and Technology}) décida qu'il était temps de développer un nouveau standard d'algorithme de chiffrement. Ce nouveau standard, nommé \textbf{AES} (pour \textit{Advanced Encryption Standard}), était appelé à remplacer l'ancien standard de chiffrement, l'algorithme DES (pour \textit{Data Encryption Standard}). Pour ce faire, le NIST organisa un concours cryptographique, les chercheurs du monde entier furent invités à soumettre leurs propositions. En Octobre 2000, Le NIST annonça le vainqueur du concours : l'algorithme de Rijndael, du nom de ses concepteurs Joan Daemen et Vincent Rijmen, tous deux de nationalité belge.
+
+L'algorithme de Rijndael, désormais plus connu sous le nom d'algorithme AES, est un algorithme de chiffrement symétrique par blocs. C'est-à-dire que les données sont traitées par blocs de 128 bits. La clé secrète peut posséder différentes longueurs : 128 bits (AES-128), 192 bits (AES-192) ou encore 256 bits (AES-256). À noter qu'en théorie, plus la taille de la clé est élevée, moins il y a de chance de casser l'algorithme cependant avec les side-channel attacks, le problème peut vite être contourné. \\ La description qui suit est basée sur l'algorithme AES-128 bits, c'est-à-dire que la clé de chiffrement a une taille de 128 bits.
+
+L'AES-128 a donc pour rôle de chiffrer des blocs de données de 128 bits avec une clé de 128 bits. Les données et la clé sont représentés par une tableau (matrice) de bytes. Étant donné les 128 bits, on aura 16 bytes représentés par une matrice de 4 lignes et 4 colonnes. Autrement dit, chaque élément de la matrice aura la taille d'un byte.
+
+Une matrice particulière (de 4x4) appelé STATE contient l'ensemble des résultats intermédiaires traduisant les données depuis leur état initial jusqu'à leur état final. En effet, l'algorithme AES est caractérisé par une série de tours (\textit{rounds} en anglais) dépendant de la taille de la clé. Pour une clé dont la taille est 128 bits, on dénombre 10 tours. Un tour est définit par 4 opérations appliquées succinctement sur la matrice STATE. Ces 4 opérations sont : \textit{AddRoundKey}, \textit{SubBytes}, \textit{ShiftRows}, \textit{MixColumns}. La figure \ref{fig:AES} ci-dessous présente le principe de fonctionnement de l'algorithme AES-128.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.75]{image/AES}
+    \caption{Principe de fonctionnement de l'algorithme AES-128.}
+    \label{fig:AES}
+\end{figure}
+
+La figure \ref{fig:matrix} présente 3 matrices : la matrice de donnée (message clair initial de 128 bits), la matrice STATE (qui va contenir les résultats intermédiaires des données suite aux différentes opérations) et la matrice clé (clé de 128 bits).
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.75]{image/matrix}
+    \caption{Les 3 matrices utilisées par l'algorithme AES.}
+    \label{fig:matrix}
+\end{figure}
+
+\textbf{Fonctionnement :} \\
+Seule la matrice STATE va être utilisée pour manipuler les données via les différentes opérations possibles (\textit{AddRoundKey}, \textit{SubBytes}, \textit{ShiftRows}, \textit{MixColumns}). La première étape va donc consister à transposer la matrice de données dans la matrice STATE.
+
+
+
+\newpage
+\subsection{Notions de \textit{Side-Channel Attacks}}
+
+A la fin des années 1990, une nouvelle contrainte pour la conception de système informatique a vu le jour : la sécurité matérielle. Bien souvent, la sécurité d'un système informatique s'appuie plus sur les concepts software que hardware. Cependant, un nouveau mode d'attaque s'est développé. Il s'agit d'attaques physiques, c'est-à-dire d'attaques réalisées sur le circuit électronique lui-même. Deux grandes familles d'attaques sont recensées : 
+\begin{itemize}
+\item \textbf{\textit{Attaques actives}} : Une attaque est dite active lorsque les entrées et/ou l'environnement du device cryptographique sont manipulés par l'attaquant en vue de produire un comportement anormal du device. La clé secrète est révélée en exploitant les données issues de ce comportement anormal. Cela peut être une variation de la tension du device, une injection de glitch d'horloge, etc. On distingue deux types d'attaques actives : 
+\begin{itemize}
+\item Les attaques actives \textbf{\textit{irréversibles}} qui conduisent à la destruction du device cryptographique. Ce type d'attaque est souvent réalisé pour connaître la conception physique d'un device. \textit{Exemple} : Découpage laser d’un circuit intégré.
+\item Les attaques actives \textbf{\textit{pseudo-réversibles}} qui n’entrainent pas forcément la destruction du device cryptographique, mais qui sont souvent tout de même invasives puisqu’elles nécessitent la préparation du circuit (découpe partielle du boitier du circuit intégré par exemple). Un exemple typique de ce type d'attaque est ce qu'on appelle les attaques en fautes. Le principe est d'introduire volontairement des fautes dans le circuit (exemple : Injection de rayon laser, injection de glitch d’horloge, etc.). Les fautes ainsi créées peuvent entrainer le circuit dans des modes de fonctionnement conduisant à des erreurs. Ces erreurs peuvent ensuite être exploitées pour déterminer la clé.
+\end{itemize}
+\item \textbf{\textit{Attaques passives}} : Une attaque est dite passive lorsque l'attaquant exploite l'analyse, en fonctionnement normal, d'informations s'échappant d'un device cryptographique. Cela peut être l'analyse de la consommation de puissance, l'analyse temporelle, l'analyse par rayonnement électromagnétique, etc. C'est ce type d'attaque qui sera détaillé tout au long de ce stage et durant la réalisation de TFE. \\
+\end{itemize}
+
+La figure \ref{fig:attaques} ci-dessous résume les différents types d'attaques physiques possibles.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{image/attaques}
+    \caption{Les 2 grandes familles d'attaques physiques possibles. La suite de ce rapport se concentre essentiellement sur les attaques physiques dites passives.}
+    \label{fig:attaques}
+\end{figure}
+
+Les attaques passives sont globalement beaucoup plus simples à mettre en oeuvre que les attaques actives. Comme définit précédemment, ces attaques consistent à analyser des données issues de canaux auxiliaires au device cryptographique (lorsque ce dernier est en état de fonctionnement normal). Ces canaux auxiliaires sont des canaux présents physiquement sur le circuit attaqué et le long desquels de l’information s’échappe (sous différentes formes : rayonnement électromagnétique, rayonnement photonique, consommation de puissance, etc.). C'est là qu'intervient la notion de side-channel attacks. 
+En effet, les fonctions cryptographiques, bien que pouvant être extrêmement robustes théoriquement (c'est-à-dire mathématiquement) sont très sensibles aux fuites d’informations. C'est-à-dire qu'une quantité très faible d’informations peut être exploitée pour casser un algorithme cryptographique très fort. C’est ce que les attaques par canaux auxiliaires exploitent. 
+
+Dans notre cas, l'attaque portera sur l'analyse de la consommation de puissance. Autrement dit, un oscilloscope sera utilisé pour capturer et enregistrer des données, appelées \textbf{\textit{traces}}, provenant des canaux auxiliaires. Sur base de ces traces, divers procédés seront mis en oeuvre afin de casser l'algorithme et ainsi exploiter les données confidentielles.
 
 \subsection{Simulation d'un tracé et d'une attaque par canal auxiliaire sur MATLAB}
 
-Afin de bien assimiler les notions de \textit{side-channel attacks}, il m'a été demandé de réaliser une simulation sur MATLAB. La première phase de la simulation génère des traces sur base de l'algorithme AES. La seconde phase de la simulation est une attaque par canal auxiliaire. Plus précisément, cette attaque est réalisée sur un seul byte de donnée et se fait en sortie de la SBox. Ce type d'attaque est appelé CPA. Pour cette raison, seules les 2 premières étapes de l'algorithme AES sont nécessaires et seront donc simulées (\textit{AddRoundKey()}, \textit{SubBytes()}).
+Afin de bien assimiler les notions de \textit{side-channel attacks}, il m'a été demandé de réaliser une simulation sur MATLAB. La première phase de la simulation génère des traces sur base de l'algorithme AES. La seconde phase de la simulation a pour but de réaliser une attaque par canal auxiliaire. Plus précisément, cette attaque est réalisée sur un seul byte de donnée et se fait en sortie de la SBox. Ce type d'attaque est appelé CPA. Pour cette raison, seules les 2 premières étapes de l'algorithme AES sont nécessaires et seront donc simulées (\textit{AddRoundKey()}, \textit{SubBytes()}).
 
 
 \subsection{Notions de statistiques et de t-test}
