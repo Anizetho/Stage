@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+# LaTeX temporary files
+*.aux
+*.brf
+*.out
+*.toc
+*.log
+*.synctex.gz
