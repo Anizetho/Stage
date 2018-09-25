@@ -173,16 +173,7 @@ En 1997, le NIST (\textit{National Institute of Standards and Technology}) déci
 
 L'algorithme de Rijndael, désormais plus connu sous le nom d'algorithme AES, est un algorithme de chiffrement symétrique par blocs. C'est-à-dire que les données sont traitées par blocs de 128 bits. La clé secrète peut posséder différentes longueurs : 128 bits (AES-128), 192 bits (AES-192) ou encore 256 bits (AES-256). À noter qu'en théorie, plus la taille de la clé est élevée, moins il y a de chance de casser l'algorithme cependant avec les side-channel attacks, le problème peut vite être contourné. \\ La description qui suit est basée sur l'algorithme AES-128 bits, c'est-à-dire que la clé de chiffrement a une taille de 128 bits.
 
-L'AES-128 a donc pour rôle de chiffrer des blocs de données de 128 bits avec une clé de 128 bits. Les données et la clé sont représentés par une tableau (matrice) de bytes. Étant donné les 128 bits, on aura 16 bytes représentés par une matrice de 4 lignes et 4 colonnes. Autrement dit, chaque élément de la matrice aura la taille d'un byte.
-
-Une matrice particulière (de 4x4) appelé STATE contient l'ensemble des résultats intermédiaires traduisant les données depuis leur état initial jusqu'à leur état final. En effet, l'algorithme AES est caractérisé par une série de tours (\textit{rounds} en anglais) dépendant de la taille de la clé. Pour une clé dont la taille est 128 bits, on dénombre 10 tours. Un tour est définit par 4 opérations appliquées succinctement sur la matrice STATE. Ces 4 opérations sont : \textit{AddRoundKey}, \textit{SubBytes}, \textit{ShiftRows}, \textit{MixColumns}. La figure \ref{fig:AES} ci-dessous présente le principe de fonctionnement de l'algorithme AES-128.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.75]{image/AES}
-    \caption{Principe de fonctionnement de l'algorithme AES-128.}
-    \label{fig:AES}
-\end{figure}
+L'AES-128 a donc pour rôle de chiffrer des blocs de données de 128 bits avec une clé de 128 bits. Les données et la clé sont représentés par une matrice où chaque élément de la matrice correspond à un byte (un octet soit 8 bits). Étant donné que 128 bits correspond à 16 bytes, la matrice de données, au même titre que la matrice de clé, correspond à une matrice de 4 lignes et 4 colonnes (formant ainsi les 4x4 soit 16 bytes). Une matrice particulière (de taille 4x4) appelé STATE contient l'ensemble des résultats intermédiaires résultant des diverses opérations que subissent les données (depuis leur état initial). 
 
 La figure \ref{fig:matrix} présente 3 matrices : la matrice de donnée (message clair initial de 128 bits), la matrice STATE (qui va contenir les résultats intermédiaires des données suite aux différentes opérations) et la matrice clé (clé de 128 bits).
 \begin{figure}[htbp]
@@ -192,9 +183,42 @@ La figure \ref{fig:matrix} présente 3 matrices : la matrice de donnée (message
     \label{fig:matrix}
 \end{figure}
 
-\textbf{Fonctionnement :} \\
-Seule la matrice STATE va être utilisée pour manipuler les données via les différentes opérations possibles (\textit{AddRoundKey}, \textit{SubBytes}, \textit{ShiftRows}, \textit{MixColumns}). La première étape va donc consister à transposer la matrice de données dans la matrice STATE.
+\textit{Remarque} : En réalité, la matrice de données est directement confondue avec la matrice STATE. Autrement dit, les premiers éléments à être placés dans la matrice STATE représentent les bytes de données. En résumé, on n'utilise que deux matrices durant le fonctionnement de l'algorithme AES : la matrice STATE et la matrice clé.
 
+Par ailleurs, l'algorithme AES est caractérisé par une série de tours (\textit{rounds} en anglais) dépendant de la taille de la clé. Pour une clé dont la taille est 128 bits, on dénombre 10 tours (12 tours pour une clé de 192 bits et 14 tours pour une clé de 256 bits). Un tour est définit par 4 opérations appliquées succinctement sur la matrice STATE. Ces 4 opérations sont : \textit{AddRoundKey}, \textit{SubBytes}, \textit{ShiftRows}, \textit{MixColumns}. Elles sont appliquées à divers instants dans l'exécution de l'algorithme AES. La figure \ref{fig:AES} (page suivante) permet de visualiser l'ordre d'exécution chronologique de ces 4 opérations. 
+
+\newpage
+
+La figure \ref{fig:AES} ci-dessous présente le principe de fonctionnement général de l'algorithme AES-128.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.75]{image/AES}
+    \caption{Principe de fonctionnement de l'algorithme AES-128.} 
+    \label{fig:AES}
+\end{figure}
+
+
+
+\underline{\textbf{Fonctionnement :}} \\ \\
+Initialement, la matrice STATE, contenant les données claires, va être utilisée avec la matrice clé. En effet, une première opération (\textit{AddRoundKey}) est appliquée sur ces deux matrices. Plus précisément, cette opération réalise un XOR (symbole \oplus) entre chaque élément de la matrice STATE et chaque élément de la matrice clé. Le résultat est ré-écrit dans la matrice STATE. La figure \ref{fig:XOR} ci-dessous présente le principe de fonctionnement de cette première opération :
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.65]{image/XOR}
+    \caption{Opération XOR entre la matrice STATE et la matrice clé.}
+    \label{fig:XOR}
+\end{figure}
+
+\hspace{-0.5 cm}Ensuite, une série de 4 opérations se répétant 9 fois (9 tours cycliques) est exécutée. Ces 4 opérations sont appliquées dans l'ordre suivant : \textit{SubBytes}, \textit{ShiftRows}, \textit{MixColumns}, \textit{AddRoundKey}. \\
+Enfin, une fois les 9 tours exécutés, le dernier \textit{round} se lance exécutant 3 opérations : \textit{SubBytes}, \textit{ShiftRows} et \textit{AddRoundKey}.
+
+
+\underline{\textbf{Description des 4 opérations :}} \\
+\begin{description}
+\item[1. SubBytes] :
+\item[2. ShiftRows] :
+\item[3. MixColumns] :
+\item[4. AddRoundKey] : 
+\end{description}
 
 
 \newpage
@@ -268,9 +292,17 @@ CC BY 2.5 (\url{https://creativecommons.org/licenses/by/2.5})], de Wikimedia Com
 
 %%%%%%%%%%%%%%%%%%%%%%%% REFERENCES %%%%%%%%%%%%%%%%%%%%
 \phantomsection
+\section*{Références}
 \addcontentsline{toc}{section}{Références}
 
-\bibliographystyle{unsrt}
-\bibliography{ampli-classe-d}
+\begin{itemize}
+\item \url{https://www.emse.fr/~dutertre/documents/synth_AES128.pdf}
+\item \url{https://www.j3ea.org/articles/j3ea/pdf/2012/01/j3ea12004.pdf}
+\item Attaques par canaux auxiliaires : nouvelles attaques, contre-mesures et mises en oeuvre (thèse)
+\item From Improved Leakage Detection to the Detection of Points of Interests in Leakage Traces
+\item 
+\item 
+\end{itemize}
+
 
 \end{document}
