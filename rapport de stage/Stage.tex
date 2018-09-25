@@ -26,6 +26,9 @@
 \usepackage{pdfpages}
 \usepackage{caption}
 
+\usepackage{mwe} % For dummy images
+\usepackage{subcaption}
+
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhead[R]{}
@@ -199,8 +202,9 @@ La figure \ref{fig:AES} ci-dessous présente le principe de fonctionnement gén�
 
 
 
-\underline{\textbf{Fonctionnement :}} \\ \\
-Initialement, la matrice STATE, contenant les données claires, va être utilisée avec la matrice clé. En effet, une première opération (\textit{AddRoundKey}) est appliquée sur ces deux matrices. Plus précisément, cette opération réalise un XOR (symbole \oplus) entre chaque élément de la matrice STATE et chaque élément de la matrice clé. Le résultat est ré-écrit dans la matrice STATE. La figure \ref{fig:XOR} ci-dessous présente le principe de fonctionnement de cette première opération :
+\underline{\textbf{Fonctionnement :}} 
+
+Initialement, 2 matrices vont être utilisées : la matrice STATE, contenant les données claires, et la matrice clé, contenant la clé secrète initiale. En effet, une première opération (\textit{AddRoundKey}) est appliquée sur ces deux matrices. Plus précisément, cette opération réalise un XOR (symbole \oplus) entre chaque élément de la matrice STATE et chaque élément de la matrice clé. Le résultat est ré-écrit dans la matrice STATE. La figure \ref{fig:XOR} ci-dessous présente le principe de fonctionnement de cette première opération :
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.65]{image/XOR}
@@ -208,20 +212,51 @@ Initialement, la matrice STATE, contenant les données claires, va être utilis�
     \label{fig:XOR}
 \end{figure}
 
-\hspace{-0.5 cm}Ensuite, une série de 4 opérations se répétant 9 fois (9 tours cycliques) est exécutée. Ces 4 opérations sont appliquées dans l'ordre suivant : \textit{SubBytes}, \textit{ShiftRows}, \textit{MixColumns}, \textit{AddRoundKey}. \\
-Enfin, une fois les 9 tours exécutés, le dernier \textit{round} se lance exécutant 3 opérations : \textit{SubBytes}, \textit{ShiftRows} et \textit{AddRoundKey}.
+\vspace{-0.5 cm}\hspace{-0.5 cm}Ensuite, une série de 4 opérations se répétant 9 fois (9 tours cycliques) est exécutée. Ces 4 opérations sont appliquées dans l'ordre suivant : \textit{SubBytes}, \textit{ShiftRows}, \textit{MixColumns}, \textit{AddRoundKey}. \\
+Enfin, une fois les 9 tours exécutés, le dernier \textit{round} se lance exécutant 3 opérations : \textit{SubBytes}, \textit{ShiftRows} et \textit{AddRoundKey}. À la fin de ces 3 dernières opérations, une matrice de taille 4x4 présente le message chiffré de 128 bits.
 
 
 \underline{\textbf{Description des 4 opérations :}} \\
 \begin{description}
-\item[1. SubBytes] :
-\item[2. ShiftRows] :
-\item[3. MixColumns] :
-\item[4. AddRoundKey] : 
+\item[1. SubBytes] : 
+La figure \ref{fig:subByte} ci-dessous présente le principe de fonctionnement de l'opération \textit{SubBytes} :
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.05\textwidth]{image/ligne}
+    \caption{Opération \textit{subBytes} exécutée sur la matrice STATE.}
+    \label{fig:subByte}
+\end{figure}
+
+\item[2. ShiftRows] : Comme son nom l'indique, cette opération concerne les lignes de la matrice STATE. Cette opération réalise une permutation cyclique des octets sur les lignes de la matrice STATE. Plus précisément, \textbf{pour la \textit{i-ième} ligne, on décalera chaque élément de la matrice STATE de \textit{i} positions vers la gauche}, en considérant que la première a pour indice 0.
+La figure \ref{fig:ligne} ci-dessous présente le principe de fonctionnement de l'opération \textit{ShiftRows} :
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.05\textwidth]{image/ligne}
+    \caption{Opération \textit{ShiftRows} exécutée sur la matrice STATE.}
+    \label{fig:ligne}
+\end{figure}
+
+\item[3. MixColumns] : Comme son nom nom l'indique, cette opération concerne les colonnes de la matrice STATE. \textbf{Cette opération réalise un produit matriciel entre une matrice fixée (taille 4x4) définie ci-dessous (figure \ref{fig:colonne}) et un vecteur colonne (taille 4x1) de la matrice STATE}. Cela produit un nouveau vecteur colonne (taille 4x1) permettant de définir la nouvelle matrice STATE.
+La figure \ref{fig:colonne} ci-dessous présente le principe de fonctionnement de l'opération \textit{MixColumns} :
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.45]{image/colonne}
+    \caption{Opération \textit{MixColumns} exécutée sur la matrice STATE.}
+    \label{fig:colonne}
+\end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{image/colonnebis}
+    \caption{Exemple de l'opération \textit{MixColumns} exécutée sur la deuxième colonne de la matrice STATE.}
+    \label{fig:colonnebis}
+\end{figure}
+
+\item[4. AddRoundKey] :  La gestion des clés se fait au travers des fonctions addRoundKey et keyExpansion. AddRounkey réalise un XOR entre STATE et la clé courante (roundkey 8). Le résultat de ce XOR est placé dans STATE. Cette roundkey est dérivée de la clé secrète. On change de clé courante à chaque tour pour éviter d’utiliser toujours la même valeur ; cela rend la tâche d’attaquants plus difficile. KeyExpansion est là pour étendre la clé afin, comme nous l’avons dit plus haut, de ne pas utiliser la même clé à chaque tour. La taille de la clé, après avoir été étendue, est égale à la longueur d’un bloc multipliée par le nombre de tours plus un. En effet, il nous faut une clé différente par tour ; de plus, au début de l’algorithme, on exécute un addRounKey initial avant le premier tour. Pour AES-128 (10 tours et clé de 16 octets), la clé, après avoir été étendue, aura 176 octets. 16(10+1) = 176 octets. Le fonctionnement de KeyExpansion étant le même pour la construction de chaque sous-clé, nous allons voir comment on crée la première sous-clé à partir de la clé de départ ; ceci pourra se généraliser pour les autres clés en remplaçant « première sous-clé » par « i-ième sous-clé » et « clé de départ » par « sous-clé précédente ».
 \end{description}
 
 
 \newpage
+
 \subsection{Notions de \textit{Side-Channel Attacks}}
 
 A la fin des années 1990, une nouvelle contrainte pour la conception de système informatique a vu le jour : la sécurité matérielle. Bien souvent, la sécurité d'un système informatique s'appuie plus sur les concepts software que hardware. Cependant, un nouveau mode d'attaque s'est développé. Il s'agit d'attaques physiques, c'est-à-dire d'attaques réalisées sur le circuit électronique lui-même. Deux grandes familles d'attaques sont recensées : 
@@ -247,12 +282,47 @@ En effet, les fonctions cryptographiques, bien que pouvant être extrêmement 
 
 Dans notre cas, l'attaque portera sur l'analyse de la consommation de puissance. Autrement dit, un oscilloscope sera utilisé pour capturer et enregistrer des données, appelées \textbf{\textit{traces}}, provenant des canaux auxiliaires. Sur base de ces traces, divers procédés seront mis en oeuvre afin de casser l'algorithme et ainsi exploiter les données confidentielles.
 
+Nous allons définir deux types d'attaques : 
+\begin{itemize}
+\item Les attaque (\textit{Differential Power Analysis})
+\item Les attaque CPA (\textit{Correlation Power Analysis}) \\
+\end{itemize}
+
+\underline{\textbf{Attaque DPA :}}
+
+\underline{\textbf{Attaque CPA :}}
+
+\newpage
+
 \subsection{Simulation d'un tracé et d'une attaque par canal auxiliaire sur MATLAB}
 
-Afin de bien assimiler les notions de \textit{side-channel attacks}, il m'a été demandé de réaliser une simulation sur MATLAB. La première phase de la simulation génère des traces sur base de l'algorithme AES. La seconde phase de la simulation a pour but de réaliser une attaque par canal auxiliaire. Plus précisément, cette attaque est réalisée sur un seul byte de donnée et se fait en sortie de la SBox. Ce type d'attaque est appelé CPA. Pour cette raison, seules les 2 premières étapes de l'algorithme AES sont nécessaires et seront donc simulées (\textit{AddRoundKey()}, \textit{SubBytes()}).
+Afin de bien assimiler les notions de \textit{side-channel attacks}, il m'a été demandé de réaliser une simulation sur MATLAB. La première phase de la simulation génère des traces sur base de l'algorithme AES. La seconde phase de la simulation a pour but de réaliser une attaque par canal auxiliaire. Plus précisément, cette attaque est réalisée sur un seul byte de données et se fait en sortie de la SBox. Ce type d'attaque est appelé CPA. Pour cette raison, seules les 2 premières étapes de l'algorithme AES sont nécessaires et seront donc simulées (\textit{AddRoundKey}, \textit{SubBytes}).
 
+Les graphes \ref{fig:colonne} ci-dessous présentent les valeurs de coefficient de corrélation en fonction des valeurs de clé testées. En toute logique, le coefficient de corrélation est maximum (en valeur absolue) pour la clé réellement utilisée pour le chiffrement des données. Cependant, en fonction du nombres de traces prises, les valeurs du facteur de corrélation fluctuent beaucoup entre -1 et 1. Ainsi, au plus le nombre de traces est grand, au plus on peut facilement repérer la clé de chiffrement. En effet, si on observe les 3 graphes ci-dessous, on peut remarque que 10 traces, le coefficient de corrélation varie entre -0,65 et 0,65 ; pour 100 traces, le coefficient de corrélation varie entre -0,4 et 0,4 ; pour 1000 traces, le coefficient de corrélation varie entre -0,2 et 0,2.
+Il est, en effet, beaucoup plus facile visuellement de retrouver la clé lorsque le nombre de traces est élevé.
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.05\textwidth]{image/10}    \caption{Pour 10 traces.}    \label{fig:10}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.05\textwidth]{image/100}    \caption{Pour 100 traces.}    \label{fig:100}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.05\textwidth]{image/1000}    \caption{Pour 1000 traces.}    \label{fig:1000}
+\end{figure}
+
+
+\newpage
 
 \subsection{Notions de statistiques et de t-test}
+
+Être capable d'analyser les traces de puissance d'un point de vue statistique est une étapes primordiale dans les side-channel attacks.
 
 \subsection{Simulation d'un t-test sur MATLAB}
 
