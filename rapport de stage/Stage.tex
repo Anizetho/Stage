@@ -298,23 +298,23 @@ Nous allons définir deux types d'attaques :
 
 Afin de bien assimiler les notions de \textit{side-channel attacks}, il m'a été demandé de réaliser une simulation sur MATLAB. La première phase de la simulation génère des traces sur base de l'algorithme AES. La seconde phase de la simulation a pour but de réaliser une attaque par canal auxiliaire. Plus précisément, cette attaque est réalisée sur un seul byte de données et se fait en sortie de la SBox. Ce type d'attaque est appelé CPA. Pour cette raison, seules les 2 premières étapes de l'algorithme AES sont nécessaires et seront donc simulées (\textit{AddRoundKey}, \textit{SubBytes}).
 
-Les graphes \ref{fig:colonne} ci-dessous présentent les valeurs de coefficient de corrélation en fonction des valeurs de clé testées. En toute logique, le coefficient de corrélation est maximum (en valeur absolue) pour la clé réellement utilisée pour le chiffrement des données. Cependant, en fonction du nombres de traces prises, les valeurs du facteur de corrélation fluctuent beaucoup entre -1 et 1. Ainsi, au plus le nombre de traces est grand, au plus on peut facilement repérer la clé de chiffrement. En effet, si on observe les 3 graphes ci-dessous, on peut remarque que 10 traces, le coefficient de corrélation varie entre -0,65 et 0,65 ; pour 100 traces, le coefficient de corrélation varie entre -0,4 et 0,4 ; pour 1000 traces, le coefficient de corrélation varie entre -0,2 et 0,2.
+Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent les valeurs du coefficient de corrélation en fonction des valeurs de clé testées. En toute logique, le coefficient de corrélation est maximum (en valeur absolue) pour la clé réellement utilisée pour le chiffrement des données. Cependant, en fonction du nombres de traces prises, les valeurs du facteur de corrélation fluctuent beaucoup entre -1 et 1. Ainsi, au plus le nombre de traces est grand, au plus on peut facilement repérer la clé de chiffrement. En effet, si on observe les 3 graphes ci-dessous, on peut remarque que pour 10 traces, le coefficient de corrélation varie entre -0,83 et 0,8 ; pour 100 traces, le coefficient de corrélation varie entre -0,26 et 0,34 ; pour 1000 traces, le coefficient de corrélation varie entre -0,24 et 0,21.
 Il est, en effet, beaucoup plus facile visuellement de retrouver la clé lorsque le nombre de traces est élevé.
 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.05\textwidth]{image/10}    \caption{Pour 10 traces.}    \label{fig:10}
+    \includegraphics[width=1.05\textwidth]{image/10}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 10 traces.}    \label{fig:10}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.05\textwidth]{image/100}    \caption{Pour 100 traces.}    \label{fig:100}
+    \includegraphics[width=1.05\textwidth]{image/100}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 100 traces.}    \label{fig:100}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.05\textwidth]{image/1000}    \caption{Pour 1000 traces.}    \label{fig:1000}
+    \includegraphics[width=1.05\textwidth]{image/1000}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 1000 traces.}    \label{fig:1000}
 \end{figure}
 
 
