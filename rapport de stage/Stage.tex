@@ -322,8 +322,130 @@ Il est, en effet, beaucoup plus facile visuellement de retrouver la clé lorsque
 
 \subsection{Notions de statistiques et de t-test}
 
-Être capable d'analyser les traces de puissance d'un point de vue statistique est une étapes primordiale dans les side-channel attacks.
+Les notions de statistiques et de t-test présentent un intérêt certain en ce qui concerne la compréhension et l'analyse dans les side-channel attacks. Pour rappel, les traces de puissance enregistrées par un oscilloscope représentent des vecteurs de valeurs en tension. Ces valeurs de tension mesurées sont proportionnelles à la consommation de puissance d'un device cryptographique. En effet, l'oscilloscope sera toujours connecté en un endroit approprié de mesure sur le circuit du device cryptographique. En fonction du paramètrage de l'oscilloscope, on sera en mesure de déterminer la longueur des traces de puissance ainsi que le nombre de points enregistrés par seconde : c'est là que vont intervenir les notions de modèles statistiques. Ces modèles statistiques décrivent les traces de puissance enregistrées à l'oscilloscope de manière à comprendre et analyser, de façon simple, les attaques réalisées.
 
+\subsubsection{Composition des traces de puissance}
+Les attaques basées sur l'analyse de la consommation de puissance exploitent le fait que la consommation de puissance d'un device cryptographique dépend des \textbf{opérations qu'il exécute} et des \textbf{données qu'il manipule}. Ces deux informations vont ainsi permettre de définir différentes propriétés intéressantes. Pour chaque point analysé dans une trace de puissance, on notera :
+\begin{itemize}
+\item \textbf{$P_{op}$ la composante dépendante de l'opération exécutée} ;
+\item \textbf{$P_{data}$ la composante dépendante de la donnée manipulée}. \\
+\end{itemize}
+De plus, une troisième composante doit également être prise en compte. Cette composante fait référence au \textbf{bruit électrique} (aussi appelé bruit de fond) et sera notée \textbf{$P_{noise}$}. En effet, un signal est toujours affecté de petites fluctuations plus ou moins importantes. Ces fluctuations, dont les origines peuvent être diverses, sont appelées bruit électrique (ou simplement bruit). Le bruit est considéré comme un élément parasite aléatoire, c'est-à-dire qu'on ne sait pas le déterminer à l'avance. Au plus cette composante sera élevée et au plus l'analyse de la consommation de puissance sera difficile.
+
+Ainsi, chaque point d'une trace de puissance peut être modélisé comme la somme des 3 composantes définies ci-dessus, soit : 
+$P_{total} = P_{op} + P_{data} + P_{noise}$.
+
+\subsubsection{Caractéristiques d'un seul point de la trace : Distribution normale}
+\label{subsubsection:distribution}
+
+Pour simplifier, on commence par définir les différentes composantes des traces de puissance en observant uniquement un seul point de la trace, c'est-à-dire en observant la consommation de puissance d'un device cryptographique à un instant fixé dans le temps. Le but étant de déterminer, à cet instant donné, la distribution de probabilité de $P_{noise}$, $P_{data}$ et $P_{op}$.
+En théorie, ces 3 composantes suivent une \textbf{distribution normale} (aussi appelée loi normale).
+
+En théorie des probabilités et en statistique, la \textbf{loi normale} est une loi de probabilité utilisée pour modéliser des phénomènes naturels issus de plusieurs événements aléatoires. Une densité de probabilité est une fonction qui permet de représenter une loi de probabilité : on parle aussi de fonction de densité. La fonction de densité caractérisant la loi normale dépend des deux paramètres que sont la moyenne (symbole \mu) et l'écart-type (symbole \sigma). L'équation \ref{eqn:distribution} présente son expression mathématique:
+
+\begin{gather}
+    f(x)=\frac{1}{(\sqrt{2.\pi }.\sigma))} .e^{-\frac{1}{2}.(\frac{x-\mu}{\sigma})^2}\label{eqn:distribution}
+\end{gather}
+
+
+Le graphe \ref{fig:distribution} ci-dessous présente la courbe de la densité de probabilité d'une distribution normale. Cette courbe est généralement appelée \textbf{courbe de Gauss} (ou courbe en cloche). Dans le cas particulier où la loi normale est de moyenne nulle et d'écart type unitaire, on parle de \textbf{\textit{loi normale centrée réduite}}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=1.1]{image/distribution}    
+    \caption{Courbe de Gauss : fonction de densité d'une distribution normale.}    
+    \label{fig:distribution}
+\end{figure}
+
+Ainsi, chacune des 3 composantes $P_{noise}$, $P_{data}$ et $P_{op}$ suivent une loi normale de moyenne {\mu} et d'écart-type \sigma, notée : N(\mu, \sigma). Plus précisément : 
+\begin{itemize}
+\item La distribution du bruit électronique $P_{noise}$ suit une distribution normale : N(0, \sigma).
+\item La distribution de $P_{data}$ suit une distribution normale N(\mu, \sigma) si les données manipulées sont distribuées uniformément.
+\item La distribution de $P_{op}$  suit une distribution normale : N(\mu, \sigma).
+\end{itemize}
+
+\underline{\textit{Exemple}} : un exemple est réalisé pour démontrer que la distribution du bruit électronique suit bien une loi normale N(0, \sigma).
+
+\subsubsection{Caractéristiques de plusieurs points de la trace : Corrélation}
+Dans le section précédente \ref{subsubsection:distribution}, nous avons étudié les caractéristiques d'un seul point de la trace de puissance. On a alors du définir les notions de distribution normale. Dans cette section, on va définir des méthodes statistiques pour décrire les relations entre plusieurs points issus d'une trace de puissance. 
+
+En théorie, il existe une relation entre les différents points d'une trace de puissance : il s'agit d'une relation dite \textbf{ linéaire}. Une relation linéaire est ... 
+En pratique, cette relation peut être mesurée en calculant les coefficients de corrélation. Les coefficients de corrélation ont une valeurs comprises dans l'intervalle -1 à 1.
+
+\newpage
+
+\subsubsection{Définition Test-T}
+
+Le test-t de Student est un test statistique permettant de comparer les moyennes de deux groupes d’échantillons. L'objectif est donc de savoir si les moyennes des deux groupes sont significativement différentes d'un point de vue statistique. Ce test de Student est dit paramétrique car, comme le montre la formule \ref{eqn:test_t} (ci-dessous), celle-ci dépend de la moyenne et de l’écart-type des observations à comparer. \\ \\
+Pour appliquer un test-t de student, il faut s'assurer de deux conditions : 
+\begin{enumerate}
+\item La distribution des échantillons étudiés suit une distribution normale.
+\item  Les données des échantillons doivent être indépendantes. Autrement dit, les données d'un sujet ne sont pas censées avoir influencé les mesures faites sur un autre sujet. \\
+\end{enumerate}
+Il existe plusieurs variantes du test-t de Student:
+\begin{itemize}
+\item Le test-t de Student pour échantillon unique.
+\item Le test-t de Student comparant deux groupes d’échantillons indépendants (on parle de test de Student non apparié)
+\item Le test-t de Student comparant deux groupes d’échantillons dépendants (on parle de test de Student apparié). \\
+\end{itemize}
+Dans notre étude, on ne développera que le cas du test-t de Student comparant \textbf{deux groupes d'échantillons indépendants} (non appariés). Ce cas n'est utilisé que lorsque les deux groupes d'échantillons à comparer n'ont aucun lien. Autrement dit, il s'agit de comparer deux moyennes observées. \\ \\
+\textit{Exemple pratique} : Afin de bien comprendre la notion de test-t de Student non-apparié, voici un exemple concret.
+Nous avons un groupe de 100 individus (50 femmes et 50 hommes) pris au hasard au sein de la population. On se pose la question de savoir si le poids moyen des femmes est significativement différent de celui des hommes? \\
+Dans cet exemple on parle de test de Student non apparié car les deux groupes à comparer (homme et femmes) n’ont aucun lien. Il s’agit donc de calculer le poids moyen des femmes et de celui des hommes et d’évaluer si la différence des ces moyennes est significative d'un point de vue statistique.
+
+En pratique, on ne va pas utiliser le test-t de Student non-apparié mais une variante : le test-t de Welch. La raison est simple : le test-t de student non-apparié ne peut être utilisé que dans le cas où les deux échantillons A et B suivent des lois normales de même variances. Or, dans notre cas, pour l'analyse des traces de puissance, nous deux échantillons n'auront pas la même variance. Pour ce faire, une variante du test-t de student non apparié existe, il s'agit du test-t de Welch.\\ \\
+\textbf{Le \textit{test-t de Welch} est une adaptation du test t de Student non apparié permettant de comparer les moyennes de deux groupes d’échantillons indépendants lorsque leurs variances sont différentes.} \\ \\
+Ce test permet de calculer la statistique \textit{t} par la formule \ref{eqn:test_t} suivante :
+\begin{gather}
+	t=\frac{m_{A} - m_{B}}{\sqrt{\frac{S_{A}^2}{n_{A}} +\frac{S_{B}^2}{n_{B}}}}\label{eqn:test_t}
+\end{gather}
+
+Où :
+\begin{itemize}
+\item A et B sont les deux échantillons différents à comparer.
+\item $m_{A}$ et $m_{B}$ représentent la moyenne de l'échantillon A et celle de l'échantillon B, respectivement.
+\item $n_{A}$ et $n_{B}$ représentent la taille de l'échantillon A et celle de l'échantillon B, respectivement.
+\item $S_{A}$ et $S_{B}$ représentent l’écart-type de l'échantillon A et celui de l'échantillon B, respectivement. \\
+\end{itemize}
+Une notion importante à définir pour réaliser un test-t de student de manière général (et donc pour un test-t de Welch dans un cas précis) est la notion de degré de liberté. \\ \\
+\textbf{En statistique, le \textit{degré de liberté} désigne le nombre de valeurs aléatoires qui ne peuvent être déterminées ou fixées par une équation.} \\ \\ \\
+\textit{Exemple pratique} : Afin de bien comprendre la notion de degré de liberté, voici un exemple concret. 
+Si l'on cherche deux nombres dont la somme est 12, aucun des deux nombres ne peut être directement déterminé par la simple équation X + Y = 12. En effet, X peut être choisi arbitrairement, mais alors pour Y il n'y a alors plus le choix. Ainsi, si on choisit 11 comme valeur pour X, Y vaut obligatoirement 1. Il y a donc deux variables aléatoires (X,Y), mais un seul degré de liberté. \\ \\
+Le calcul du degré de liberté (\textit{ddl}) du test-t de Welch se fait selon la formule suivante \ref{eqn:ddl}:
+\begin{gather}
+	ddl =\frac{(\frac{S_{A}^2}{n_{A}} +\frac{S_{B}^2}{n_{B}})^2}{\frac{S_{A}^4}{n_{A}^2.(n_{A}-1)}+\frac{S_{B}^4}{n_{B}^2.(n_{B}-1)}}\label{eqn:ddl}
+\end{gather}
+
+Effectuer un test consiste à rejeter ou non une certaine hypothèse, appelée \textbf{\textit{hypothèse nulle}}. On distingue toujours deux types d'hypothèse nulle, qui dans le cas du test-t de Welch s'énonce de façon suivante :
+\begin{itemize}
+\item L'hypothèse nulle qui stipule que les moyennes de deux populations sont égales : on parle de \textbf{\textit{test bilatéral}}.
+\item L'hypothèse nulle qui stipule que la moyenne d'une population est supérieure ou égale à une autre : on parle de \textbf{\textit{test unilatéral}}. \\
+\end{itemize}
+La figure \ref{fig:bi_uni} présente le principe de test unilatéral gauche, bilatéral et unilatéral droit, respectivement.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{image/bi_uni}    
+    \caption{.}    
+    \label{fig:bi_uni}
+\end{figure}
+
+La valeur-p (\textit{p-value} en anglais) est une nombre utilisé en statistique et qui doit être définit afin de pouvoir tirer des conclusion sur l'analyse du test réalisé. La procédure généralement employée consiste à comparer la valeur-p à un seuil préalablement défini (dans notre cas, et c'est le cas général, nous considérerons 5 \%). Si la valeur-p est :
+\begin{itemize}
+\item Inférieure à ce seuil, on rejette l'hypothèse nulle en faveur de l’hypothèse alternative, et le résultat du test est déclaré \textit{statistiquement significatif}.
+\item Supérieure à ce seuil, on ne rejette pas l’hypothèse nulle, et on ne peut rien conclure quant aux hypothèses formulées. \\
+\end{itemize}
+
+Ainsi, après calcul de la valeur de \textit{t} et de la valeur du \textit{degré de liberté}, on va pouvoir conclure sur le test : \textit{l'hypothèse nulle doit-elle être acceptée ou rejetée ? Autrement dit, la différence des moyennes de chacun des deux échantillons est-elle significative ou non ?}
+
+Pour répondre à cette question, il faut réaliser un test bilatéral. Connaissant le degré de liberté (ddl), il faut regarder la valeur-p (valeur critique de \textit{t}) mentionnée dans une table, appelée \textbf{table de t}, pour cette valeur calculée de ddl et pour un risque alpha = 5\%. Ainsi, on conclut :
+\begin{itemize}
+\item Si la valeur absolue de t (calculée) est supérieure à la valeur-p (dans la table), alors la différence est significative. 
+\item 
+\end{itemize}
+
+Dans le cas contraire, elle, ne l’est pas. Le degré de siginificativité ou p-value correspond au risque indiqué par la table de Student pour la valeur |t|
+
+Ce nombre est utilisé en statistiques inférentielles pour conclure sur le résultat d’un test statistique. La procédure généralement employée consiste à comparer la valeur-p à un seuil préalablement défini (traditionnellement 5 \%). 
 \subsection{Simulation d'un t-test sur MATLAB}
 
 
