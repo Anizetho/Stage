@@ -391,11 +391,11 @@ Il existe plusieurs variantes du test-t de Student:
 Dans notre étude, on ne développera que le cas du test-t de Student comparant \textbf{deux groupes d'échantillons indépendants} (non appariés). Ce cas n'est utilisé que lorsque les deux groupes d'échantillons à comparer n'ont aucun lien. Autrement dit, il s'agit de comparer deux moyennes observées. \\ \\
 \textit{Exemple pratique} : Afin de bien comprendre la notion de test-t de Student non-apparié, voici un exemple concret.
 Nous avons un groupe de 100 individus (50 femmes et 50 hommes) pris au hasard au sein de la population. On se pose la question de savoir si le poids moyen des femmes est significativement différent de celui des hommes? \\
-Dans cet exemple on parle de test de Student non apparié car les deux groupes à comparer (homme et femmes) n’ont aucun lien. Il s’agit donc de calculer le poids moyen des femmes et de celui des hommes et d’évaluer si la différence des ces moyennes est significative d'un point de vue statistique.
+Dans cet exemple on parle de test-t de Student non apparié car les deux groupes à comparer (hommes et femmes) n’ont aucun lien. Il s’agit donc de calculer le poids moyen des femmes et de celui des hommes et d’évaluer si la différence des ces moyennes est significative d'un point de vue statistique.
 
-En pratique, on ne va pas utiliser le test-t de Student non-apparié mais une variante : le test-t de Welch. La raison est simple : le test-t de student non-apparié ne peut être utilisé que dans le cas où les deux échantillons A et B suivent des lois normales de même variances. Or, dans notre cas, pour l'analyse des traces de puissance, nous deux échantillons n'auront pas la même variance. Pour ce faire, une variante du test-t de student non apparié existe, il s'agit du test-t de Welch.\\ \\
-\textbf{Le \textit{test-t de Welch} est une adaptation du test t de Student non apparié permettant de comparer les moyennes de deux groupes d’échantillons indépendants lorsque leurs variances sont différentes.} \\ \\
-Ce test permet de calculer la statistique \textit{t} par la formule \ref{eqn:test_t} suivante :
+En pratique, on ne va pas utiliser le test-t de Student non-apparié mais une variante : le test-t de Welch. La raison est simple : le test-t de student non-apparié ne peut être utilisé que dans le cas où les deux échantillons A et B suivent des lois normales de même variances. Or, dans notre cas, pour l'analyse des traces de puissance, nos deux échantillons n'auront pas la même variance. Pour ce faire, une variante du test-t de student non apparié existe, il s'agit du test-t de Welch.\\ \\
+\textbf{Le \textit{test-t de Welch} est une adaptation du test-t de Student non apparié permettant de comparer les moyennes de deux groupes d’échantillons indépendants lorsque leurs variances sont différentes.} \\ \\
+Ce test permet de calculer la statistique \textit{t} par la formule (\ref{eqn:test_t}) suivante :
 \begin{gather}
 	t=\frac{m_{A} - m_{B}}{\sqrt{\frac{S_{A}^2}{n_{A}} +\frac{S_{B}^2}{n_{B}}}}\label{eqn:test_t}
 \end{gather}
@@ -410,8 +410,8 @@ Où :
 Une notion importante à définir pour réaliser un test-t de student de manière général (et donc pour un test-t de Welch dans un cas précis) est la notion de degré de liberté. \\ \\
 \textbf{En statistique, le \textit{degré de liberté} désigne le nombre de valeurs aléatoires qui ne peuvent être déterminées ou fixées par une équation.} \\ \\ \\
 \textit{Exemple pratique} : Afin de bien comprendre la notion de degré de liberté, voici un exemple concret. 
-Si l'on cherche deux nombres dont la somme est 12, aucun des deux nombres ne peut être directement déterminé par la simple équation X + Y = 12. En effet, X peut être choisi arbitrairement, mais alors pour Y il n'y a alors plus le choix. Ainsi, si on choisit 11 comme valeur pour X, Y vaut obligatoirement 1. Il y a donc deux variables aléatoires (X,Y), mais un seul degré de liberté. \\ \\
-Le calcul du degré de liberté (\textit{ddl}) du test-t de Welch se fait selon la formule suivante \ref{eqn:ddl}:
+Si l'on cherche deux nombres dont la somme est 30, aucun des deux nombres ne peut être directement déterminé par la simple équation X + Y = 30. En effet, X peut être choisi arbitrairement, mais dans ce cas, il n'y a plus de choix pour Y. Ainsi, si on choisit  20 comme valeur pour X, Y vaut obligatoirement 10. Il y a donc deux variables aléatoires (X,Y), mais un seul degré de liberté. \\ \\
+Le calcul du degré de liberté (\textit{ddl}) du test-t de Welch se fait selon la formule (\ref{eqn:ddl}) suivante :
 \begin{gather}
 	ddl =\frac{(\frac{S_{A}^2}{n_{A}} +\frac{S_{B}^2}{n_{B}})^2}{\frac{S_{A}^4}{n_{A}^2.(n_{A}-1)}+\frac{S_{B}^4}{n_{B}^2.(n_{B}-1)}}\label{eqn:ddl}
 \end{gather}
@@ -419,33 +419,59 @@ Le calcul du degré de liberté (\textit{ddl}) du test-t de Welch se fait selon 
 Effectuer un test consiste à rejeter ou non une certaine hypothèse, appelée \textbf{\textit{hypothèse nulle}}. On distingue toujours deux types d'hypothèse nulle, qui dans le cas du test-t de Welch s'énonce de façon suivante :
 \begin{itemize}
 \item L'hypothèse nulle qui stipule que les moyennes de deux populations sont égales : on parle de \textbf{\textit{test bilatéral}}.
-\item L'hypothèse nulle qui stipule que la moyenne d'une population est supérieure ou égale à une autre : on parle de \textbf{\textit{test unilatéral}}. \\
+\item L'hypothèse nulle qui stipule que la moyenne d'une population est supérieure ou égale (ou inférieur ou égale) à une autre : on parle de \textbf{\textit{test unilatéral}}. \\
 \end{itemize}
 La figure \ref{fig:bi_uni} présente le principe de test unilatéral gauche, bilatéral et unilatéral droit, respectivement.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{image/bi_uni}    
+    \includegraphics[width=0.9\textwidth]{image/bi_uni}    
     \caption{.}    
     \label{fig:bi_uni}
 \end{figure}
 
-La valeur-p (\textit{p-value} en anglais) est une nombre utilisé en statistique et qui doit être définit afin de pouvoir tirer des conclusion sur l'analyse du test réalisé. La procédure généralement employée consiste à comparer la valeur-p à un seuil préalablement défini (dans notre cas, et c'est le cas général, nous considérerons 5 \%). Si la valeur-p est :
+Aucun test statistique n'est fiable à 100\%. Les tests sont basés sur des probabilités, par conséquent il existe toujours un risque de tirer une mauvaise conclusion. En statistiques, lorsqu'on effectue un test d'hypothèse, on définit deux types d'erreurs : 
 \begin{itemize}
-\item Inférieure à ce seuil, on rejette l'hypothèse nulle en faveur de l’hypothèse alternative, et le résultat du test est déclaré \textit{statistiquement significatif}.
-\item Supérieure à ce seuil, on ne rejette pas l’hypothèse nulle, et on ne peut rien conclure quant aux hypothèses formulées. \\
+\item \textbf{\textit{L'erreur de type 1 (notée \alpha)}} : Une erreur de type 1 est commise lorsque l'hypothèse nulle est vérifiée mais qu'on la rejette. La probabilité de commettre ce type d'erreur est représentée par \alpha, qui désigne le \textit{seuil de signification} définit pour le test d'hypothèse. \\ 
+\textit{Exemple pratique} : Un niveau {\alpha} de 0,05 indique que nous sommes disposés à avoir 5\% de chances de rejeter l'hypothèse nulle à tort. Pour réduire ce risque, nous devons réduire la valeur de \alpha.
+\item \textbf{\textit{L'erreur de type 2 (notée \beta)}} : Une erreur de type 2 est commise lorsque l'hypothèse nulle est fausse et que nous ne la rejetons pas. La probabilité de commettre ce type d'erreur est représente par \beta. Nous ne nous intéresserons pas à ce type d'erreur dans la suite de ce rapport.
+\end{itemize}
+La tableau \ref{tab:erreurs} résume les deux types d'erreurs possibles.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.4]{image/erreur}    
+    \caption{Tableau d'erreurs : erreur de type 1 (\alpha) et erreur de type 2 (\beta).}    
+    \label{tab:erreurs}
+\end{figure}
+
+Le \textbf{\textit{seuil de signification}}, noté \alpha, représente donc une valeur, comprise entre 0 et 1 (ou exprimée en pour-cent), qui va être comparée à la valeur-p (définie ci-après) en vue de tirer des conclusions sur un test réalisé. Plus précisément, ce seuil de signification va indiquer le pourcentage de probabilité de rejeter l'hypothèse nulle à tort. Autrement dit, il va indiquer le pourcentage de probabilité de s'être trompé dans la conclusion d'un test. La valeur de ce seuil de signification vaut en général 5\%, 2\% ou encore 1\%.
+
+La \textbf{\textit{valeur-p}} (\textit{p-value} en anglais) est une nombre utilisé en statistique et qui doit être défini afin de pouvoir tirer des conclusion sur l'analyse du test réalisé. En statistique, la procédure généralement employée consiste à comparer la valeur-p à un seuil préalablement défini ((le seuil de signification). Si la valeur-p est :
+\begin{itemize}
+\item Inférieure à ce seuil, on rejette l'hypothèse nulle en faveur de l’hypothèse alternative, et le résultat du test est déclaré statistiquement \textit{significatif}.
+\item Supérieure ou égale à ce seuil, on ne rejette pas l’hypothèse nulle, et on ne peut rien conclure quant aux hypothèses formulées. Le résultat du test est déclaré statistiquement \textit{non-significatif}.\\
+\end{itemize}
+\textit{Exemple pratique} :  On souhaite savoir si, dans une certaine population, les femmes fument autant que les hommes. On décide de faire un test avec un seuil de signification (\alpha) de 5\% (risque d'erreur accepté). Dans ce test, l'hypothèse nulle est : \textit{il n'y a pas de différence entre hommes et femmes dans la population}. Le premier objectif de ce test est de savoir s'il est raisonnable de rejeter cette hypothèse nulle.
+Si on note :
+\begin{itemize}
+\item f1 et f2, le nombre de fumeurs observés respectivement chez les hommes et les femmes dans l'échantillon.
+\item {\delta} = f1—f2, la différence entre les valeurs observées chez les hommes et les femmes dans l'échantillon.
+\item \alpha, le seuil de signification, c'est-à-dire le risque d'erreur accepté, fixé à l'avance (ici {\alpha} = 5\%).
+\item p, la probabilité, si l'hypothèse nulle était vraie (c'est-à-dire en l'absence de différence entre hommes et femmes dans la population) que le hasard seul explique une différence au moins aussi grande que la différence {\delta} effectivement observée (des formules permettent de calculer cette probabilité).
+\end{itemize}
+La règle de décision est la suivante :
+\begin{itemize}
+\item si p {\geq} {\alpha} : on admet que la différence observée peut provenir des fluctuations d'échantillonnage. On ne peut pas rejeter l'hypothèse nulle (absence de différence dans la population). On conclut donc que la différence n'est pas significative au seuil de 5\%.
+\item si p < {\alpha} : on n'admet plus que la différence observée peut être due au hasard. On rejette donc l'hypothèse nulle. On conclut que la différence est significative à 5\%. \\
 \end{itemize}
 
-Ainsi, après calcul de la valeur de \textit{t} et de la valeur du \textit{degré de liberté}, on va pouvoir conclure sur le test : \textit{l'hypothèse nulle doit-elle être acceptée ou rejetée ? Autrement dit, la différence des moyennes de chacun des deux échantillons est-elle significative ou non ?}
-
-Pour répondre à cette question, il faut réaliser un test bilatéral. Connaissant le degré de liberté (ddl), il faut regarder la valeur-p (valeur critique de \textit{t}) mentionnée dans une table, appelée \textbf{table de t}, pour cette valeur calculée de ddl et pour un risque alpha = 5\%. Ainsi, on conclut :
+Ainsi, pour en revenir au test-t de Welch, après calcul de la valeur de \textit{t} et de la valeur du \textit{degré de liberté}, on va pouvoir conclure sur le test : \textit{l'hypothèse nulle doit-elle être acceptée ou rejetée ? Autrement dit, la différence des moyennes de chacun des deux échantillons est-elle significative ou non ?} \\ \\
+Pour répondre à cette question, il faut réaliser un test bilatéral. Connaissant le degré de liberté (ddl) et la valeur de la statistique \textit{t}, on peut retrouver la valeur-p en vue de tirer une conclusion. De manière plus simplifiée, on va aller chercher dans la table de t la valeur de t pour un ddl calculé et pour un risque {\alpha} de 0,05. Ensuite, on va comparé cette valeur de t avec la valeur calculée. Ainsi, on conclut :
 \begin{itemize}
-\item Si la valeur absolue de t (calculée) est supérieure à la valeur-p (dans la table), alors la différence est significative. 
-\item 
+\item Si la valeur absolue de t (calculée) est supérieure ou égale à la valeur de t (dans la table), alors la différence est significative. 
+\item Si la valeur absolue de t (calculée) est inférieur à la valeur de t (dans la table), alors la différence est significative.
 \end{itemize}
 
-Dans le cas contraire, elle, ne l’est pas. Le degré de siginificativité ou p-value correspond au risque indiqué par la table de Student pour la valeur |t|
 
-Ce nombre est utilisé en statistiques inférentielles pour conclure sur le résultat d’un test statistique. La procédure généralement employée consiste à comparer la valeur-p à un seuil préalablement défini (traditionnellement 5 \%). 
 \subsection{Simulation d'un t-test sur MATLAB}
 
 
@@ -492,8 +518,12 @@ CC BY 2.5 (\url{https://creativecommons.org/licenses/by/2.5})], de Wikimedia Com
 \item \url{https://www.j3ea.org/articles/j3ea/pdf/2012/01/j3ea12004.pdf}
 \item Attaques par canaux auxiliaires : nouvelles attaques, contre-mesures et mises en oeuvre (thèse)
 \item From Improved Leakage Detection to the Detection of Points of Interests in Leakage Traces
-\item 
-\item 
+\item \url{https://support.minitab.com/fr-fr/minitab/18/help-and-how-to/statistics/basic-statistics/supporting-topics/basics/type-i-and-type-ii-error/}
+\item \url{}
+\item \url{}
+\item \url{}
+\item \url{}
+\item \url{}
 \end{itemize}
 
 
