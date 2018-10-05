@@ -348,6 +348,60 @@ La \textbf{\textit{technologie CMOS}} (pour \textit{Complementary MOS}) est la t
 
 Si on applique à l'entrée un niveau haut, le transistor N est passant et le P est bloqué. On place ainsi la sortie au potentiel Vss (la masse), c'est-à-dire à l'état bas. Inversement, quand on met l'entrée à l'état bas, le transistor P est passant et le N est bloqué. La sortie est donc à l'état haut. On a donc bien réalisé une fonction inversion.
 
+
+\subsubsection{Puissance statique et dynamique}
+\label{sec:puissance}
+Il est évident que les circuits digitaux modernes consomment de la puissance lorsqu'ils exécutent des instructions (opérations) sur des données. Dans le domaine de la cryptanalyse, cette puissance va être mesurée et analysée afin de déterminer si le device cryptographique est attaquable ou non. Dans cette section, nous allons étudier plus particulièrement la consommation de puissance d'un type précis de circuit : les circuits utilisant la technologie CMOS (voir section \ref{sec:CMOS} pour plus de précision). Cette technologie est très répandue et couvre la plupart des circuit digitaux modernes. 
+
+La consommation totale de puissance d'un circuit CMOS peut être obtenue en sommant les consommations de puissance respectives de chaque cellule logique du circuit CMOS. De cette façon, la consommation de puissance totale dépend essentiellement du nombre de cellules logiques dans le circuit CMOS. \\
+En prenant comme exemple de cellule logique CMOS, l'inverseur CMOS (expliqué à la section \ref{sec:CMOS}), nous allons tenter de comprendre quand et pourquoi ces cellules CMOS dissipent de la puissance. Pour ce faire, il faut savoir que la consommation de puissance est essentiellement divisée en deux parties : 
+\begin{itemize}
+\item La puissance statique (notée $P_{stat}$): C'est la puissance qui est consommée lorsqu'il n'y a pas de commutation dans une cellule (c'est-à-dire dans l'inverseur). Autrement dit, c'est la puissance qui est consommée lorsque l'inverseur est en fonctionnement normal mais ne commute pas.
+\item La puissance dynamique (notée $P_{dyn}$) : C'est la puissance qui est consommée par une cellule si la sortie de cette cellule commute. 
+\end{itemize}
+Ainsi, la puissance totale consommée par une cellule vaut la somme de ces deux composantes, soit :
+\begin{gather}
+	P_{total} = P_{stat} + P_{dyn}
+\end{gather}
+
+Mais de façon plus précise, que vaut la puissance statique ? De même, comment pourrait-on exprimer la puissance dynamique ? 
+
+\underline{\textbf{\textit{Puissance statique :}}} \\ \\
+Les cellules CMOS sont toujours construites de façon à ce que les deux transistors complémentaires ne soient jamais passants au même moment. En effet, si on reprend l'exemple de l'inverseur CMOS, lorsque on met le signal d'entrée à \textit{GND} alors le transistor P1 est passant et N1 est bloqué. Par contre, lorsqu'on met le signal d'entrée à \textit{$V_{DD}$}, le transistor P1 devient bloqué tandis que le transistor N1 devient passant. De cette façon, il n'y a pas de connexion directe entre \textit{$V_{DD}$} et \textit{GND}. Par conséquent, seul un petit pic de courant (notée $I_{pic}$) passe au travers de la cellule logique. La valeur de ce pic de courant est très très faible, de l'ordre du \si{\pico A}. Ainsi, la puissance statique peut se calculer de la façon suivante : 
+\begin{gather}
+	P_{stat} = I_{pic} . V_{DD}
+\end{gather}
+
+Pour conclure, la consommation de puissance statique des circuits CMOS est typiquement très faible, nous pourrons donc la négliger (même si elle augmente significativement pour les circuits numériques modernes qui utilisent de très petites tailles de structure).
+
+\underline{\textbf{\textit{Puissance dynamique :}}} \\ \\
+La consommation de puissance dynamique apparait typiquement lors d'une commutation des transistors. Une commutation est le passage d'un état haut à un état bas ou d'un état bas à un état haut. En réalité, il existe 4 transitions d'état possibles. Ces 4 possibilités sont reprises dans le tableau \ref{fig:dyn} ci-dessous. On constate que pour chaque transition possible, il y a présence de puissance statique. Cependant, il n'y présence de puissance dynamique que dans le cas d'une commutation, c'est-à-dire dans les deux transitions suivantes : 0-1 et 1-0. 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.5]{image/dyn}
+    \caption{Type de puissance consommée sur une cellule CMOS en fonction des 4 transitions d'état de sa sortie.}
+    \label{fig:dyn} 
+\end{figure}
+
+La consommation de puissance totale dépend du type de cellule et de la technologie employée. Cependant, en général, on constate que : 
+\begin{itemize}
+\item Lorsqu'il n'y a pas de commutation, la puissance totale reste plus ou moins identique.
+\item Lorsqu'il y a une commutation, la puissance totale augmente. Elle devient même supérieure à la puissance totale prise quand il n'y a pas de commutation.
+\end{itemize}
+Dans tous les cas, la consommation de puissance dynamique dépend des données qui sont manipulées.
+Ainsi, on peut conclure que la consommation de puissance dynamique des circuits CMOS constitue le facteur dominant dans la consommation de puissance totale.
+
+La consommation de puissance moyenne de chargement de la capacité ...
+\begin{gather}
+	P_{chrg} = \frac{1}{T}\int_{0}^{T}p_{chrg}(t)dt=\alpha.f.C_{L}.V_{DD}^{2}
+\end{gather}
+
+La consommation de puissance moyenne qui est causée par les courants de court-circuit ...
+\begin{gather}
+	P_{cc} = \frac{1}{T}\int_{0}^{T}p_{cc}(t)dt=\alpha.f.C_{L}.V_{DD}.I_{pic}.t_{cc}
+\end{gather}
+
+
 \underline{\textbf{\textit{Puissance :}}} Comme vu à la section précédente (\ref{sec:puissance}), il faut analyser deux types de puissance. En ce qui concerne la puissance statique, celle-ci est négligeable lorsque l’entrée (E) est stable à l’état haut ou à l’état bas et en supposant que les fuites dans les transistors MOS sont maîtrisées.
 Par contre, en ce qui concerne la puissance dynamique consommée, celle-ci devient importante lors des commutations de l’entrée. Cette puissance dynamique dépend effectivement du type de commutation. Ainsi :
 \begin{itemize}
@@ -355,17 +409,15 @@ Par contre, en ce qui concerne la puissance dynamique consommée, celle-ci devi
 \item Lors d’un passage de l’entrée (E) de l’état bas à l’état haut, la capacité de ligne se décharge au travers du transistor N-MOS, l’alimentation fournit un courant transitoire de court circuit ($I_{CC}$).
 \end{itemize}
 
-
-\subsubsection{Puissance statique et dynamique}
-\label{sec:puissance}
-Il est évident que les circuits digitaux modernes consomment de la puissance lorsqu'ils exécutent des instructions (opérations) sur des données. Dans le domaine de la cryptanalyse, cette puissance va être mesurée et analysée afin de déterminer si le device cryptographique est attaquable ou non. Dans cette section, nous allons étudier plus particulièrement la consommation de puissance d'un type précis de circuit : les circuits utilisant la technologie CMOS (voir section \ref{sec:CMOS} pour plus de précision). Cette technologie est très répandue et couvre la plupart des circuit digitaux modernes. 
-
-La consommation totale de puissance d'un circuit CMOS peut être obtenue en sommant les consommations de puissance respectives de chaque cellule logique du circuit CMOS. De cette façon, la consommation de puissance totale dépend essentiellement du nombre de cellules logiques dans le circuit CMOS. 
-
 \subsubsection{Modèles de puissance}
+
+Distance de Hamming...
+
+Poids de Hamming ...
 
 \subsubsection{L'attaque CPA en concret}
 
+La figure \ref{fig:CPAconcrete} ci-dessous présente le principe de fonctionnement d'une attaque CPA comme décrite ci-avant.
 
 \newpage
 
