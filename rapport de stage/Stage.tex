@@ -257,7 +257,8 @@ La figure \ref{fig:colonne} ci-dessous présente le principe de fonctionnement d
 
 \newpage
 
-\subsection{Notions de \textit{Side-Channel Attacks}}
+\subsection{Introduction aux \textit{attaques par canal auxiliaire}}
+\subsubsection{Types d'attaques}
 
 A la fin des années 1990, une nouvelle contrainte pour la conception de système informatique a vu le jour : la sécurité matérielle. Bien souvent, la sécurité d'un système informatique s'appuie plus sur les concepts software que hardware. Cependant, un nouveau mode d'attaque s'est développé. Il s'agit d'attaques physiques, c'est-à-dire d'attaques réalisées sur le circuit électronique lui-même. Deux grandes familles d'attaques sont recensées : 
 \begin{itemize}
@@ -269,7 +270,7 @@ A la fin des années 1990, une nouvelle contrainte pour la conception de systèm
 \item \textbf{\textit{Attaques passives}} : Une attaque est dite passive lorsque l'attaquant exploite l'analyse, en fonctionnement normal, d'informations s'échappant d'un device cryptographique. Cela peut être l'analyse de la consommation de puissance, l'analyse temporelle, l'analyse par rayonnement électromagnétique, etc. C'est ce type d'attaque qui sera détaillé tout au long de ce stage et durant la réalisation de TFE. \\
 \end{itemize}
 
-La figure \ref{fig:attaques} ci-dessous résume les différents types d'attaques physiques possibles.
+\vspace{-0.1 cm}La figure \ref{fig:attaques} ci-dessous résume les différents types d'attaques physiques possibles.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{image/attaques}
@@ -277,20 +278,94 @@ La figure \ref{fig:attaques} ci-dessous résume les différents types d'attaques
     \label{fig:attaques}
 \end{figure}
 
-Les attaques passives sont globalement beaucoup plus simples à mettre en oeuvre que les attaques actives. Comme définit précédemment, ces attaques consistent à analyser des données issues de canaux auxiliaires au device cryptographique (lorsque ce dernier est en état de fonctionnement normal). Ces canaux auxiliaires sont des canaux présents physiquement sur le circuit attaqué et le long desquels de l’information s’échappe (sous différentes formes : rayonnement électromagnétique, rayonnement photonique, consommation de puissance, etc.). C'est là qu'intervient la notion de side-channel attacks. 
+\vspace{-0.2 cm}Les attaques passives sont globalement beaucoup plus simples à mettre en oeuvre que les attaques actives. Comme définit précédemment, ces attaques consistent à analyser des données issues de canaux auxiliaires au device cryptographique (lorsque ce dernier est en état de fonctionnement normal). Ces canaux auxiliaires sont des canaux présents physiquement sur le circuit attaqué et le long desquels de l’information s’échappe (sous différentes formes : rayonnement électromagnétique, rayonnement photonique, consommation de puissance, etc.). C'est là qu'intervient la notion de \textit{side-channel attacks} ou en français \textit{l'attaque par canal auxiliaire}. 
 En effet, les fonctions cryptographiques, bien que pouvant être extrêmement robustes théoriquement (c'est-à-dire mathématiquement) sont très sensibles aux fuites d’informations. C'est-à-dire qu'une quantité très faible d’informations peut être exploitée pour casser un algorithme cryptographique très fort. C’est ce que les attaques par canaux auxiliaires exploitent. 
 
-Dans notre cas, l'attaque portera sur l'analyse de la consommation de puissance. Autrement dit, un oscilloscope sera utilisé pour capturer et enregistrer des données, appelées \textbf{\textit{traces}}, provenant des canaux auxiliaires. Sur base de ces traces, divers procédés seront mis en oeuvre afin de casser l'algorithme et ainsi exploiter les données confidentielles.
+La figure \ref{fig:attackpassive} ci-dessous présente les différentes façons possibles de réaliser des attaques passives.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.4]{image/attackpassive}
+    \caption{Les différentes façons d'attaquer passivement un device cryptographique en vue de casser l'algorithme de chiffrement qui se trouve dessus.}
+    \label{fig:attackpassive}
+\end{figure}
 
-Nous allons définir deux types d'attaques : 
+Dans la suite de cet ouvrage, on se concentrera sur un type précis d'attaque passive : l'attaque sur \textbf{l'analyse de la consommation de puissance}. Les sections suivantes décrivent le principe de fonctionnement de ce type d'attaque. 
+
+\subsubsection{Introduction aux attaques par analyse de la consommation de puissance}
+
+Nous allons donc étudier un cas précis d'attaque passive : l'attaque par \textbf{l'analyse de la consommation de puissance}. Comme son nom l'indique, ce type d'attaque analyse la consommation de puissance du device cryptographique attaqué pour retrouver des informations sensibles. En effet, la consommation de courant d'un circuit électronique dépend de deux facteurs : 
 \begin{itemize}
-\item Les attaque (\textit{Differential Power Analysis})
-\item Les attaque CPA (\textit{Correlation Power Analysis}) \\
+\item Les opérations qui sont exécutées.
+\item Les données qui sont manipulées.
+\end{itemize}
+Ainsi, en mesurant un certain nombre de fois la consommation de puissance d'un circuit, il est possible de retrouver certaines informations comme les opérations exécutées (afin d'identifier un algorithme par exemple), les informations secrètes complètes (clé de chiffrement) ou partielles (poids de Hamming d'une clé de chiffrement). Pour ce faire, un oscilloscope est utilisé afin de capturer et d'enregistrer des données, appelées \textbf{\textit{traces}}, mesurées à partir des canaux auxiliaires du circuit électronique (dans notre cas, un FPGA). Pour réaliser la mesure, une résistance sera placée en série avec un canal du device cryptographique afin que l'oscilloscope soit capable de capturer une différence de potentielle minime. En effet, étant donné que les courants qui circulent sur le device cryptographique sont de valeurs très faibles (\si{\micro}A), un amplificateur est utilisé afin d'amplifier la différence de potentielle. La figure \ref{fig:oscillo} ci-dessous présente le principe de mesure à l'oscilloscope.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.4]{image/oscillo}
+    \caption{Principe de mesure à l'oscilloscope.}
+    \label{fig:oscillo} 
+\end{figure}
+
+\hspace{-0.5 cm}Il existe différents types d'attaques par analyse de la consommation de puissance : 
+\begin{itemize}
+\item Les attaques SPA (\textit{Simple Power Analysis})
+\item Les attaques DPA (\textit{Differential Power Analysis})
+\item Les attaques CPA (\textit{Correlation Power Analysis}) \\
+\end{itemize}
+Nous allons en définir une plus précisément, c'est l'attaque CPA. C'est ce type d'attaque qui a été mis en place durant le stage afin de tenter de casser l'algorithme AES. Ainsi, en continuant l'introduction sur les attaques par analyse de la consommation de puissance, et en prenant le cas particulier d'une attaque dite CPA, nous pouvons dire que : \\ En supposant connu les messages clairs envoyés au device cryptographique et en supposant que ce dernier implémente l'algorithme AES, nous simulerons sur ordinateur le poids de Hamming de chaque donnée binaire obtenue en sortie de l'opération \textit{SubBytes}. Ensuite, nous calculerons les différentes valeurs de coefficient de corrélation entre les traces de puissance capturées à l'oscilloscope et le poids de Hamming obtenu par simulation (sur ordinateur). Sur base de cette étude de la corrélation, nous serons (en principe) capable de déterminer la clé secrète, c'est-à-dire casser l'algorithme AES et ainsi exploiter les données confidentielles. La figure \ref{fig:CPA} présente vulgairement le principe général d'une attaque CPA.
+\begin{figure}[h]
+    \hspace{-1.5 cm}
+    \includegraphics[scale=0.55]{image/CPA}
+    \caption{Principe générale d'une attaque CPA.}
+    \label{fig:CPA} 
+\end{figure}
+
+Le principe d'une attaque par consommation de puissance, et plus particulièrement d'une attaque CPA, ayant été introduit de manière générale, nous allons maintenant revenir sur différentes notions citées ci-dessus afin de mieux les définir et ainsi mieux comprendre le raisonnement qui se cache derrière une attaque par calcul de corrélation (CPA).
+
+\newpage
+
+\subsection{Attaque CPA (\textit{Correlation Power Analysis})}
+
+\subsubsection{Technologie CMOS}
+\label{sec:CMOS}
+La \textbf{\textit{technologie CMOS}} (pour \textit{Complementary MOS}) est la technologie la plus répandue parmi toutes les technologies de semi-conducteurs. En effet, on la retrouve dans la majorité des systèmes informatiques modernes. En 2001, elle englobait 86\% de la production mondiale des circuits intégrés. Pour cette raison, nous nous intéressons à leur conception afin de détecter des anomalies qui pourraient se révéler être utiles pour la cryptanalyse. Le nom de cette technologie vient du fait que toutes les fonctions logiques (portes OR, NAND, etc.) peuvent être réalisées moyennant l’utilisation d’une paire de transistors MOS complémentaires (N-MOS et P-MOS) associés symétriquement et fonctionnant en régime de commutation. Ainsi lorsqu'un des deux transistor MOS conduit, l’autre est par conséquent fermé. Grâce à ce principe, une porte logique CMOS ne consomme de l’énergie qu’au moment de la commutation. Cette caractéristique permet de distinguer le CMOS de toutes les autres technologies.
+
+\hspace{-0.5 cm}Pour expliquer le fonctionnement de cette technologie, on peut prendre un exemple simple : \textbf{\textit{l'inverseur CMOS}}. Un inverseur CMOS est simplement une fonction \textit{NON}. Voici donc sa table de vérité :
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.5]{image/verite}
+    \caption{Table de vérité pour la fonction NON (inverseur CMOS).}
+    \label{fig:verite} 
+\end{figure}
+
+\hspace{-0.5 cm}La figure \ref{fig:CMOS} ci-dessous présente le schéma de l'inverseur CMOS :
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.8]{image/CMOS}
+    \caption{Schéma de l'inverseur CMOS.}
+    \label{fig:CMOS} 
+\end{figure}
+
+Si on applique à l'entrée un niveau haut, le transistor N est passant et le P est bloqué. On place ainsi la sortie au potentiel Vss (la masse), c'est-à-dire à l'état bas. Inversement, quand on met l'entrée à l'état bas, le transistor P est passant et le N est bloqué. La sortie est donc à l'état haut. On a donc bien réalisé une fonction inversion.
+
+\underline{\textbf{\textit{Puissance :}}} Comme vu à la section précédente (\ref{sec:puissance}), il faut analyser deux types de puissance. En ce qui concerne la puissance statique, celle-ci est négligeable lorsque l’entrée (E) est stable à l’état haut ou à l’état bas et en supposant que les fuites dans les transistors MOS sont maîtrisées.
+Par contre, en ce qui concerne la puissance dynamique consommée, celle-ci devient importante lors des commutations de l’entrée. Cette puissance dynamique dépend effectivement du type de commutation. Ainsi :
+\begin{itemize}
+\item Lors d’un passage de l’entrée (E) de l’état haut à l’état bas, l’alimentation fournit au travers du transistor P-MOS un courant de charge ($I_{CI}$) à la capacité de ligne ($C_l$) connectée à la sortie (S), plus un courant transitoire de court-circuit ($I_{CC}$) (lorsque les deux transistors sont simultanément en régime de fonctionnement linéaire).
+\item Lors d’un passage de l’entrée (E) de l’état bas à l’état haut, la capacité de ligne se décharge au travers du transistor N-MOS, l’alimentation fournit un courant transitoire de court circuit ($I_{CC}$).
 \end{itemize}
 
-\underline{\textbf{Attaque DPA :}}
 
-\underline{\textbf{Attaque CPA :}}
+\subsubsection{Puissance statique et dynamique}
+\label{sec:puissance}
+Il est évident que les circuits digitaux modernes consomment de la puissance lorsqu'ils exécutent des instructions (opérations) sur des données. Dans le domaine de la cryptanalyse, cette puissance va être mesurée et analysée afin de déterminer si le device cryptographique est attaquable ou non. Dans cette section, nous allons étudier plus particulièrement la consommation de puissance d'un type précis de circuit : les circuits utilisant la technologie CMOS (voir section \ref{sec:CMOS} pour plus de précision). Cette technologie est très répandue et couvre la plupart des circuit digitaux modernes. 
+
+La consommation totale de puissance d'un circuit CMOS peut être obtenue en sommant les consommations de puissance respectives de chaque cellule logique du circuit CMOS. De cette façon, la consommation de puissance totale dépend essentiellement du nombre de cellules logiques dans le circuit CMOS. 
+
+\subsubsection{Modèles de puissance}
+
+\subsubsection{L'attaque CPA en concret}
+
 
 \newpage
 
