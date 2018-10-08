@@ -36,6 +36,8 @@
 \fancyfoot[C]{}
 \fancyfoot[R]{\thepage}
 
+\usepackage{rotating}
+\usepackage{tikz}
 
 % Keep lasts
 \usepackage[french]{babel}
@@ -422,7 +424,7 @@ La figure \ref{fig:CPAconcrete} ci-dessous présente le principe de fonctionneme
 
 \newpage
 
-\subsection{Simulation d'un tracé et d'une attaque par canal auxiliaire sur MATLAB}
+\subsection{Simulations sur MATLAB}
 
 Afin de bien assimiler une attaque par canal auxiliaire, il m'a été demandé de tester, par des simulation sur le logiciel MATLAB, les notions théoriques développées précédemment. Deux exercices différents ont ainsi été réalisés. 
 \begin{enumerate}
@@ -430,21 +432,21 @@ Afin de bien assimiler une attaque par canal auxiliaire, il m'a été demandé d
 \item \textbf{Réaliser une attaque CPA à partir de traces réelles}. Dans ce cas de figure, on connait 4 paramètres : les messages clairs envoyés (plaintexts), les traces capturées à l'oscilloscope, le nombre de traces ainsi que le nombre d'échantillons. Ainsi, sur base des traces qui nous sont fournies, l'objectif est de tenter de retrouver la clé secrète en réalisant une attaque CPA. La différence majeure avec l'exercice précédent est que l'on étudie une trace selon l'ensemble de points (les échantillons) qui la caractérise. Cet ensemble de traces étant par ailleurs fournit sur base de mesures réalisées à l'oscilloscope. \\
 \end{enumerate}
 
-\hspace{-0.5 cm}\textbf{\underline{Exercice 1 :}} La figure \ref{fig:simul1} ci-dessous représente le schéma-block de la première phase de l'exercice 1, c'est-à-dire qu'il présente les différentes étapes à réaliser pour simuler un point d'une trace.
+\hspace{-0.5 cm}\textbf{\underline{Exercice 1 :}} La figure \ref{fig:simul1} ci-dessous représente le schéma-bloc de la première phase de l'exercice 1, c'est-à-dire qu'il présente les différentes étapes à réaliser pour simuler un point d'une trace.
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.45]{image/simul1}
-    \caption{Schéma-block permettant de comprendre la simulation d'un point d'une trace.}
+    \caption{Schéma-bloc permettant de comprendre la simulation d'un point d'une trace.}
     \label{fig:simul1} 
 \end{figure}
 
-\vspace{-0.4 cm}Sur le schéma-block, nous percevons deux entrées : la clé secrète (connue) utilisée pour le chiffrement ainsi que les N messages clairs devant être chiffrés. Nous réalisons ensuite les deux premières étapes de l'algorithme AES, à savoir les opérations \textit{AddRoundKey} (correspondant à un \textit{XOR}) et \textit{SubBytes} respectivement. Le résultat obtenu à la sortie de l'opération \textit{AddRoundKey} est noté \textit{$Y_1$} alors que le résultat obtenu à la sortie de l'opération \textit{SubBytes} est noté \textit{$Z_1$}. Ensuite, un modèle de puissance est utilisé afin d'imiter au mieux la consommation de puissance du circuit. Ce modèle de puissance est le \textit{poids de Hamming}. Le but est donc de compter le nombre de bits à '1' pour chaque octet de données \textit{$Z_1$}. Le résultat obtenu est noté \textit{$HW(Z_1)$}. Enfin, une fois que le poids de Hamming a été calculé, on ajoute du bruit afin de rendre la simulation plus réelle. En effet, en réalité, lors d'une prise de mesure, un élément parasite vient toujours s'additionner au signal que l'on étudie, il s'agit de bruit électronique.
+\vspace{-0.4 cm}Sur le schéma-bloc, nous percevons deux entrées : la clé secrète (connue) utilisée pour le chiffrement ainsi que les N messages clairs devant être chiffrés. Nous réalisons ensuite les deux premières étapes de l'algorithme AES, à savoir les opérations \textit{AddRoundKey} (correspondant à un \textit{XOR}) et \textit{SubBytes} respectivement. Le résultat obtenu à la sortie de l'opération \textit{AddRoundKey} est noté \textit{$Y_1$} alors que celui obtenu à la sortie de l'opération \textit{SubBytes} est noté \textit{$Z_1$}. Ensuite, un modèle de puissance est utilisé afin d'imiter au mieux la consommation de puissance du circuit. Ce modèle de puissance est le \textit{poids de Hamming}. Le but est donc de compter le nombre de bits à '1' pour chaque octet de données \textit{$Z_1$}. Le résultat obtenu est noté \textit{$HW(Z_1)$}. Enfin, une fois que le poids de Hamming a été calculé, on ajoute du bruit afin de rendre la simulation plus réelle. En effet, en réalité, lors d'une prise de mesure, un élément parasite vient toujours s'additionner au signal que l'on étudie, il s'agit de bruit électronique.
 
-La figure \ref{fig:simul2} ci-dessous représente le schéma-block de la seconde phase de l'exercice 1. Il présente ainsi les différentes étapes à réaliser qui serviront \textit{in fine} à réaliser l'attaque CPA.
+La figure \ref{fig:simul2} ci-dessous représente le schéma-bloc de la seconde phase de l'exercice 1. Il présente ainsi les différentes étapes à réaliser qui serviront \textit{in fine} à réaliser l'attaque CPA.
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.45]{image/simul2}
-    \caption{Schéma-block permettant de comprendre la seconde phase de l'exercice 1.}
+    \caption{Schéma-bloc permettant de comprendre la seconde phase de l'exercice 1.}
     \label{fig:simul2} 
 \end{figure}
 
@@ -455,7 +457,7 @@ Concrètement, sur MATLAB, tous ces calculs vont être opérés sur des matrices
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{image/simulCPA1}
-    \caption{Schéma-block permettant de visualiser la taille des différentes matrices employées pour la simulation.}
+    \caption{Schéma-bloc permettant de visualiser la taille des différentes matrices employées pour la simulation.}
     \label{fig:simulCPA1} 
 \end{figure}
 
@@ -466,8 +468,8 @@ Ainsi :
 \item La matrice clé, dans le cas de la génération d'un point de la trace, est représentée par une matrice de taille 1x1. Un seul octet de l'unique clé secrète est en effet utilisé.
 \item La matrice clé, dans le cas de la simulation par ordinateur, est représentée par une matrice de taille 1x256. En effet, le but étant de retrouver la valeur du premier octet de la clé secrète, il existe $2^8$ soit 256 valeurs possibles.
 \item $Y_1$ et $Y_2$ sont des matrices de taille Nx1 etNx256 respectivement. En effet, pour $Y_1$, une seul clé est utilisée alors que pour $Y_2$, 256 valeurs de clé sont utilisées.
-\item $Z_1$ et $Z_2$ sont des matrices de taille Nx1 et Nx256 respectivement. En effet, l'opération \textit{SubBytes} ne modifie pas la taille des données obtenues précédemment.
-\item Enfin, $HW(Z_1)$ et $HW(Z_2)$ sont des matrices de taille Nx1 et Nx256 pour les mêmes raisons que précédemment. \\
+\item $Z_1$ et $Z_2$ sont des matrices de taille Nx1 et Nx256 respectivement. En effet, l'opération \textit{SubBytes} ne modifie pas la taille des données obtenues précédemment ($Y_1$ et $Y_2$).
+\item Enfin, $HW(Z_1)$ et $HW(Z_2)$ sont des matrices de taille Nx1 et Nx256 pour les mêmes raisons évoquées précédemment. \\
 \end{itemize}
 
 \vspace{-0.2 cm}Pour rappel, le but final de la simulation est de retrouver le premier octet de la clé connaissant un point de la trace (obtenu par simulation) et connaissant les N messages clairs envoyés. Cela sera rendu possible en calculant le coefficient de corrélation pour chaque valeur de clé possible. Le figure \ref{fig:CorrEx1} ci-dessous présente le calcul final qui permettra de retrouver le premier octet de la clé secrète.
@@ -480,7 +482,7 @@ Ainsi :
 \end{figure}
 
 \newpage
-Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent les résultats obtenus. Il s'agit de graphes indiquant les valeurs de coefficient de corrélation en fonction des 256 valeurs de clé testées. En toute logique, le coefficient de corrélation est maximum (en valeur absolue) pour la clé réellement utilisée pour le chiffrement des données. Cependant, on sait qu'en fonction du nombres de traces analysées, les valeurs du facteur de corrélation fluctuent dans un intervalle plus ou moins grand. Ainsi, au plus le nombre de traces sera grand, au plus l'intervalle sera petit et au plus ce sera facile de repérer la clé de chiffrement. En effet, si on observe les trois graphes ci-dessous, on peut remarquer que pour 10 traces, le coefficient de corrélation varie entre -0,83 et 0,8 ; pour 100 traces, le coefficient de corrélation varie entre -0,26 et 0,34 ; pour 1000 traces, le coefficient de corrélation varie entre -0,24 et 0,21. Pour chacun des trois graphes, on peut néanmoins distinguer la valeur de la clé secrète dont la valeur du coefficient de corrélation culmine à 0,98. La clé secrète utilisée vaut 200.
+Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent les résultats obtenus. Il s'agit de graphes indiquant les valeurs de coefficient de corrélation en fonction des 256 valeurs de clé testées. En toute logique, le coefficient de corrélation est maximum (en valeur absolue) pour la clé réellement utilisée pour le chiffrement des données. Cependant, on sait qu'en fonction du nombres de traces analysées, les valeurs du facteur de corrélation fluctuent dans un intervalle plus ou moins grand. Ainsi, au plus le nombre de traces sera grand, au plus l'intervalle des valeurs de corrélation sera petit et au plus ce sera facile de repérer la clé de chiffrement. En effet, si on observe les trois graphes ci-dessous, on peut remarquer que pour 10 traces, le coefficient de corrélation varie entre -0,83 et 0,8 ; pour 100 traces, le coefficient de corrélation varie entre -0,26 et 0,34 ; pour 1000 traces, le coefficient de corrélation varie entre -0,24 et 0,21. Pour chacun des trois graphes, on peut néanmoins distinguer la valeur de la clé secrète dont la valeur du coefficient de corrélation culmine à 0,98. Dans l'exemple, la clé secrète qui était utilisée valait 200 (en décimal).
 
 \begin{figure}[htbp]
     \centering
@@ -499,12 +501,64 @@ Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent
 
 \newpage
 
-\hspace{-0.5 cm}\textbf{\underline{Exercice 2 :}} La figure \ref{fig:simulEx2} ci-dessous représente le schéma-block de l'exercice 2. Il confronte ainsi les mesures obtenues à l'oscilloscope avec le poids de Hamming calculé à partir des messages clairs. Pour l'exemple ci-dessous, on opère toujours sur le premier octet de données et le premier octet de la clé.
+\hspace{-0.5 cm}\textbf{\underline{Exercice 2 :}} La figure \ref{fig:simulEx2} ci-dessous représente le schéma-bloc de l'exercice 2. Dans cet exercice, on confronte les mesures obtenues à l'oscilloscope avec le poids de Hamming calculé à partir des messages clairs et pour chaque valeur de clé. À noter que dans cet exercice, on opère toujours sur le premier octet de données et le premier octet de la clé.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.5]{image/simulEx2}
-    \caption{Schéma-block permettant de comprendre le principe de fonctionnement du deuxième exercice.}
+    \includegraphics[scale=0.4]{image/simulEx2}
+    \caption{Schéma-bloc permettant de comprendre le principe de fonctionnement du deuxième exercice.}
     \label{fig:simulEx2} 
+\end{figure}
+
+\vspace{-0.3 cm}On distingue 3 grands blocs sur le schéma ci-dessus :
+\begin{itemize}
+\item Premièrement, la prise de mesures à l'oscilloscope. Cette prise de mesure nous fournit un ensemble de traces. Plus précisément, l'oscilloscope a enregistré N traces différentes.
+\item Deuxièmement, des calculs de simulation de la consommation de puissance à partir du modèle du \textit{poids de Hamming}. Pour chaque texte clair envoyé et pour chaque clé possible, on va calculer le poids de Hamming du résultat obtenu en sortie de l'opération \textit{SubBytes}. Ce bloc est identique à la figure \ref{fig:simul2}.
+\item Dernièrement, le calcul du coefficient de corrélation. Cette corrélation est effectuée pour chaque trace capturée avec chaque résultat du poids de Hamming. 
+\end{itemize}
+
+\hspace{-0.5 cm}Voici les données dont nous disposons pour l'exercice :
+\begin{itemize}
+\item On connait le nombre de traces enregistrées à l'oscilloscope. Il y en a 2380.
+\item On connait le nombre d'échantillons pris dans une seule trace. Il y en a 16384.
+\item On connait tous les textes clairs envoyés au device cryptographique en vue d'être chiffrés. On a donc 2380 textes clairs connus. Chaque texte possédant une taille de 128 bits, soit 16 octets. Néanmoins, comme précisé précédemment, on ne s'intéresse qu'au premier octet.
+\item On connait toutes les traces mesurées à l'oscilloscope. 2380 traces ont été enregistrées. Chaque trace contient 16384 points (échantillons). \\
+\end{itemize}
+
+\hspace{-0.5 cm}Les 4 figures suivantes permettent de mieux comprendre, en pratique, l'objectif de l'exercice :
+\begin{enumerate}
+\item La figure \ref{fig:traces} présente les quatre premières traces, parmi les 2380, mesurées à l'oscilloscope.
+\item La figure \ref{fig:cle} présente les valeurs de coefficient de corrélation obtenues pour quatre clés possibles, à savoir les clés 128, 129, 130 et 131. Chaque valeur de corrélation est calculée pour chacun des 16384 points (échantillons) des 2380 traces. 
+\item La figure \ref{fig:3D} présente en trois dimensions les valeurs de coefficient de corrélation obtenues pour les 256 valeurs de clé possibles. On remarque qu'il existe un coefficient de corrélation maximum, marqué par une étoile rouge sur la figure. Ce coefficient correspond à la clé 8 (en décimal). Cela signifie que le premier octet de la clé secrète vaut 8. 
+\item La figure \ref{fig:cle8} présente les valeurs de coefficient de corrélation obtenues pour une valeur de clé correspondant à 8. Cette valeur présente le plus grand coefficient de corrélation et correspond donc au premier octet de la clé secrète. Le coefficient de corrélation maximum vaut effectivement 0,5099.
+\end{enumerate}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.45, angle=90]{image/traces}
+    \caption{Les 4 premières traces mesurées à l'oscilloscope.}
+    \label{fig:traces} 
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.56, angle=90]{image/cle}
+    \caption{Les valeurs de coefficient de corrélation obtenues pour les valeurs de clé : 128, 129, 130 et 131 respectivement.}
+    \label{fig:cle} 
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.54, angle=90]{image/3D2}
+    \caption{Affichage en 3D de toutes les valeurs de corrélation obtenues pour chaque valeur de clé possible.}
+    \label{fig:3D} 
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.44, angle=90]{image/cle8}
+    \caption{Valeurs de corrélation obtenue pour la clé secrète 8 (bonne clé).}
+    \label{fig:cle8} 
 \end{figure}
 
 \newpage
@@ -701,7 +755,8 @@ Pour répondre à cette question, il faut réaliser un test bilatéral. Connaiss
 
 
 
-\subsection{Simulation d'un t-test sur MATLAB}
+\subsection{Contre-mesures}
+\label{contre-mesures}
 
 
 \newpage
