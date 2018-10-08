@@ -143,7 +143,7 @@ La figure \ref{fig:chiffrement} ci-dessous présente le principe de fonctionneme
 
 Nous distinguons 2 types d'algorithmes de chiffrements : 
 \begin{itemize}
-\item \textbf{\textit{Chiffrement symétrique}} : Le chiffrement est dit symétrique lorsque le procédé de chiffrement (algorithme) utilise une seule clé, appelée \textit{clé secrète}. Par convention, ce type de chiffrement permet à la fois de chiffrer et de déchiffrer des messages à partir d'une seule et unique clé. Le désavantage de ce typer de chiffrement est que si une personne parvient à subtiliser la clé publique, elle sera en mesure de déchiffrer tout message qu'elle intercepte.  \\
+\item \textbf{\textit{Chiffrement symétrique}} : Le chiffrement est dit symétrique lorsque le procédé de chiffrement (algorithme) utilise une seule clé, appelée \textit{clé secrète}. Par convention, ce type de chiffrement permet à la fois de chiffrer et de déchiffrer des messages à partir d'une seule et unique clé. Le désavantage de ce typer de chiffrement est que si une personne parvient à subtiliser la clé, elle sera en mesure de déchiffrer tout message qu'elle intercepte.  \\
 \textit{Exemple} : L'algorithme AES. Une explication plus détaillée de cet algorithme est reprise à la section \ref{sec:AES}
 \item \textbf{\textit{Chiffrement asymétrique}} : Le chiffrement est dit asymétrique lorsque le procédé de chiffrement (algorithme) utilise 2 clés : une \textit{clé publique} et une \textit{clé privée}. Par convention, la clé publique est la clé de chiffrement du message clair, elle peut être communiquée sans aucune restriction tandis que la clé privée est la clé de déchiffrement du message chiffré, elle ne doit être communiquée sous aucun prétexte. Le fonctionnement est le suivant : Avec une clé publique, l'expéditeur code, dans un algorithme de chiffrement donné, un message. Ce message, une fois transmis, ne pourra être déchiffré que par le destinataire, détenteur de la clé privée. \\
 \textit{Exemple} : L'algorithme RSA. \\
@@ -174,11 +174,11 @@ Que ce soit pour un algorithme de chiffrement symétrique ou asymétrique, la cl
 
 En 1997, le NIST (\textit{National Institute of Standards and Technology}) décida qu'il était temps de développer un nouveau standard d'algorithme de chiffrement. Ce nouveau standard, nommé \textbf{AES} (pour \textit{Advanced Encryption Standard}), était appelé à remplacer l'ancien standard de chiffrement, l'algorithme DES (pour \textit{Data Encryption Standard}). Pour ce faire, le NIST organisa un concours cryptographique, les chercheurs du monde entier furent invités à soumettre leurs propositions. En Octobre 2000, Le NIST annonça le vainqueur du concours : l'algorithme de Rijndael, du nom de ses concepteurs Joan Daemen et Vincent Rijmen, tous deux de nationalité belge.
 
-L'algorithme de Rijndael, désormais plus connu sous le nom d'algorithme AES, est un algorithme de chiffrement symétrique par blocs. C'est-à-dire que les données sont traitées par blocs de 128 bits. La clé secrète peut posséder différentes longueurs : 128 bits (AES-128), 192 bits (AES-192) ou encore 256 bits (AES-256). À noter qu'en théorie, plus la taille de la clé est élevée, moins il y a de chance de casser l'algorithme cependant avec les side-channel attacks, le problème peut vite être contourné. \\ La description qui suit est basée sur l'algorithme AES-128 bits, c'est-à-dire que la clé de chiffrement a une taille de 128 bits.
+L'algorithme de Rijndael, désormais plus connu sous le nom d'algorithme AES, est un \textbf{algorithme de chiffrement symétrique par blocs}. C'est-à-dire que les données sont traitées par blocs de 128 bits. La clé secrète peut posséder différentes tailles : 128 bits (AES-128), 192 bits (AES-192) ou encore 256 bits (AES-256). À noter qu'en théorie, plus la taille de la clé est élevée, moins il y a de chance de casser l'algorithme cependant,  comme nous le verrons par la suite, avec les attaques par canal auxiliaire (section \ref{sec:att}), le problème peut vite être contourné. La description qui suit est basée sur l'algorithme AES-128 bits, c'est-à-dire que la clé de chiffrement a une taille de 128 bits.
 
-L'AES-128 a donc pour rôle de chiffrer des blocs de données de 128 bits avec une clé de 128 bits. Les données et la clé sont représentés par une matrice où chaque élément de la matrice correspond à un byte (un octet soit 8 bits). Étant donné que 128 bits correspond à 16 bytes, la matrice de données, au même titre que la matrice de clé, correspond à une matrice de 4 lignes et 4 colonnes (formant ainsi les 4x4 soit 16 bytes). Une matrice particulière (de taille 4x4) appelé STATE contient l'ensemble des résultats intermédiaires résultant des diverses opérations que subissent les données (depuis leur état initial). 
+L'AES-128 a donc pour rôle de chiffrer des blocs de données de 128 bits avec une clé de 128 bits. Les données et la clé sont représentés par une matrice où chaque élément de la matrice correspond à un byte (un octet, i.e 8 bits). Étant donné que 128 bits correspond à 16 bytes, la matrice de données, au même titre que la matrice de clé, correspond à une matrice de 4 lignes et 4 colonnes (formant ainsi les 4x4 soit 16 bytes). Une matrice particulière (de taille 4x4 également) appelé STATE contient l'ensemble des résultats intermédiaires résultant des diverses opérations que subissent les données (depuis leur état initial). 
 
-La figure \ref{fig:matrix} présente 3 matrices : la matrice de donnée (message clair initial de 128 bits), la matrice STATE (qui va contenir les résultats intermédiaires des données suite aux différentes opérations) et la matrice clé (clé de 128 bits).
+La figure \ref{fig:matrix} présente les 3 matrices qui viennent d'être citées : la matrice de donnée (message clair initial de 128 bits), la matrice STATE (qui va contenir les résultats intermédiaires des données suite aux différentes opérations) et la matrice clé (clé de 128 bits).
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.75]{image/matrix}
@@ -186,9 +186,9 @@ La figure \ref{fig:matrix} présente 3 matrices : la matrice de donnée (message
     \label{fig:matrix}
 \end{figure}
 
-\textit{Remarque} : En réalité, la matrice de données est directement confondue avec la matrice STATE. Autrement dit, les premiers éléments à être placés dans la matrice STATE représentent les bytes de données. En résumé, on n'utilise que deux matrices durant le fonctionnement de l'algorithme AES : la matrice STATE et la matrice clé.
+\textit{Remarque} : En pratique, la matrice de données est directement confondue avec la matrice STATE. Autrement dit, les premiers éléments à être placés dans la matrice STATE représentent les bytes de données. Ainsi, on n'utilise que deux matrices durant le fonctionnement de l'algorithme AES : la matrice STATE et la matrice clé.
 
-Par ailleurs, l'algorithme AES est caractérisé par une série de tours (\textit{rounds} en anglais) dépendant de la taille de la clé. Pour une clé dont la taille est 128 bits, on dénombre 10 tours (12 tours pour une clé de 192 bits et 14 tours pour une clé de 256 bits). Un tour est définit par 4 opérations appliquées succinctement sur la matrice STATE. Ces 4 opérations sont : \textit{AddRoundKey}, \textit{SubBytes}, \textit{ShiftRows}, \textit{MixColumns}. Elles sont appliquées à divers instants dans l'exécution de l'algorithme AES. La figure \ref{fig:AES} (page suivante) permet de visualiser l'ordre d'exécution chronologique de ces 4 opérations. 
+Par ailleurs, l'algorithme AES est caractérisé par une série de tours (\textit{rounds} en anglais) dépendant de la taille de la clé. Pour une clé dont la taille est 128 bits, on dénombre 10 tours (12 tours pour une clé de 192 bits et 14 tours pour une clé de 256 bits). Un tour est définit par 4 opérations appliquées succinctement sur la matrice STATE. Ces 4 opérations sont : \textit{AddRoundKey}, \textit{SubBytes}, \textit{ShiftRows} et \textit{MixColumns}. Elles sont appliquées à divers instants dans l'exécution de l'algorithme AES. La figure \ref{fig:AES} (page suivante) permet de visualiser l'ordre d'exécution chronologique de ces 4 opérations. 
 
 \newpage
 
@@ -204,7 +204,7 @@ La figure \ref{fig:AES} ci-dessous présente le principe de fonctionnement gén�
 
 \underline{\textbf{Fonctionnement :}} 
 
-Initialement, 2 matrices vont être utilisées : la matrice STATE, contenant les données claires, et la matrice clé, contenant la clé secrète initiale. En effet, une première opération (\textit{AddRoundKey}) est appliquée sur ces deux matrices. Plus précisément, cette opération réalise un XOR (symbole \oplus) entre chaque élément de la matrice STATE et chaque élément de la matrice clé. Le résultat est ré-écrit dans la matrice STATE. La figure \ref{fig:XOR} ci-dessous présente le principe de fonctionnement de cette première opération :
+Initialement, deux matrices vont être utilisées : la matrice STATE, contenant les données claires, et la matrice clé, contenant la clé secrète initiale. En effet, une première opération (\textit{AddRoundKey}) est appliquée sur ces deux matrices. Plus précisément, cette opération réalise un XOR (symbole \oplus) entre chaque élément de la matrice STATE et chaque élément de la matrice clé. Le résultat est ré-écrit dans la matrice STATE. La figure \ref{fig:XOR} ci-dessous présente le principe de fonctionnement de cette première opération :
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.65]{image/XOR}
@@ -258,6 +258,7 @@ La figure \ref{fig:colonne} ci-dessous présente le principe de fonctionnement d
 \newpage
 
 \subsection{Introduction aux \textit{attaques par canal auxiliaire}}
+\label{sec:att}
 \subsubsection{Types d'attaques}
 
 A la fin des années 1990, une nouvelle contrainte pour la conception de système informatique a vu le jour : la sécurité matérielle. Bien souvent, la sécurité d'un système informatique s'appuie plus sur les concepts software que hardware. Cependant, un nouveau mode d'attaque s'est développé. Il s'agit d'attaques physiques, c'est-à-dire d'attaques réalisées sur le circuit électronique lui-même. Deux grandes familles d'attaques sont recensées : 
@@ -265,7 +266,7 @@ A la fin des années 1990, une nouvelle contrainte pour la conception de systèm
 \item \textbf{\textit{Attaques actives}} : Une attaque est dite active lorsque les entrées et/ou l'environnement du device cryptographique sont manipulés par l'attaquant en vue de produire un comportement anormal du device. La clé secrète est révélée en exploitant les données issues de ce comportement anormal. Cela peut être une variation de la tension du device, une injection de glitch d'horloge, etc. On distingue deux types d'attaques actives : 
 \begin{itemize}
 \item Les attaques actives \textbf{\textit{irréversibles}} qui conduisent à la destruction du device cryptographique. Ce type d'attaque est souvent réalisé pour connaître la conception physique d'un device. \textit{Exemple} : Découpage laser d’un circuit intégré.
-\item Les attaques actives \textbf{\textit{pseudo-réversibles}} qui n’entrainent pas forcément la destruction du device cryptographique, mais qui sont souvent tout de même invasives puisqu’elles nécessitent la préparation du circuit (découpe partielle du boitier du circuit intégré par exemple). Un exemple typique de ce type d'attaque est ce qu'on appelle les attaques en fautes. Le principe est d'introduire volontairement des fautes dans le circuit (exemple : Injection de rayon laser, injection de glitch d’horloge, etc.). Les fautes ainsi créées peuvent entrainer le circuit dans des modes de fonctionnement conduisant à des erreurs. Ces erreurs peuvent ensuite être exploitées pour déterminer la clé.
+\item Les attaques actives \textbf{\textit{pseudo-réversibles}} qui n’entrainent pas forcément la destruction du device cryptographique, mais qui sont souvent tout de même invasives puisqu’elles nécessitent la préparation du circuit (découpe partielle du boitier du circuit intégré par exemple). Un exemple typique de ce type d'attaque est ce qu'on appelle les \textit{attaques en fautes}. Le principe est d'introduire volontairement des fautes dans le circuit (exemple : Injection de rayon laser, injection de glitch d’horloge, etc.). Les fautes ainsi créées peuvent entrainer le circuit dans des modes de fonctionnement conduisant à des erreurs. Ces erreurs peuvent ensuite être exploitées pour déterminer la clé.
 \end{itemize}
 \item \textbf{\textit{Attaques passives}} : Une attaque est dite passive lorsque l'attaquant exploite l'analyse, en fonctionnement normal, d'informations s'échappant d'un device cryptographique. Cela peut être l'analyse de la consommation de puissance, l'analyse temporelle, l'analyse par rayonnement électromagnétique, etc. C'est ce type d'attaque qui sera détaillé tout au long de ce stage et durant la réalisation de TFE. \\
 \end{itemize}
@@ -423,20 +424,72 @@ La figure \ref{fig:CPAconcrete} ci-dessous présente le principe de fonctionneme
 
 \subsection{Simulation d'un tracé et d'une attaque par canal auxiliaire sur MATLAB}
 
-Afin de bien assimiler les notions de \textit{side-channel attacks}, il m'a été demandé de réaliser une simulation sur MATLAB. La première phase de la simulation génère des traces sur base de l'algorithme AES. La seconde phase de la simulation a pour but de réaliser une attaque par canal auxiliaire. Plus précisément, cette attaque est réalisée sur un seul byte de données et se fait en sortie de la SBox. Ce type d'attaque est appelé CPA. Pour cette raison, seules les 2 premières étapes de l'algorithme AES sont nécessaires et seront donc simulées (\textit{AddRoundKey}, \textit{SubBytes}).
+Afin de bien assimiler une attaque par canal auxiliaire, il m'a été demandé de tester, par des simulation sur le logiciel MATLAB, les notions théoriques développées précédemment. Deux exercices différents ont ainsi été réalisés. 
+\begin{enumerate}
+\item \textbf{Simuler un point d'une trace et ensuite réaliser une attaque CPA sur ce point}. La première phase de la simulation a pour objectif de génèrer un point particulier d'une trace sur base de l'algorithme AES. La seconde phase de la simulation a pour but de réaliser une attaque par canal auxiliaire. Plus précisément, il s'agit d'une attaque CPA. Pour cette raison, seules les 2 premières étapes de l'algorithme AES sont nécessaires et seront donc simulées (\textit{AddRoundKey}, \textit{SubBytes}). À noter que, pour simplifier, cette attaque n'est réalisée que sur un seul byte de données et donc aussi un seul byte de clé.
+\item \textbf{Réaliser une attaque CPA à partir de traces réelles}. Dans ce cas de figure, on connait 4 paramètres : les messages clairs envoyés (plaintexts), les traces capturées à l'oscilloscope, le nombre de traces ainsi que le nombre d'échantillons. Ainsi, sur base des traces qui nous sont fournies, l'objectif est de tenter de retrouver la clé secrète en réalisant une attaque CPA. La différence majeure avec l'exercice précédent est que l'on étudie une trace selon l'ensemble de points (les échantillons) qui la caractérise. Cet ensemble de traces étant par ailleurs fournit sur base de mesures réalisées à l'oscilloscope. \\
+\end{enumerate}
 
-Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent les valeurs du coefficient de corrélation en fonction des valeurs de clé testées. En toute logique, le coefficient de corrélation est maximum (en valeur absolue) pour la clé réellement utilisée pour le chiffrement des données. Cependant, en fonction du nombres de traces prises, les valeurs du facteur de corrélation fluctuent beaucoup entre -1 et 1. Ainsi, au plus le nombre de traces est grand, au plus on peut facilement repérer la clé de chiffrement. En effet, si on observe les 3 graphes ci-dessous, on peut remarque que pour 10 traces, le coefficient de corrélation varie entre -0,83 et 0,8 ; pour 100 traces, le coefficient de corrélation varie entre -0,26 et 0,34 ; pour 1000 traces, le coefficient de corrélation varie entre -0,24 et 0,21.
-Il est, en effet, beaucoup plus facile visuellement de retrouver la clé lorsque le nombre de traces est élevé.
+\hspace{-0.5 cm}\textbf{\underline{Exercice 1 :}} La figure \ref{fig:simul1} ci-dessous représente le schéma-block de la première phase de l'exercice 1, c'est-à-dire qu'il présente les différentes étapes à réaliser pour simuler un point d'une trace.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.45]{image/simul1}
+    \caption{Schéma-block permettant de comprendre la simulation d'un point d'une trace.}
+    \label{fig:simul1} 
+\end{figure}
 
+\vspace{-0.4 cm}Sur le schéma-block, nous percevons deux entrées : la clé secrète (connue) utilisée pour le chiffrement ainsi que les N messages clairs devant être chiffrés. Nous réalisons ensuite les deux premières étapes de l'algorithme AES, à savoir les opérations \textit{AddRoundKey} (correspondant à un \textit{XOR}) et \textit{SubBytes} respectivement. Le résultat obtenu à la sortie de l'opération \textit{AddRoundKey} est noté \textit{$Y_1$} alors que le résultat obtenu à la sortie de l'opération \textit{SubBytes} est noté \textit{$Z_1$}. Ensuite, un modèle de puissance est utilisé afin d'imiter au mieux la consommation de puissance du circuit. Ce modèle de puissance est le \textit{poids de Hamming}. Le but est donc de compter le nombre de bits à '1' pour chaque octet de données \textit{$Z_1$}. Le résultat obtenu est noté \textit{$HW(Z_1)$}. Enfin, une fois que le poids de Hamming a été calculé, on ajoute du bruit afin de rendre la simulation plus réelle. En effet, en réalité, lors d'une prise de mesure, un élément parasite vient toujours s'additionner au signal que l'on étudie, il s'agit de bruit électronique.
+
+La figure \ref{fig:simul2} ci-dessous représente le schéma-block de la seconde phase de l'exercice 1. Il présente ainsi les différentes étapes à réaliser qui serviront \textit{in fine} à réaliser l'attaque CPA.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.45]{image/simul2}
+    \caption{Schéma-block permettant de comprendre la seconde phase de l'exercice 1.}
+    \label{fig:simul2} 
+\end{figure}
+
+\vspace{-0.4 cm}La figure \ref{fig:simul2} est quasi identique à la figure \ref{fig:simul1}. La seule différence concerne l'une des deux entrées. En effet, le but de l'attaque CPA est de retrouver la clé secrète utilisée dans la figure \ref{fig:simul1} pour chiffrer nos N messages. Ainsi, si on ne s'intéresse qu'à un seul octet de données et donc, par la même occasion, à un seul octet de clé, on va tester les 256 ($2^8$) valeurs de clé possibles. En notant respectivement $Y_2$ et $Z_2$ les résultats obtenus en sortie des opérations \textit{AddRoundKey} et \textit{SubBytes}, il ne nous restera plus qu'à calculer le poids de Hamming et à ajouter du bruit pour ensuite tenter de retrouver la clé secrète par calcul du coefficient de corrélation.
+
+
+Concrètement, sur MATLAB, tous ces calculs vont être opérés sur des matrices. La figure \ref{fig:simulCPA1} présente les différentes tailles de matrices utilisées pour réaliser la simulation.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{image/simulCPA1}
+    \caption{Schéma-block permettant de visualiser la taille des différentes matrices employées pour la simulation.}
+    \label{fig:simulCPA1} 
+\end{figure}
+
+\vspace{-0.3 cm}Comme vu à la section \ref{sec:AES}, l'algorithme AES implémente deux matrices en entrée : la matrice STATE et la matrice clé. Ces deux matrices contiennent 16 éléments correspondants aux 16 octet de données (pour la matrice STATE) et aux 16 octets de clé (pour la matrice clé). Autrement dit, ces deux matrices sont de tailler 4x4. Pour le test, nous allons simplifier le procédé. En effet, en pratique les opérations s'exécutent octect par octet. Dans notre cas, on ne va s'intéresser qu'au premier octet de la matrice STATE et donc, par la même occasion, au premier octet de la matrice clé. \textbf{\textit{Le but final de la simulation sera donc de retrouver le premier octet de la clé connaissant le premier octet des N messages clairs devant être chiffrés.}}
+Ainsi :
+\begin{itemize}
+\item La matrice STATE est représentée par une matrice de taille Nx1. N représente le nombre de messages clairs envoyés.
+\item La matrice clé, dans le cas de la génération d'un point de la trace, est représentée par une matrice de taille 1x1. Un seul octet de l'unique clé secrète est en effet utilisé.
+\item La matrice clé, dans le cas de la simulation par ordinateur, est représentée par une matrice de taille 1x256. En effet, le but étant de retrouver la valeur du premier octet de la clé secrète, il existe $2^8$ soit 256 valeurs possibles.
+\item $Y_1$ et $Y_2$ sont des matrices de taille Nx1 etNx256 respectivement. En effet, pour $Y_1$, une seul clé est utilisée alors que pour $Y_2$, 256 valeurs de clé sont utilisées.
+\item $Z_1$ et $Z_2$ sont des matrices de taille Nx1 et Nx256 respectivement. En effet, l'opération \textit{SubBytes} ne modifie pas la taille des données obtenues précédemment.
+\item Enfin, $HW(Z_1)$ et $HW(Z_2)$ sont des matrices de taille Nx1 et Nx256 pour les mêmes raisons que précédemment. \\
+\end{itemize}
+
+\vspace{-0.2 cm}Pour rappel, le but final de la simulation est de retrouver le premier octet de la clé connaissant un point de la trace (obtenu par simulation) et connaissant les N messages clairs envoyés. Cela sera rendu possible en calculant le coefficient de corrélation pour chaque valeur de clé possible. Le figure \ref{fig:CorrEx1} ci-dessous présente le calcul final qui permettra de retrouver le premier octet de la clé secrète.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.05\textwidth]{image/10}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 10 traces.}    \label{fig:10}
+    \includegraphics[scale=0.35]{image/CorrEx1}
+    \caption{Calcul du coefficient de corrélation entre un point d'une trace simulée et le poids de Hamming.}
+    \label{fig:CorrEx1} 
+\end{figure}
+
+\newpage
+Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent les résultats obtenus. Il s'agit de graphes indiquant les valeurs de coefficient de corrélation en fonction des 256 valeurs de clé testées. En toute logique, le coefficient de corrélation est maximum (en valeur absolue) pour la clé réellement utilisée pour le chiffrement des données. Cependant, on sait qu'en fonction du nombres de traces analysées, les valeurs du facteur de corrélation fluctuent dans un intervalle plus ou moins grand. Ainsi, au plus le nombre de traces sera grand, au plus l'intervalle sera petit et au plus ce sera facile de repérer la clé de chiffrement. En effet, si on observe les trois graphes ci-dessous, on peut remarquer que pour 10 traces, le coefficient de corrélation varie entre -0,83 et 0,8 ; pour 100 traces, le coefficient de corrélation varie entre -0,26 et 0,34 ; pour 1000 traces, le coefficient de corrélation varie entre -0,24 et 0,21. Pour chacun des trois graphes, on peut néanmoins distinguer la valeur de la clé secrète dont la valeur du coefficient de corrélation culmine à 0,98. La clé secrète utilisée vaut 200.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{image/10}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 10 traces.}    \label{fig:10}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.05\textwidth]{image/100}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 100 traces.}    \label{fig:100}
+    \includegraphics[width=0.95\textwidth]{image/100}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 100 traces.}    \label{fig:100}
 \end{figure}
 
 \begin{figure}[htbp]
@@ -444,6 +497,15 @@ Il est, en effet, beaucoup plus facile visuellement de retrouver la clé lorsque
     \includegraphics[width=1.05\textwidth]{image/1000}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 1000 traces.}    \label{fig:1000}
 \end{figure}
 
+\newpage
+
+\hspace{-0.5 cm}\textbf{\underline{Exercice 2 :}} La figure \ref{fig:simulEx2} ci-dessous représente le schéma-block de l'exercice 2. Il confronte ainsi les mesures obtenues à l'oscilloscope avec le poids de Hamming calculé à partir des messages clairs. Pour l'exemple ci-dessous, on opère toujours sur le premier octet de données et le premier octet de la clé.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.5]{image/simulEx2}
+    \caption{Schéma-block permettant de comprendre le principe de fonctionnement du deuxième exercice.}
+    \label{fig:simulEx2} 
+\end{figure}
 
 \newpage
 
