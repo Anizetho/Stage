@@ -39,6 +39,7 @@
 \usepackage{rotating}
 \usepackage{tikz}
 
+
 % Keep lasts
 \usepackage[french]{babel}
     \frenchsetup{SmallCapsFigTabCaptions=false}
@@ -370,47 +371,84 @@ Ainsi, la puissance totale consommée par une cellule vaut la somme de ces deux 
 Mais de façon plus précise, que vaut la puissance statique ? De même, comment pourrait-on exprimer la puissance dynamique ? 
 
 \underline{\textbf{\textit{Puissance statique :}}} \\ \\
-Les cellules CMOS sont toujours construites de façon à ce que les deux transistors complémentaires ne soient jamais passants au même moment. En effet, si on reprend l'exemple de l'inverseur CMOS, lorsque on met le signal d'entrée à \textit{GND} alors le transistor P1 est passant et N1 est bloqué. Par contre, lorsqu'on met le signal d'entrée à \textit{$V_{DD}$}, le transistor P1 devient bloqué tandis que le transistor N1 devient passant. De cette façon, il n'y a pas de connexion directe entre \textit{$V_{DD}$} et \textit{GND}. Par conséquent, seul un petit pic de courant (notée $I_{pic}$) passe au travers de la cellule logique. La valeur de ce pic de courant est très très faible, de l'ordre du \si{\pico A}. Ainsi, la puissance statique peut se calculer de la façon suivante : 
+Les cellules CMOS sont toujours construites de façon à ce que les deux transistors complémentaires ne soient jamais passants au même moment. En effet, si on reprend l'exemple de l'inverseur CMOS (\ref{sec:CMOS}), lorsqu'on met le signal d'entrée à \textit{GND} alors le transistor P1 est passant et N1 est bloqué. Par contre, lorsqu'on met le signal d'entrée à \textit{$V_{DD}$}, le transistor P1 devient bloqué tandis que le transistor N1 devient passant. Ainsi, en théorie, un seul transistor fonctionne et laisse passer du courant. Cependant, en pratique, lorsqu'un transistor MOS est bloqué, le courant qui le traverse n'est pas totalement nul. En effet, une très petite valeur de courant circule dans le canal du transistor. Ce courant, que l'on appelle \textit{courant de fuite} et que l'on note \textit{$I_{fuite}$}, produit une consommation de puissance \textbf{statique} pouvant être calculée de la façon suivante :
 \begin{gather}
 	P_{stat} = I_{pic} . V_{DD}
 \end{gather}
 
-Pour conclure, la consommation de puissance statique des circuits CMOS est typiquement très faible, nous pourrons donc la négliger (même si elle augmente significativement pour les circuits numériques modernes qui utilisent de très petites tailles de structure).
+\hspace{-0.5 cm}\fbox{
+\begin{minipage}{\textwidth}
+Ainsi, on peut conclure que la consommation de puissance statique des circuits CMOS correspond à la puissance qui est consommée par le circuit lorsqu'il n'y a pas de commutation dans une cellule. Cette puissance est typiquement très faible et sera, en pratique, négligée.
+\end{minipage}
+}
 
 \underline{\textbf{\textit{Puissance dynamique :}}} \\ \\
-La consommation de puissance dynamique apparait typiquement lors d'une commutation des transistors. Une commutation est le passage d'un état haut à un état bas ou d'un état bas à un état haut. En réalité, il existe 4 transitions d'état possibles. Ces 4 possibilités sont reprises dans le tableau \ref{fig:dyn} ci-dessous. On constate que pour chaque transition possible, il y a présence de puissance statique. Cependant, il n'y présence de puissance dynamique que dans le cas d'une commutation, c'est-à-dire dans les deux transitions suivantes : 0-1 et 1-0. 
+La consommation de puissance dynamique apparait typiquement lors d'une commutation des transistors. Une commutation est le passage d'un état haut à un état bas ou d'un état bas à un état haut. En réalité, il existe 4 transitions d'état possibles. Ces 4 possibilités sont reprises dans le tableau \ref{fig:dyn} ci-dessous. 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.5]{image/dyn}
-    \caption{Type de puissance consommée sur une cellule CMOS en fonction des 4 transitions d'état de sa sortie.}
+    \includegraphics[scale=0.4]{image/dyn}
+    \caption{Type de puissance consommée par une cellule CMOS en fonction des 4 transitions d'état de sa sortie.}
     \label{fig:dyn} 
 \end{figure}
 
-La consommation de puissance totale dépend du type de cellule et de la technologie employée. Cependant, en général, on constate que : 
+\hspace{-0.5 cm}On constate que pour chaque transition possible, il y a présence de puissance statique. Cependant, il n'y présence de puissance dynamique que dans le cas d'une commutation, c'est-à-dire dans les deux transitions suivantes : 0-1 et 1-0.  En toute logique, la consommation de puissance totale dépend du type de cellule et de la technologie employée. Cependant, en général, on constate que : 
 \begin{itemize}
-\item Lorsqu'il n'y a pas de commutation, la puissance totale reste plus ou moins identique.
-\item Lorsqu'il y a une commutation, la puissance totale augmente. Elle devient même supérieure à la puissance totale prise quand il n'y a pas de commutation.
+\item \textbf{\textit{Lorsqu'il n'y a pas de commutation}}(transitions 0-0 et 1-1), la puissance totale reste plus ou moins constante. En effet, la puissance dynamique étant nulle, on ne retrouve dans le calcul de puissance total que la puissance statique. Autrement dit : $P_{total}=P_{stat}$.
+\item \textbf{\textit{Lorsqu'il y a une commutation}} (transitions 0-1 et 1-0), la puissance totale augmente. En effet, en plus de la puissance statique vient s'ajouter la puissance dynamique. Autrement dit : $P_{total}=P_{stat}+P_{dyn}$.
 \end{itemize}
-Dans tous les cas, la consommation de puissance dynamique dépend des données qui sont manipulées.
-Ainsi, on peut conclure que la consommation de puissance dynamique des circuits CMOS constitue le facteur dominant dans la consommation de puissance totale.
 
-La consommation de puissance moyenne de chargement de la capacité ...
+\vspace{+0.5 cm}\hspace{-0.5 cm}\fbox{
+\begin{minipage}{\textwidth}
+Ainsi, on peut conclure que la consommation de puissance dynamique des circuits CMOS correspond à la puissance qui est consommée par le circuit lorsqu'il y a une commutation dans la cellule. Cette puissance constitue un facteur dominant dans la consommation de puissance totale. Il est donc primordial de pouvoir la calculer.
+\end{minipage}
+}
+
+Le calcul de la consommation de puissance dynamique se divise en deux parties. Pour mieux comprendre pourquoi, reprenons l'exemple de l'inverseur CMOS.
+
+\begin{enumerate}
+\vspace{-0.2 cm}\item \textbf{\textit{Puissance moyenne de chargement de la capacité}} : La figure \ref{fig:transitors} présente le schéma de l'inverseur CMOS lorsqu'il y a une commutation de sa sortie de l'état 0 à l'état 1 (partie gauche du shéma) et lorsqu'il y a une commutation de sa sortie de l'état 1 à l'état 0 (partie droite du schéma). Pour rappel, le fonctionnement de l'inverseur est le suivant : Lorsque le signal d'entrée est à 1 (ou 0), la transistor du dessous est passant (ou bloqué) alors que celui du haut est bloqué (ou passant), la sortie est donc à 0 (ou 1). Maintenant, il faut regarder dans le cas d'une commutation à la sortie de l'inverseur CMOS. Si il y a une commutation de l'état 0 à l'état 1 en sortie, l'inverseur dessine un courant provenant de l'alimentation ($V_{DD}$) et venant charger le condensateur $C_L$. Ce courant est appelé \textit{courant de charge}. À contrario, lors d'une commutation de l'état 1 à l'état 0, l'inverseur décharge le courant du condensateur $C_L$ vers la masse ($GND$). Ainsi, on constate bien que la commutation à la sortie de l'inverseur génère un courant qui produira une partie de la consommation de puissance dynamique. La consommation de puissance moyenne de chargement de la capacité durant un temps T peut être calculé de la façon suivante (\ref{eqn:charge}) :
 \begin{gather}
-	P_{chrg} = \frac{1}{T}\int_{0}^{T}p_{chrg}(t)dt=\alpha.f.C_{L}.V_{DD}^{2}
+	P_{chrg} = \frac{1}{T}\int_{0}^{T}p_{chrg}(t)dt=\alpha.f.C_{L}.V_{DD}^{2}\label{eqn:charge}
+\end{gather}
+Où : 
+\begin{itemize}
+\item $p_{chrg}(t)$ représente la consommation de puissance de chargement instantané de la cellule.
+\item $\alpha$ est le facteur d'activité. Il correspond au nombre moyen de transitions (0-1) en sortie de la cellule à chaque coup de clock.
+\item $f$ représente la fréquence de clock.
+\item $C_L$ représente la valeur de capacité du condensateur.
+\item $V_{DD}$ représente la tension positive de l'alimentation. \\
+\end{itemize}
+
+
+\vspace{-0.2 cm}\item \textbf{\textit{Puissance moyenne causée par les courants de court-circuit}} : En plus de la puissance moyenne de chargement de la capacité, il existe lors d'une commutation un bref instant, durant lequel les deux transistors conduisent le courant. Cela a pour effet de créer un court-circuit entre $V_{DD}$ en $GND$. Ce court-circuit va dissiper, le temps de son passage, de la puissance. La consommation de puissance moyenne qui est causée par les courants de court-circuit dans une cellule durant un temps T peut être calculé de la façon suivante (\ref{eqn:charge}) :
+\begin{gather}
+	P_{cc} = \frac{1}{T}\int_{0}^{T}p_{cc}(t)dt=\alpha.f.C_{L}.V_{DD}.I_{fuite}.t_{cc}
 \end{gather}
 
-La consommation de puissance moyenne qui est causée par les courants de court-circuit ...
-\begin{gather}
-	P_{cc} = \frac{1}{T}\int_{0}^{T}p_{cc}(t)dt=\alpha.f.C_{L}.V_{DD}.I_{pic}.t_{cc}
-\end{gather}
-
-
-\underline{\textbf{\textit{Puissance :}}} Comme vu à la section précédente (\ref{sec:puissance}), il faut analyser deux types de puissance. En ce qui concerne la puissance statique, celle-ci est négligeable lorsque l’entrée (E) est stable à l’état haut ou à l’état bas et en supposant que les fuites dans les transistors MOS sont maîtrisées.
-Par contre, en ce qui concerne la puissance dynamique consommée, celle-ci devient importante lors des commutations de l’entrée. Cette puissance dynamique dépend effectivement du type de commutation. Ainsi :
+Où : 
 \begin{itemize}
-\item Lors d’un passage de l’entrée (E) de l’état haut à l’état bas, l’alimentation fournit au travers du transistor P-MOS un courant de charge ($I_{CI}$) à la capacité de ligne ($C_l$) connectée à la sortie (S), plus un courant transitoire de court-circuit ($I_{CC}$) (lorsque les deux transistors sont simultanément en régime de fonctionnement linéaire).
-\item Lors d’un passage de l’entrée (E) de l’état bas à l’état haut, la capacité de ligne se décharge au travers du transistor N-MOS, l’alimentation fournit un courant transitoire de court circuit ($I_{CC}$).
+\item $p_{cc}(t)$ représente la puissance de court-circuit consommée par la cellule.
+\item $\alpha$ est le facteur d'activité. Il correspond au nombre moyen de transitions (0-1) en sortie de la cellule à chaque coup de clock.
+\item $f$ représente la fréquence de clock.
+\item $V_{DD}$ représente la tension positive de l'alimentation.
+\item $I_{fuite}$ représente le courant de fuite causé par le court-circuit.
+\item $t_{cc}$ représente le temps durant lequel le court-circuit existe.
 \end{itemize}
+
+\end{enumerate}
+
+
+
+\subsubsection{Composition des traces de puissance}
+Les attaques basées sur l'analyse de la consommation de puissance exploitent le fait que la consommation de puissance d'un device cryptographique dépend des \textbf{opérations qu'il exécute} et des \textbf{données qu'il manipule}. Ces deux informations vont ainsi permettre de définir différentes propriétés intéressantes. Pour chaque point analysé dans une trace de puissance, on notera :
+\begin{itemize}
+\item \textbf{$P_{op}$ la composante dépendante de l'opération exécutée} ;
+\item \textbf{$P_{data}$ la composante dépendante de la donnée manipulée}. \\
+\end{itemize}
+De plus, une troisième composante doit également être prise en compte. Cette composante fait référence au \textbf{bruit électrique} (aussi appelé bruit de fond) et sera notée \textbf{$P_{noise}$}. En effet, un signal est toujours affecté de petites fluctuations plus ou moins importantes. Ces fluctuations, dont les origines peuvent être diverses, sont appelées bruit électrique (ou simplement bruit). Le bruit est considéré comme un élément parasite aléatoire, c'est-à-dire qu'on ne sait pas le déterminer à l'avance. Au plus cette composante sera élevée et au plus l'analyse de la consommation de puissance sera difficile.
+
+Ainsi, chaque point d'une trace de puissance peut être modélisé comme la somme des 3 composantes définies ci-dessus, soit : 
+$P_{total} = P_{op} + P_{data} + P_{noise}$.
 
 \subsubsection{Modèles de puissance}
 
@@ -562,198 +600,6 @@ Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent
 \end{figure}
 
 \newpage
-
-\subsection{Notions de statistiques et de t-test}
-
-Les notions de statistiques et de t-test présentent un intérêt certain en ce qui concerne la compréhension et l'analyse dans les side-channel attacks. Pour rappel, les traces de puissance enregistrées par un oscilloscope représentent des vecteurs de valeurs en tension. Ces valeurs de tension mesurées sont proportionnelles à la consommation de puissance d'un device cryptographique. En effet, l'oscilloscope sera toujours connecté en un endroit approprié de mesure sur le circuit du device cryptographique. En fonction du paramètrage de l'oscilloscope, on sera en mesure de déterminer la longueur des traces de puissance ainsi que le nombre de points enregistrés par seconde : c'est là que vont intervenir les notions de modèles statistiques. Ces modèles statistiques décrivent les traces de puissance enregistrées à l'oscilloscope de manière à comprendre et analyser, de façon simple, les attaques réalisées.
-
-\subsubsection{Composition des traces de puissance}
-Les attaques basées sur l'analyse de la consommation de puissance exploitent le fait que la consommation de puissance d'un device cryptographique dépend des \textbf{opérations qu'il exécute} et des \textbf{données qu'il manipule}. Ces deux informations vont ainsi permettre de définir différentes propriétés intéressantes. Pour chaque point analysé dans une trace de puissance, on notera :
-\begin{itemize}
-\item \textbf{$P_{op}$ la composante dépendante de l'opération exécutée} ;
-\item \textbf{$P_{data}$ la composante dépendante de la donnée manipulée}. \\
-\end{itemize}
-De plus, une troisième composante doit également être prise en compte. Cette composante fait référence au \textbf{bruit électrique} (aussi appelé bruit de fond) et sera notée \textbf{$P_{noise}$}. En effet, un signal est toujours affecté de petites fluctuations plus ou moins importantes. Ces fluctuations, dont les origines peuvent être diverses, sont appelées bruit électrique (ou simplement bruit). Le bruit est considéré comme un élément parasite aléatoire, c'est-à-dire qu'on ne sait pas le déterminer à l'avance. Au plus cette composante sera élevée et au plus l'analyse de la consommation de puissance sera difficile.
-
-Ainsi, chaque point d'une trace de puissance peut être modélisé comme la somme des 3 composantes définies ci-dessus, soit : 
-$P_{total} = P_{op} + P_{data} + P_{noise}$.
-
-\subsubsection{Caractéristiques d'un seul point de la trace : Distribution normale}
-\label{subsubsection:distribution}
-
-Pour simplifier, on commence par définir les différentes composantes des traces de puissance en observant uniquement un seul point de la trace, c'est-à-dire en observant la consommation de puissance d'un device cryptographique à un instant fixé dans le temps. Le but étant de déterminer, à cet instant donné, la distribution de probabilité de $P_{noise}$, $P_{data}$ et $P_{op}$.
-En théorie, ces 3 composantes suivent une \textbf{distribution normale} (aussi appelée loi normale).
-
-En théorie des probabilités et en statistique, la \textbf{loi normale} est une loi de probabilité utilisée pour modéliser des phénomènes naturels issus de plusieurs événements aléatoires. Une densité de probabilité est une fonction qui permet de représenter une loi de probabilité : on parle aussi de fonction de densité. La fonction de densité caractérisant la loi normale dépend des deux paramètres que sont la moyenne (symbole \mu) et l'écart-type (symbole \sigma). L'équation \ref{eqn:distribution} présente son expression mathématique:
-
-\begin{gather}
-    f(x)=\frac{1}{(\sqrt{2.\pi }.\sigma))} .e^{-\frac{1}{2}.(\frac{x-\mu}{\sigma})^2}\label{eqn:distribution}
-\end{gather}
-
-
-Le graphe \ref{fig:distribution} ci-dessous présente la courbe de la densité de probabilité d'une distribution normale. Cette courbe est généralement appelée \textbf{courbe de Gauss} (ou courbe en cloche). Dans le cas particulier où la loi normale est de moyenne nulle et d'écart type unitaire, on parle de \textbf{\textit{loi normale centrée réduite}}.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=1.1]{image/distribution}    
-    \caption{Courbe de Gauss : fonction de densité d'une distribution normale.}    
-    \label{fig:distribution}
-\end{figure}
-
-Ainsi, chacune des 3 composantes $P_{noise}$, $P_{data}$ et $P_{op}$ suivent une loi normale de moyenne {\mu} et d'écart-type \sigma, notée : N(\mu, \sigma). Plus précisément : 
-\begin{itemize}
-\item La distribution du bruit électronique $P_{noise}$ suit une distribution normale : N(0, \sigma).
-\item La distribution de $P_{data}$ suit une distribution normale N(\mu, \sigma) si les données manipulées sont distribuées uniformément.
-\item La distribution de $P_{op}$  suit une distribution normale : N(\mu, \sigma).
-\end{itemize}
-
-\underline{\textit{Exemple}} : un exemple est réalisé pour démontrer que la distribution du bruit électronique suit bien une loi normale N(0, \sigma).
-
-\subsubsection{Caractéristiques de plusieurs points de la trace : Corrélation}
-Dans le section précédente \ref{subsubsection:distribution}, nous avons étudié les caractéristiques d'un seul point de la trace de puissance. On a alors du définir les notions de distribution normale. Dans cette section, on va définir des méthodes statistiques pour décrire les relations entre plusieurs points issus d'une trace de puissance. 
-
-En théorie, il existe une relation entre les différents points d'une trace de puissance : il s'agit d'une relation dite \textbf{ linéaire}. Une relation linéaire est ... 
-En pratique, cette relation peut être mesurée en calculant les coefficients de corrélation. Les coefficients de corrélation ont une valeurs comprises dans l'intervalle -1 à 1.
-
-\newpage
-
-\subsubsection{Définition Test-T}
-
-Le test-t de Student est un test statistique permettant de \textbf{\textit{comparer les moyennes de deux groupes d’échantillons}}. L'objectif est donc de savoir si les moyennes des deux groupes sont significativement différentes d'un point de vue statistique. Ce test de Student est dit paramétrique car, comme le montre la formule \ref{eqn:test_t} (ci-dessous), celle-ci dépend de la moyenne et de l’écart-type des observations à comparer. \\ \\
-Il existe plusieurs variantes du test-t de Student:
-\begin{itemize}
-\item Le test-t de Student pour échantillon unique.
-\item Le test-t de Student comparant deux groupes d’échantillons indépendants (on parle de test de Student non apparié).
-\item Le test-t de Student comparant deux groupes d’échantillons dépendants (on parle de test de Student apparié). \\
-\end{itemize}
-Dans notre étude, on ne développera que le cas du test-t de Student comparant \textbf{deux groupes d'échantillons indépendants} (non appariés). Ce cas n'est utilisé que lorsque les deux groupes d'échantillons à comparer n'ont aucun lien. Autrement dit, il s'agit de comparer deux moyennes observées. \\ \\
-Pour appliquer un test-t de student non-apparié, il faut s'assurer de deux conditions : 
-\begin{enumerate}
-\item La distribution des échantillons étudiés suit une distribution normale.
-\item  Les données des échantillons doivent être indépendantes. Autrement dit, les données d'un sujet ne sont pas censées avoir influencé les mesures faites sur un autre sujet. \\
-\end{enumerate}
-\textit{Exemple pratique} : Afin de bien comprendre la notion de test-t de Student non-apparié, voici un exemple concret.
-Nous avons un groupe de 100 individus (50 femmes et 50 hommes) pris au hasard au sein de la population. On se pose la question de savoir si le poids moyen des femmes est significativement différent de celui des hommes? \\
-Dans cet exemple on parle de test-t de Student non apparié car les deux groupes à comparer (hommes et femmes) n’ont aucun lien. Il s’agit donc de calculer le poids moyen des femmes et de celui des hommes et d’évaluer si la différence des ces moyennes est significative d'un point de vue statistique.
-
-En pratique, on ne va pas utiliser le test-t de Student non-apparié mais une variante : le test-t de Welch. La raison est simple : le test-t de student non-apparié ne peut être utilisé que dans le cas où \textit{les deux échantillons étudiés A et B suivent des lois normales de variances identiques}. Or, dans notre cas, pour l'analyse des traces de puissance, nos deux échantillons seront indépendants et ils n'auront donc pas la même variance. Pour ce faire, une variante du test-t de student non apparié existe, il s'agit du test-t de Welch.\\ \\
-\fbox{
-\begin{minipage}{1\textwidth}
-\textbf{Le \textit{test-t de Welch} est une adaptation du test-t de Student non apparié permettant de comparer les moyennes de deux groupes d’échantillons indépendants lorsque leurs variances sont différentes.} \\ \\
-Ce test permet de calculer la statistique de test \textit{t} par la formule (\ref{eqn:test_t}) suivante :
-\begin{gather}
-	t=\frac{\mu_{A} - \mu_{B}}{\sqrt{\frac{\sigma_{A}^2}{n_{A}} +\frac{\sigma_{B}^2}{n_{B}}}}\label{eqn:test_t}
-\end{gather}
-
-Où :
-\begin{itemize}
-\item A et B sont les deux échantillons différents à comparer.
-\item $\mu_{A}$ et $\mu_{B}$ représentent la moyenne de l'échantillon A et celle de l'échantillon B, respectivement.
-\item $n_{A}$ et $n_{B}$ représentent la taille de l'échantillon A et celle de l'échantillon B, respectivement.
-\item $\sigma_{A}$ et $\sigma_{B}$ représentent l’écart-type de l'échantillon A et celui de l'échantillon B, respectivement.
-\end{itemize}
-\end{minipage}
-}
-
-\vspace{+0.5 cm}\hspace{-0.5 cm}Une notion importante à définir pour réaliser un test-t de student de manière général (et donc pour un test-t de Welch dans un cas précis) est la notion de degré de liberté. \\ \\
-\fbox{
-\begin{minipage}{1\textwidth}
-\textbf{En statistique, le \textit{degré de liberté} désigne le nombre de valeurs aléatoires qui ne peuvent être déterminées ou fixées par une équation.} \\ \\
-Le calcul du degré de liberté (\textit{ddl}) du test-t de Welch se fait selon la formule (\ref{eqn:ddl}) suivante :
-\begin{gather}
-	ddl =\frac{(\frac{\sigma_{A}^2}{n_{A}} +\frac{\sigma_{B}^2}{n_{B}})^2}{\frac{\sigma_{A}^4}{n_{A}^2.(n_{A}-1)}+\frac{\sigma_{B}^4}{n_{B}^2.(n_{B}-1)}}\label{eqn:ddl}
-\end{gather}
-\end{minipage}
-}
-
-\vspace{+0.1 cm}\hspace{-0.5 cm}\textit{Exemple pratique} : Afin de bien comprendre la notion de degré de liberté, voici un exemple concret. 
-Si l'on cherche deux nombres dont la somme est 30, aucun des deux nombres ne peut être directement déterminé par la simple équation X + Y = 30. En effet, X peut être choisi arbitrairement, mais dans ce cas, il n'y a plus de choix pour Y. Ainsi, si on choisit  20 comme valeur pour X, Y vaut obligatoirement 10. Il y a donc deux variables aléatoires (X,Y), mais un seul degré de liberté.
-
-L'objectif final d'un test statistique consiste à rejeter ou non une certaine hypothèse de départ, appelée \textbf{\textit{hypothèse nulle}}. Dans le cas où cette hypothèse nulle est rejetée, une \textbf{\textit{hypothèse alternative}} doit être définie. Ainsi, on définit ces deux hypothèse contradictoires de la façon suivante : 
-\begin{itemize}
-\item \textbf{\textit{L'hypothèse nulle (notée $H_{0}$)}} : C'est l'hypothèse selon laquelle les paramètres de deux échantillons étudiés sont égaux. Dans le cas précis du test-t de Welch, ce paramètre est la \textbf{moyenne}. Ainsi, l'hypothèse nulle du test-t de Welch s'énonce : \textit{La moyenne de l'échantillon A est égale à la moyenne de l'échantillon B, soit $\mu_{A} = \mu_{B}$}.
-\item \textbf{\textit{L'hypothèse alternative (notée $H_{1}$)}} : C'est l'hypothèse selon laquelle les paramètres de deux échantillons étudiés sont inégaux ou sont inférieurs ou supérieurs l'un par rapport à l'autre. Dans ce cas, on distingue deux types de test : 
-\begin{itemize}
-\item \textbf{\textit{Test bilatéral}} : Un test bilatéral est associé à une hypothèse alternative selon laquelle le signe de la différence potentielle entre les deux paramètres comparés est inconnu. Par exemple, si nous comparons les moyennes de deux échantillons A et B. Avant de mettre en place l’expérimentation et de lancer le test, nous ne savons pas avec certitude si A serait inférieure à B ou le contraire dans la situation où une différence entre A et B serait mise en relief par le test. Ceci nous conduit à opter pour un test bilatéral, associé à l’hypothèse alternative suivante : $\mu_{A} \neq \mu_{B}$. 
-\item \textbf{\textit{Test unilatéral}} : Un test unilatéral est associé à une hypothèse alternative selon laquelle le signe de la différence potentielle entre les deux paramètres comparés est connu avant le lancement de l’expérimentation et du test. En reprenant l'exemple sur la comparaison des moyennes, l’hypothèse alternative associée à un test unilatéral peut être écrite de la sorte : $\mu_{A} < \mu_{B}$ ou $\mu_{A} > \mu_{B}$, en fonction du signe attendu de la différence. \\
-\end{itemize}
-\end{itemize}
-\fbox{
-\begin{minipage}{1\textwidth}
-Pour résumer ce qui vient d'être dit, lorsqu'on réalisera un test-t de Welch, on définira deux hypothèses : 
-\begin{description}
-\item $H_{0} : \mu_{A} = \mu_{B}$
-\item $H_{1} : \mu_{A} \neq \mu_{B}$ (test bilatéral)
-\end{description}
-\end{minipage}
-}
-
-\hspace{-0.5 cm}La figure \ref{fig:bi_uni} présente respectivement le principe de test unilatéral gauche, bilatéral et unilatéral droit.
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.9\textwidth]{image/bi_uni}    
-    \caption{Représentation graphique des principes de test unilatéral et bilatéral.}    
-    \label{fig:bi_uni}
-\end{figure}
-
-Aucun test statistique n'est fiable à 100\%. Les tests sont basés sur des probabilités. Par conséquent, il existe toujours un risque de tirer une mauvaise conclusion. En statistiques, lorsqu'on effectue un test d'hypothèse, on définit deux types d'erreurs : 
-\begin{itemize}
-\item \textbf{\textit{L'erreur de type 1 (notée \alpha)}} : Une erreur de type 1 est commise lorsque l'hypothèse nulle est vérifiée mais qu'on la rejette : on se trompe dans la conclusion du test. La probabilité de commettre ce type d'erreur est représentée par le symbole \alpha, qui désigne le \textit{seuil de signification} définit pour le test d'hypothèse. \\ 
-\textit{Exemple pratique} : Un niveau {\alpha} de 0,05 indique que nous sommes disposés à avoir 5\% de chances de rejeter l'hypothèse nulle à tort. Pour réduire ce risque, nous devons réduire la valeur de \alpha.
-\item \textbf{\textit{L'erreur de type 2 (notée \beta)}} : Une erreur de type 2 est commise lorsque l'hypothèse nulle est fausse mais que nous ne la rejetons pas. La probabilité de commettre ce type d'erreur est représenté par le symbole \beta. Nous ne nous intéresserons pas à ce type d'erreur dans la suite de ce rapport. \\
-\end{itemize}
-La tableau \ref{tab:erreurs} résume les deux types d'erreurs possibles.
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.4]{image/erreur}    
-    \caption{Tableau d'erreurs : erreur de type 1 (\alpha) et erreur de type 2 (\beta).}    
-    \label{tab:erreurs}
-\end{figure}
-
-Le \textbf{\textit{seuil de signification}}, noté \alpha, représente donc une valeur, comprise entre 0 et 1 (ou exprimée en pour-cent), qui va être comparée à la valeur-p (définie ci-après) en vue de tirer des conclusions sur un test réalisé. Plus précisément, ce seuil de signification va indiquer le pourcentage de probabilité de rejeter l'hypothèse nulle à tort. Autrement dit, il va indiquer le pourcentage de probabilité de s'être trompé dans la conclusion d'un test. La valeur de ce seuil de signification vaut en général 5\%, 2\% ou encore 1\%.
-
-La \textbf{\textit{valeur-p}} (\textit{p-value} en anglais, notée p) est une nombre utilisé en statistique et qui doit être défini afin de pouvoir tirer des conclusion sur l'analyse du test réalisé. Ce nombre représente la probabilité de faire une erreur de type 1, c'est-à-dire de rejeter $H_{0}$ alors qu'elle est vraie. En statistique, la procédure généralement employée consiste à comparer la valeur-p à un seuil préalablement défini (le seuil de signification). Si :
-\begin{itemize}
-\item $p < {\alpha}$, on rejette l'hypothèse nulle en faveur de l’hypothèse alternative, et le résultat du test est déclaré statistiquement \textit{significatif}.
-\item $p \geq {\alpha}$, on ne rejette pas l’hypothèse nulle, et on ne peut rien conclure quant aux hypothèses formulées. Le résultat du test est déclaré statistiquement \textit{non-significatif}.\\
-\end{itemize}
-\fbox{
-\begin{minipage}{1\textwidth}
-Pour résumer ce qui vient d'être dit, on doit comparer le seuil de signification (\alpha) avec la valeur-p (p) : 
-\begin{description}
-\item {\alpha} représente un seuil défini par nous-même avant l'exécution du test.
-\item p représente une valeur calculée, obtenue après l'exécution du test. 
-\item Si $p < {\alpha}$, on rejette $H_{0}$ en faveur de $H_{1}$, et le résultat du test est déclaré statistiquement \textit{significatif}.
-\item Si $p \geq {\alpha}$, on ne rejette pas $H_{0}$. Le résultat du test est déclaré statistiquement \textit{non-significatif}.
-\end{description}
-\end{minipage}
-}
-
-\vspace{+0.5cm}\hspace{-0.5 cm}\textit{Exemple pratique} :  On souhaite savoir si, dans une certaine population, les femmes fument autant que les hommes. On décide de faire un test avec un seuil de signification (\alpha) de 5\% (risque d'erreur accepté). Dans ce test, l'hypothèse nulle est : \textit{il n'y a pas de différence entre hommes et femmes dans la population}. Le premier objectif de ce test est de savoir s'il est raisonnable de rejeter cette hypothèse nulle.
-Si on note :
-\begin{itemize}
-\item f1 et f2, le nombre de fumeurs observés respectivement chez les hommes et les femmes dans l'échantillon.
-\item {\delta} = f1—f2, la différence entre les valeurs observées chez les hommes et les femmes dans l'échantillon.
-\item \alpha, le seuil de signification, c'est-à-dire le risque d'erreur accepté, fixé à l'avance (ici {\alpha} = 5\%).
-\item p, la probabilité, si l'hypothèse nulle était vraie (c'est-à-dire en l'absence de différence entre hommes et femmes dans la population) que le hasard seul explique une différence au moins aussi grande que la différence {\delta} effectivement observée (des formules permettent de calculer cette probabilité).
-\end{itemize}
-La règle de décision est la suivante :
-\begin{itemize}
-\item si p {\geq} {\alpha} : on admet que la différence observée peut provenir des fluctuations d'échantillonnage. On ne peut pas rejeter l'hypothèse nulle (absence de différence dans la population). On conclut donc que la différence n'est pas significative au seuil de 5\%.
-\item si p < {\alpha} : on n'admet plus que la différence observée peut être due au hasard. On rejette donc l'hypothèse nulle. On conclut que la différence est significative à 5\%. \\
-\end{itemize}
-\fbox{
-\begin{minipage}{1\textwidth}
-Ainsi, pour en revenir au test-t de Welch, après calcul de la valeur de \textit{t} et de la valeur du \textit{degré de liberté}, on va pouvoir conclure sur le test : \textit{l'hypothèse nulle doit-elle être acceptée ou rejetée ? Autrement dit, la différence des moyennes de chacun des deux échantillons est-elle significative ou non ?} \\ \\
-Pour répondre à cette question, il faut réaliser un test bilatéral. Connaissant le degré de liberté (ddl) et la valeur de la statistique de test \textit{t}, on peut déterminer la valeur-p à partir d'un tableau donné (voir annexe \ref{ann:table_t}) en vue de tirer une conclusion sur le test. En prenant un seuil de signification (\alpha) de 0,05, on conclut :
-\begin{description}
-\item Si $p < {\alpha}$, on rejette $H_{0}$ en faveur de $H_{1}$, et le résultat du test est déclaré statistiquement \textit{significatif}.
-\item Si $p \geq {\alpha}$, on ne rejette pas $H_{0}$. Le résultat du test est déclaré statistiquement \textit{non-significatif}.
-\end{description}
-\end{minipage}
-}
-
-
 
 \subsection{Contre-mesures}
 \label{contre-mesures}
