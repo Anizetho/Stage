@@ -604,6 +604,43 @@ Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent
 \subsection{Contre-mesures}
 \label{contre-mesures}
 
+Une fois que les attaques par analyse de la consommation de puissance ont été reconnues comme fonctionnelles, certaines entreprises (comme les banques par exemple) devaient trouver des moyens de contrer ces attaques afin d'assurer la confidentialité des données sensibles qu'elles manipulaient. Par conséquent, une série de contre-mesures a été développée à partir du début du deuxième millénaire. Cette section a pour objectif de présenter ces contre-mesures. 
+
+Pour rappel, les attaques par analyse de la consommation de puissance dépendent essentiellement de deux facteurs : les opérations exécutées et les données manipulées. Pour protéger un appareil cryptographique de telles attaques, il faut donc casser les relations entre la consommation de puissance et les données sensibles manipulées et entre la consommation de puissance et les opérations exécutées. Les contre-mesures existantes sont divisées en deux catégories différentes : 
+\begin{enumerate}
+\item \textbf{Les contre-mesures de type \textit{Hiding}} : Le principe des contre-mesures de type Hiding est de rendre la consommation de puissance du device cryptographique indépendante des opérations exécutées et des données manipulées. On va donc construire des devices cryptographiques dont la consommation de puissance n'est pas liée aux données manipulées.  
+\item \textbf{Les contre-mesures de type \textit{Masking}} : Le principe des contre-mesures de type Masking est de générer des valeurs intermédiaires aléatoires. Ainsi, on accepte que la consommation de puissance du device cryptographique dépende des valeurs intermédiaires manipulées. Cependant, on modifie (on masque) ces valeurs intermédiaires afin que les traces de puissance obtenues à l'oscilloscope soient faussées. On va donc construire des devices cryptographique dont la consommation de puissance est liée aux données manipulées mais ces données sont faussées (modifiées). \\
+\end{enumerate}
+
+\vspace{-0.2 cm}Il faut noter que les traces de puissance sont en pratique vulgairement caractérisées par des traces en tension. Ainsi, sur un graphe, une trace de puissance est représentée par une courbe indiquant la tension mesurée en fonction du temps. Les contre-mesures développées pour les attaques par analyse de la consommation de puissance ont donc pour objectif de modifier l'allure de ces traces de puissances afin de compliquer la tâche de l'attaquant. Il existe deux façons de modifier une trace de puissance : 
+\begin{itemize}
+\item \textbf{En modifiant \textit{l'amplitude} de la trace.}
+\item \textbf{En modifiant \textit{la position dans le temps} de la trace.}
+\end{itemize}
+
+
+
+\subsubsection{Contre-mesures \textit{Hiding}}
+Le principe des contre-mesures de type Hiding est de rendre la consommation de puissance du device cryptographique indépendante des opérations exécutées et des données manipulées. De cette façon, deux approches sont possibles :
+\begin{itemize}
+\item Faire en sorte que la consommation de puissance du device est \textbf{\textit{aléatoire}}. Cela signifie qu'à chaque coup de clock, une certaine quantité de puissance est consommée indépendamment des opérations exécutées et des données manipulées. Le but est donc de \textbf{modifier l'instant du leakage}. De cette façon, on cause un désalignement des traces, compliquant ainsi la tâche de l’attaquant. En effet, celui-ci doit, dans un premier temps, procéder à un alignement de ses traces pour pouvoir les analyser. Ce désalignement des traces peut s’obtenir de différentes façons : utiliser des horloges de fréquences différentes, utiliser des interruptions aléatoires lors de l’exécution du programme, changer l’ordre des instructions, etc.
+\item Faire en sorte que la consommation de puissance du device est \textbf{\textit{identique}}. Cela signifie qu'à chaque coup de clock, une quantité égale de puissance est consommée pour toutes les opérations exécutées et pour toutes les données manipulées. Le but est donc de \textbf{modifier l'intensité du leakage}. Un exemple simple pour modifier l’intensité du leakage est de modifier le rapport du signal au bruit (SNR : Signal Noise Ration en anglais). On va ajouter du bruit de façon indépendante à l'exécution de l'algorithme de chiffrement. Ainsi, en fonction de la modification du SNR, l'attaquant aura plus de mal à retrouver la clé de secrète.
+\end{itemize}
+
+
+
+\subsubsection{Contre-mesures \textit{Masking}}
+Le principe des contre-mesures de type masking est de générer des valeurs intermédiaires aléatoires. Autrement dit, lors de l'exécution d'un algorithme, différentes opérations sont exécutées conduisant à différentes valeurs intermédiaires calculées. Si aucune protection n'est mise en place, la consommation de puissance du device cryptographique dépendra des données intermédiaires qui sont manipulées par le device cryptographique (par l'algorithme pour être plus précis). L'attaquant peut alors potentiellement retrouver la clé secrète. Par contre, si chaque valeur intermédiaire est dissimulée sous une nouvelle valeur intermédiaire aléatoire appelée \textbf{masque}, alors l'attaquant pourra toujours analyser la consommation de puissance, les traces qu'il obtiendra fourniront des informations faussées (par le masque). En d'autres mots, ce type de contre-mesure accepte que la consommation de puissance du device cryptographique dépendante des données manipulées et des opérations exécutées. Cependant, on va modifier les valeurs intermédiaires de façon aléatoire pour que les traces mesurées à l'oscilloscope n'aient plus de sens. Un avantage de cette approche est qu'elle peut être implémentée au niveau de l'algorithme, c'est-à-dire sans changer les caractéristiques de consommation de puissance du device cryptographique (ce qui est plus complexe) comme c'est le cas pour le contre-mesures Hiding.
+
+
+
+"la consommation de puissance d'un device cryptographique est indépendant des opération exécutées et des données manipulées SSI une des deux propriétés suivantes est observées :
+\begin{itemize}
+\item Le device cryptographique consomme aléatoirement de la puissance à chaque coup de clock.
+\item Le device cryptographique consomme équitablement de la puissance à chaque coup de clock.
+\end{itemize}
+
+
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%% Partie 4 - Conclusion %%%%%%%%%%%%%%%
