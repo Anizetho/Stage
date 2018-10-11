@@ -604,7 +604,7 @@ Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent
 \subsection{Contre-mesures}
 \label{sec:contre-mesures}
 
-Une fois que les attaques par analyse de la consommation de puissance ont été reconnues comme fonctionnelles, certaines entreprises (comme les banques par exemple) devaient trouver des moyens de contrer ces attaques afin d'assurer la confidentialité des données sensibles qu'elles manipulaient. Par conséquent, une série de contre-mesures a été développée à partir du début du deuxième millénaire. Cette section a pour objectif de présenter ces contre-mesures. 
+\vspace{-0.2 cm}Une fois que les attaques par analyse de la consommation de puissance ont été reconnues comme fonctionnelles, certaines entreprises (comme les banques par exemple) devaient trouver des moyens de contrer ces attaques afin d'assurer la confidentialité des données sensibles qu'elles manipulaient. Par conséquent, une série de contre-mesures a été développée à partir du début du deuxième millénaire. Cette section a pour objectif de présenter ces contre-mesures. 
 
 Pour rappel, les attaques par analyse de la consommation de puissance étudient des traces dont l'allure dépend essentiellement de deux facteurs : les opérations exécutées et les données manipulées. Pour protéger un appareil cryptographique de telles attaques, il faut donc casser les relations entre la consommation de puissance et les données sensibles manipulées et entre la consommation de puissance et les opérations exécutées. Les contre-mesures existantes sont divisées en deux catégories différentes : 
 \begin{enumerate}
@@ -614,11 +614,11 @@ Pour rappel, les attaques par analyse de la consommation de puissance étudient 
 
 \vspace{-0.2 cm}Il faut noter que les traces de puissance sont en pratique vulgairement caractérisées par des traces en tension. Ainsi, sur un graphe, une trace de puissance est représentée par une courbe indiquant la tension mesurée en fonction du temps. Les contre-mesures développées pour les attaques par analyse de la consommation de puissance ont donc pour objectif de modifier l'allure de ces traces de puissances afin de compliquer la tâche de l'attaquant. Il existe deux façons de modifier une trace de puissance : 
 \begin{itemize}
-\item \textbf{En agissant sur \textit{l'amplitude} de la trace.}
-\item \textbf{En agissant sur \textit{la position dans le temps} de la trace.} \\
+\item \textbf{En agissant sur \textit{l'amplitude} de la trace}, on parlera \textbf{\textit{d'intensité du leakage.}}
+\item \textbf{En agissant sur \textit{la position dans le temps} de la trace}, on parlera \textbf{\textit{d'instant du leakage.}} \\
 \end{itemize}
 
-Avant de détailler chacune des deux catégories de contre-mesures, rappelons la définition de rapport signal à bruit (SNR : \textit{Signal to Noise Ratio} en anglais). Le rapport signal à bruit ou SNR est un indicateur de performance. Plus précisément, son objectif est de mesurer la qualité de la transmission d'une information. Sa formulation mathématique est reprise à l'équation (\ref{eqn:SNR}). Elle peut également être exprimée en \textit{dB} (\ref{eqn:SNRdb}) : \\
+\vspace{-0.2 cm}Avant de détailler chacune des deux catégories de contre-mesures, rappelons la définition de rapport signal à bruit (SNR : \textit{Signal to Noise Ratio} en anglais). Le rapport signal à bruit ou SNR est un indicateur de performance. Plus précisément, son objectif est de mesurer la qualité de la transmission d'une information. Sa formulation mathématique est reprise à l'équation (\ref{eqn:SNR}). Elle peut également être exprimée en \textit{dB} (\ref{eqn:SNRdb}) : \\
 
 \begin{minipage}{6cm}
 \begin{equation}SNR = \frac{P_{signal}}{P_{noise}} \label{eqn:SNR} \end{equation} 
@@ -635,7 +635,7 @@ Avant de détailler chacune des deux catégories de contre-mesures, rappelons la
 \end{itemize}
 
 \vspace{-0.2 cm}Ainsi, le calcul du SNR permet de savoir si le signal de transmission que l'on étudie est fortement bruité ou non. Selon l'équation (\ref{eqn:SNR}), cet indicateur SNR est d'autant plus élevé que la puissance du signal est élevée ou est d'autant plus élevé que la puissance du bruit est faible. Dans une transmission idéale, on désirera toujours un SNR très grand, signifiant que la trace obtenue représente majoritairement le signal et minoritairment le bruit. \\
-Ainsi, si le SNR d'une opération est élevé, cela signifie que la puissance du signal est plus élevée que la puissance du bruit. Autrement dit, il est plus facile de détecter des fuites d'information dans le cas d'un SNR élevé. Idéalement, il faut donc que le SNR soit proche de 0. De cette façon, le bruit recouvre tellement le signal qu'il est impossible de détecter du leakage. En pratique, cela peut être réalisé en diminuant la variance du signal vers 0 ou en augmentant la variance du bruit vers l'infini.
+Pour une trace de puissance, si le SNR d'une opération est élevé, cela signifie que la puissance du signal est plus élevée que la puissance du bruit, c'est-à-dire qu'il est plus facile de détecter des fuites d'information. Idéalement, il faut donc que le SNR soit proche de 0. De cette façon, le bruit recouvre tellement le signal qu'il est impossible de détecter du leakage. En pratique, cela peut être réalisé en diminuant la variance du signal vers 0 ou en augmentant la variance du bruit vers l'infini.
 \begin{itemize}
 \item Pour réduire la variance du signal, la consommation de puissance a besoin d'être exactement égale pour toutes les opérations exécutées et données manipulées. En pratique, cela se traduira par de petites valeurs de variances pour le signal.
 \item Pour augmenter la variance du bruit, l'amplitude du bruit a besoin d'être augmentée de façon significative laissant croire à l'attaquant l'existence de commutations sur les cellules du device. En pratique, cela se traduira par de grandes valeurs de variances pour le bruit.
@@ -651,24 +651,28 @@ Comme précisé ci-avant, le principe des contre-mesures de type Hiding est de r
 \begin{enumerate}
 \item Faire en sorte que la consommation de puissance du device cryptographique soit \textbf{\textit{aléatoire}}. Cela signifie qu'à chaque coup de clock, une certaine quantité aléatoire de puissance est consommée. Autrement dit, à chaque coup de clock, une certaine quantité de puissance est consommée mais cette puissance est consommée indépendamment des opérations définies par l'algorithme et des données manipulées par celui-ci. Le but est donc de \textbf{modifier l'instant du leakage} ou bien de \textbf{modifier l'intensité du leakage} dans la trace de puissance.
 \begin{itemize}
-\item La modification de l'instant du leakage peut être réalisée par un désalignement des traces. Cela va ainsi compliquer la tâche de l'attaquant. En effet, celui-ci doit, dans un premier temps, procéder à l'alignement de ses traces pour pouvoir les analyser correctement. Si celles-ci ne sont pas alignées, il ne pourra rien tirer de concret. Ce désalignement des traces peut s’obtenir de différentes façons : utiliser des horloges de fréquences différentes, utiliser des interruptions aléatoires lors de l’exécution du programme, changer l’ordre des instructions, etc.
-\item La modification de l'intensité du leakage peut être réalisée par une modification du rapport signal à bruit. Dans une trace de puissance, si le SNR d'une opération est élevé, cela signifie que la puissance du signal est plus élevée que la puissance du bruit. Autrement dit, il est plus facile de détecter des fuites d'information dans le cas d'un SNR élevé. Idéalement, il faut donc que le SNR soit proche de 0. De cette façon, le bruit recouvre tellement le signal qu'il est impossible de détecter du leakage. Pour ce faire, on va augmenter l'intensité du bruit. En effet, en ajoutant du bruit de façon indépendante à l'exécution de l'algorithme, on va augmenter le SNR, ce qui va avoir pour conséquence de diminuer le leakage d'une opération : L'attaquant aura plus dès lors de mal à retrouver la clé de secrète. 
+\item \textit{La modification de l'instant du leakage peut être réalisée par un désalignement des traces}. Cela va ainsi compliquer la tâche de l'attaquant. En effet, celui-ci doit, dans un premier temps, procéder à l'alignement de ses traces pour pouvoir les analyser correctement. Si celles-ci ne sont pas alignées, il ne pourra rien en tirer de concret. Ce désalignement des traces peut s’obtenir de différentes façons : utiliser des horloges de fréquences différentes, utiliser des interruptions aléatoires lors de l’exécution du programme, changer l’ordre des instructions, etc.
+\item \textit{La modification de l'intensité du leakage peut être réalisée par une modification du rapport signal à bruit}. Nous avons vu que pour modifier le SNR, il suffisait d'augmenter le bruit ou de diminuer le signal. Dans ce cas-ci, nous allons augmenter la variance du bruit. En effet, en ajoutant du bruit de façon indépendante à l'exécution de l'algorithme, on va diminuer le SNR, ce qui va avoir pour conséquence de diminuer le leakage d'une opération : L'attaquant aura dès lors plus de mal à retrouver la clé secrète. 
 \end{itemize}
 
-\item Faire en sorte que la consommation de puissance du device cryptographique soit \textbf{\textit{identique}}. Cela signifie qu'à chaque coup de clock, une quantité égale de puissance est consommée pour toutes les opérations exécutées et pour toutes les données manipulées. Le but est donc de \textbf{modifier l'intensité du leakage}. Autrement dit, on souhaite uniformiser l'amplitude de la trace. Pour ce faire, on va à nouveau utiliser la définition du SNR. Comme dit précédemment, l'idéal serait d'avoir un SNR proche de 0. Si on n'augmente pas l'intensité du bruit, la deuxième approche consiste à diminuer l'intensité du signal. En pratique, il existe deux possibilités pour diminuer le signal :
+\item Faire en sorte que la consommation de puissance du device cryptographique soit \textbf{\textit{identique}}. Cela signifie qu'à chaque coup de clock, une quantité égale de puissance est consommée pour toutes les opérations exécutées et pour toutes les données manipulées. Le but est donc de \textbf{modifier l'intensité du leakage}. Autrement dit, on souhaite uniformiser l'amplitude de la trace. Pour ce faire, on va à nouveau modifier le SNR. Comme dit précédemment, l'idéal serait d'avoir un SNR proche de 0. Si on n'augmente pas la variance du bruit, la deuxième approche consiste à diminuer la variance du signal. En pratique, il existe deux possibilités pour diminuer la variance du signal :
 \begin{itemize}
-\item La première approche concerne la cellule logique en elle-même. On sait (section \ref{sec:power}) que la consommation de puissance totale d'un device cryptographique est la somme des puissances consommées par chaque cellule. Ainsi, si chaque cellule consomme une puissance constante, la puissance totale est constante. Il faut donc construire des cellules qui consomment de faibles quantités de puissance constantes.
+\item La première approche concerne la cellule logique CMOS en elle-même. On sait (section \ref{sec:puissance}) que la consommation de puissance totale d'un device cryptographique est la somme des puissances consommées par chaque cellule. Ainsi, si chaque cellule consomme une puissance constante, la puissance totale est constante. Il faut donc construire des cellules qui consomment des quantités de puissance constantes.
 \item La seconde approche est plus complexe. Il s'agit de filtrer la puissance consommée par le device cryptographique. Le but est alors de supprimer, via ce filtre, toutes les composantes de la trace de puissance qui dépendent des données manipulées et des opérations exécutées. 
 \end{itemize}
 
 \end{enumerate}
 
-Ainsi, une contre-mesure n'est efficace que si la consommation de puissance du device cryptographique est exactement la même pour toutes les opérations exécutées et pour toutes les données manipulées. De cette façon, l'attaquant ne détecte plus de leakage.
+\hspace{-0.5 cm}La figure \ref{fig:hiding} ci-dessous résume les trois possibilités de contre-mesures de type Hiding, à savoir : 
+\begin{enumerate}
+\item La consommation de puissance du device cryptographique est rendue aléatoire en changeant aléatoirement la séquence des opérations exécutées. Cette approche conduit à un désalignement des traces : seul l'instant du leakage est affecté. 
+\item La consommation de puissance du device cryptographique est rendue aléatoire en réalisant des opérations de commutation en parallèle de l'exécution de l'opération actuelle de l'algoritme. Cela conduit à une augmentation de la variance du bruit : seul d'intensité du leakage est affectée.
+\item  La consommation de puissance du device cryptographique est égale durant chaque coup de clock. Cela signifie que la variance du signal est diminuée : seul l'intensité du leakage est affectée.
+\end{enumerate}
 
-La figure \ref{fig:hiding} ci-dessous résume les deux possibilités de contre-mesure de type Hiding en fonction des deux approches définies.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.44]{image/hiding}
+    \includegraphics[scale=0.4]{image/hiding}
     \caption{Les contre-mesures de type hiding sont utilisées pour rendre aléatoire ou égale la consommation de puissance du device cryptographique.}
     \label{fig:hiding} 
 \end{figure}
