@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{Horowitz:2015aa}
 J.M. Dutertre.
@@ -55,5 +55,17 @@ Renaud Dumont.
 \newblock {\em Cryptographie et Sécurité informatique INFO0045-2}.
 \newblock \url{http://www.montefiore.ulg.ac.be/~dumont/pdf/crypto09-10.pdf},
   2010.
+
+\bibitem{test}
+Thales Group.
+\newblock {\em Historique}.
+\newblock \url{https://www.thalesgroup.com/fr/global/groupe/historique}, 2018.
+
+\bibitem{wiki}
+Thales.
+\newblock {\em Wikipedia}.
+\newblock
+  \url{http://fr.wikipedia.org/w/index.php?title=Thales&action=history},
+  Octobre 2018.
 
 \end{thebibliography}
