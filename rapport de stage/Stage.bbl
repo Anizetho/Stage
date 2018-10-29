@@ -1,0 +1,59 @@
+\begin{thebibliography}{1}
+
+\bibitem{Horowitz:2015aa}
+J.M. Dutertre.
+\newblock {\em Synthèse AES 128}.
+\newblock \url{https://www.emse.fr/~dutertre/documents/synth_AES128.pdf}, 2011.
+
+\bibitem{gray1998quantization}
+Lilian BOSSUET.
+\newblock {\em Approche didactique pour l’enseignement de l’attaque DPA
+  ciblant l’algorithme de chiffrement AES}.
+\newblock EDP Sciences, 25 Octobre 2012.
+
+\bibitem{irf2017mosfet}
+Stephane~Fernandes Medeiros.
+\newblock {\em Attaques par canaux auxiliaires : nouvelles attaques,
+  contre-mesures et mises en oeuvre}.
+\newblock
+  \url{https://dipot.ulb.ac.be/dspace/bitstream/.../12a25345-b54f-4169-9c32-e7d2cce5af65.txt},
+  2017.
+
+\bibitem{cryptoeprint:2015:536}
+François Durvaux and François-Xavier Standaert.
+\newblock From improved leakage detection to the detection of points of
+  interests in leakage traces.
+\newblock Cryptology ePrint Archive, Report 2015/536, 2015.
+\newblock \url{https://eprint.iacr.org/2015/536}.
+
+\bibitem{cryptoeprint}
+Francois Durvaux Francois-Xavier~Standaert A.~Adam~Ding, Liwei~Zhang and Yunsi
+  Fei.
+\newblock Towards sound and optimal leakage detection procedure.
+\newblock In the proceedings of CARDIS 2017, Lecture Notes in Computer Science,
+  November 2017.
+\newblock \url{https://perso.uclouvain.be/fstandae/PUBLIS/196.pdf}.
+
+\bibitem{tel}
+Abdelaziz Elaabid.
+\newblock {\em Attaques par canaux cachés: expérimentations avancées sur
+  les attaques template}.
+\newblock \url{https://tel.archives-ouvertes.fr/tel-00937136/document}, 2014.
+
+\bibitem{hamming}
+{\em 6.1.2 Distance de Hamming et poids d'un mot de code}.
+\newblock \url{https://icwww.epfl.ch/~chappeli/it/courseFR/I2subsec_Hdist.php}.
+
+\bibitem{bruit}
+Jean-Philippe Muller.
+\newblock {\em Le bruit dans les systèmes électroniques}.
+\newblock \url{http://www.ta-formation.com/acrobat-cours/bruit.pdf}, Juillet
+  2002.
+
+\bibitem{crypto}
+Renaud Dumont.
+\newblock {\em Cryptographie et Sécurité informatique INFO0045-2}.
+\newblock \url{http://www.montefiore.ulg.ac.be/~dumont/pdf/crypto09-10.pdf},
+  2010.
+
+\end{thebibliography}
