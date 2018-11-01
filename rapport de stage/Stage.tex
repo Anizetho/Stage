@@ -273,13 +273,13 @@ La figure \ref{fig:colonne} ci-dessous présente le principe de fonctionnement d
     \label{fig:colonnebis}
 \end{figure}
 
-\item[4. AddRoundKey] : La gestion des clés se fait au travers des fonctions \textit{AddRoundKey} et \textit{KeySchedule}. Comme précisé précédemment dans le fonctionnement initial, l'opération \textit{AddRoundKey} réalise un simple XOR entre la matrice STATE et la matrice de clé. Le résultat de ce XOR est placé dans la nouvelle matrice STATE.\\ 
-On sait que la matrice STATE est modifiée après chaque opération exécutée. Ce qu'on ne sait pas encore, c'est que la matrice clé est également modifiée à chaque round afin d'éviter d'utiliser toujours la même valeur de clé. Cela permet ainsi de complexifier le chiffrement des données. L'opération qui modifie la matrice de clé initiale en une nouvelle matrice de clé est appelée \textbf{\textit{KeySchedule}}. Cette opération génère une nouvelle clé sur base de la clé précédemment employée. Ainsi, pour générer la première nouvelle clé, l'opération \textit{KeySchedule} emploiera la clé initialement donnée. Étant donné que pour l'AES-128, nous avons un total de dix rounds à exécuter, cela signifie que l'opération \textit{KeySchedule} s'exécute dix fois afin de générer dix nouvelles clés de 128 bits. En rajoutant la clé initiale, nous aurons alors onze clés de chiffrement différentes permettant d'exécuter les onze opérations \textit{AddRoundKey} présentes dans l'algorithme AES-128. Ainsi, comme présenté à l'annexe \ref{ann:AES}, l'opération \textit{KeySchedule} s'exécute en premier lieu dans le code afin de générer dix nouvelles clés. En comptant la clé initialement donnée, il y a donc onze clés. Chacune de ces onze clés sera utilisée lors de l'appel de la fonction \textit{AddRoundKey}.\\ 
+\item[4. AddRoundKey] : La gestion des clés se fait au travers des fonctions \textit{AddRoundKey} et \textit{KeySchedule}. Comme précisé précédemment dans le fonctionnement initial, l'opération \textit{AddRoundKey} réalise un XOR entre la matrice STATE et la matrice de clé. Le résultat de ce XOR est placé dans la nouvelle matrice STATE.\\ 
+On sait que la matrice STATE est modifiée après chaque opération exécutée. Ce qu'on ne sait pas encore, c'est que la matrice clé est également modifiée à chaque round afin d'éviter d'utiliser toujours la même valeur de clé. Cela permet ainsi de complexifier le chiffrement des données. L'opération qui modifie la matrice de clé initiale en une nouvelle matrice de clé est appelée \textbf{\textit{KeySchedule}}. Cette opération génère une nouvelle clé sur base de la clé précédemment employée. Ainsi, pour générer la première nouvelle clé, l'opération \textit{KeySchedule} emploiera la clé initialement donnée. Étant donné que pour l'AES-128, nous avons un total de dix rounds à exécuter, cela signifie que l'opération \textit{KeySchedule} s'exécute dix fois afin de générer dix nouvelles clés de 128 bits. En rajoutant la clé initiale, nous avons alors onze clés de chiffrement différentes permettant d'exécuter les onze opérations \textit{AddRoundKey} présentes dans l'algorithme AES-128. Ainsi, comme présenté à l'annexe \ref{ann:AES}, l'opération \textit{KeySchedule} s'exécute en premier lieu dans le code afin de générer dix nouvelles clés. En comptant la clé initialement donnée, il y a donc onze clés. Chacune de ces onze clés sera utilisée lors de l'appel de la fonction \textit{AddRoundKey}.\\ 
 
 La figure \ref{fig:XOR} reste inchangée pour décrire le principe de fonctionnement de l'opération \textit{AddRoundKey}. Nous rappelons toutefois que la matrice clé est bien modifiée lors de chaque exécution de cette opération. \\
 L'annexe \ref{ann:KeySchedule} permet quant à elle de comprendre le principe de fonctionnement de l'opération \textit{KeySchedule}, utilisée afin de générer les nouvelles clés. Plus précisément, cette annexe présente un exemple pour générer la première nouvelle clé. \\ \\
 Le fonctionnement est le suivant : l'opération \textit{KeySchedule} s'exécute colonne par colonne (sur la matrice clé de taille 4x4). On va d'abord générer la première colonne de la nouvelle clé, ensuite on générera les colonnes 2, 3 et 4. C'est la première colonne qui est la plus compliquée à générer. Les 3 autres colonnes réalisent simplement un XOR pour générer la nouvelle colonne.
-Ainsi, pour obtenir la 1ère colonne de la nouvelle clé (soit les quatre 1ers bytes), on va prendre 3 vecteurs colonnes (taille 4x1) : 
+Ainsi, pour obtenir la 1ère colonne de la nouvelle clé (soit les quatre 1ers bytes), on va prendre 3 vecteurs colonnes (taille 4x1), à savoir : 
 \begin{enumerate}
 \item Prendre la 4ème colonne de la clé initiale.
 \begin{enumerate}
@@ -289,11 +289,7 @@ Ainsi, pour obtenir la 1ère colonne de la nouvelle clé (soit les quatre 1ers b
 \item Prendre la 1ère colonne de la clé initiale.
 \item Prendre la 1ère colonne de la matrice RCON.
 \end{enumerate}
-Une fois ces trois vecteurs colonnes obtenus, on réaliser un XOR entre eux. Le résultat de ce XOR représente la 1ère colonne de la nouvelle matrice clé. Une fois ce
-
-
-
-
+Une fois ces trois vecteurs colonnes obtenus, on réalise un XOR entre eux. Le résultat de ce XOR représente la 1ère colonne de la nouvelle matrice clé. Pour les colonnes 2, 3 et 4, le principe est le suivant : la colonne \textit{i} de la nouvelle clé est obtenue en réalisant un XOR entre la colonne \textit{i} de l'ancienne clé et la colonne \textit{i-1} de la nouvelle clé (avec $i$ {\epsilon} \{2 ; 4\}). L'annexe \ref{ann:KeySchedule} permet de comprendre plus facilement ce qui vient d'être énoncé. 
 
 \end{description}
 
@@ -304,7 +300,7 @@ Une fois ces trois vecteurs colonnes obtenus, on réaliser un XOR entre eux. Le 
 \label{sec:att}
 \subsubsection{Types d'attaques}
 
-A la fin des années 1990, une nouvelle contrainte pour la conception de système informatique a vu le jour : la sécurité matérielle. Bien souvent, la sécurité d'un système informatique s'appuie plus sur les concepts software que hardware. Cependant, un nouveau mode d'attaque s'est développé. Il s'agit d'attaques physiques, c'est-à-dire d'attaques réalisées sur le circuit électronique lui-même. Deux grandes familles d'attaques sont recensées : 
+\vspace{-0.1 cm}A la fin des années 1990, une nouvelle contrainte pour la conception de système informatique a vu le jour : la sécurité matérielle. Bien souvent, la sécurité d'un système informatique s'appuie plus sur les concepts software que hardware. Cependant, un nouveau mode d'attaque s'est développé. Il s'agit d'attaques physiques, c'est-à-dire d'attaques réalisées sur le circuit électronique lui-même. En général, le but d'une attaque est de retrouver la clé de chiffrement utilisée par l'algorithme afin, justement, de déchiffrer des données sensibles. Deux grandes familles d'attaques sont recensées : 
 \begin{itemize}
 \item \textbf{\textit{Attaques actives}} : Une attaque est dite active lorsque les entrées et/ou l'environnement du device cryptographique sont manipulés par l'attaquant en vue de produire un comportement anormal du device. La clé secrète est révélée en exploitant les données issues de ce comportement anormal. Cela peut être une variation de la tension du device, une injection de glitch d'horloge, etc. On distingue deux types d'attaques actives : 
 \begin{itemize}
@@ -314,18 +310,18 @@ A la fin des années 1990, une nouvelle contrainte pour la conception de systèm
 \item \textbf{\textit{Attaques passives}} : Une attaque est dite passive lorsque l'attaquant exploite l'analyse, en fonctionnement normal, d'informations s'échappant d'un device cryptographique. Cela peut être l'analyse de la consommation de puissance, l'analyse temporelle, l'analyse par rayonnement électromagnétique, etc. C'est ce type d'attaque qui sera détaillé tout au long de ce stage et durant la réalisation de TFE. \\
 \end{itemize}
 
-\vspace{-0.1 cm}La figure \ref{fig:attaques} ci-dessous résume les différents types d'attaques physiques possibles.
+\vspace{-0.3 cm}La figure \ref{fig:attaques} ci-dessous résume les différents types d'attaques physiques possibles.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{image/attaques}
+    \includegraphics[width=0.85\textwidth]{image/attaques}
     \caption{Les 2 grandes familles d'attaques physiques possibles. La suite de ce rapport se concentre essentiellement sur les attaques physiques dites passives.}
     \label{fig:attaques}
 \end{figure}
 
-\vspace{-0.2 cm}Les attaques passives sont globalement beaucoup plus simples à mettre en oeuvre que les attaques actives. Comme définit précédemment, ces attaques consistent à analyser des données issues de canaux auxiliaires au device cryptographique (lorsque ce dernier est en état de fonctionnement normal). Ces canaux auxiliaires sont des canaux présents physiquement sur le circuit attaqué et le long desquels de l’information s’échappe (sous différentes formes : rayonnement électromagnétique, rayonnement photonique, consommation de puissance, etc.). C'est là qu'intervient la notion de \textit{side-channel attacks} ou en français \textit{l'attaque par canal auxiliaire}. 
+\vspace{-0.25 cm}Les attaques passives sont globalement beaucoup plus simples à mettre en oeuvre que les attaques actives. Comme définit précédemment, ces attaques consistent à analyser des données issues de canaux auxiliaires au device cryptographique (lorsque ce dernier est en état de fonctionnement normal). Ces canaux auxiliaires sont des canaux présents physiquement sur le circuit attaqué et le long desquels de l’information s’échappe (sous différentes formes : rayonnement électromagnétique, rayonnement photonique, consommation de puissance, etc.). C'est là qu'intervient la notion de \textit{side-channel attacks} ou en français \textit{l'attaque par canal auxiliaire}. 
 En effet, les fonctions cryptographiques, bien que pouvant être extrêmement robustes théoriquement (c'est-à-dire mathématiquement) sont très sensibles aux fuites d’informations. C'est-à-dire qu'une quantité très faible d’informations peut être exploitée pour casser un algorithme cryptographique très fort. C’est ce que les attaques par canaux auxiliaires exploitent. 
 
-La figure \ref{fig:attackpassive} ci-dessous présente les différentes façons possibles de réaliser des attaques passives.
+\hspace{-0.5 cm}La figure \ref{fig:attackpassive} ci-dessous présente les différentes façons possibles d'attaquer \textbf{passivement} un device.
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.4]{image/attackpassive}
@@ -342,7 +338,7 @@ Nous allons donc étudier un cas précis d'attaque passive : l'attaque par \text
 \item Les opérations qui sont exécutées.
 \item Les données qui sont manipulées.
 \end{itemize}
-Ainsi, en mesurant un certain nombre de fois la consommation de puissance d'un circuit, il est possible de retrouver certaines informations comme les opérations exécutées (afin d'identifier un algorithme par exemple), les informations secrètes complètes (clé de chiffrement) ou partielles (poids de Hamming d'une clé de chiffrement). Pour ce faire, un oscilloscope est utilisé afin de capturer et d'enregistrer des données, appelées \textbf{\textit{traces}}, mesurées à partir des canaux auxiliaires du circuit électronique (dans notre cas, un FPGA). Pour réaliser la mesure, une résistance sera placée en série avec un canal du device cryptographique afin que l'oscilloscope soit capable de capturer une différence de potentielle minime. En effet, étant donné que les courants qui circulent sur le device cryptographique sont de valeurs très faibles (\si{\micro}A), un amplificateur est utilisé afin d'amplifier la différence de potentielle. La figure \ref{fig:oscillo} ci-dessous présente le principe de mesure à l'oscilloscope.
+Ainsi, en mesurant un certain nombre de fois la consommation de puissance d'un circuit, il est possible de retrouver certaines informations telles que les opérations exécutées (afin d'identifier un algorithme par exemple) ou les informations secrètes (clé de chiffrement). Pour ce faire, un oscilloscope est utilisé afin de capturer et d'enregistrer des données, appelées \textbf{\textit{traces}}, mesurées à partir des canaux auxiliaires du circuit électronique (dans notre cas, un FPGA). Pour réaliser la mesure, une résistance est placée en série entre la tension d'alimentation du circuit ($V_{DD}$) et un canal du device cryptographique. L'oscilloscope est alors en mesure d'enregistrer une différence de potentielle (notée $V(t)$) aux bornes de la résistance. Étant donné que les courants circulant dans le device cryptographique sont de valeurs très faibles (\si{\micro}A), la tension $V(t)$ est également très faible. Ainsi, un amplificateur est utilisé afin d'amplifier cette différence de potentielle. La figure \ref{fig:oscillo} ci-dessous présente le principe de mesure à l'oscilloscope.
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.4]{image/oscillo}
@@ -350,25 +346,33 @@ Ainsi, en mesurant un certain nombre de fois la consommation de puissance d'un c
     \label{fig:oscillo} 
 \end{figure}
 
-\hspace{-0.5 cm}Il existe différents types d'attaques par analyse de la consommation de puissance : 
-\begin{itemize}
-\item Les attaques SPA (\textit{Simple Power Analysis})
-\item Les attaques DPA (\textit{Differential Power Analysis})
-\item Les attaques CPA (\textit{Correlation Power Analysis}) \\
-\end{itemize}
-Nous allons en définir une plus précisément, c'est l'attaque CPA. C'est ce type d'attaque qui a été mis en place durant le stage afin de tenter de casser l'algorithme AES. Ainsi, en continuant l'introduction sur les attaques par analyse de la consommation de puissance, et en prenant le cas particulier d'une attaque dite CPA, nous pouvons dire que : \\ En supposant connu les messages clairs envoyés au device cryptographique et en supposant que ce dernier implémente l'algorithme AES, nous simulerons sur ordinateur le poids de Hamming de chaque donnée binaire obtenue en sortie de l'opération \textit{SubBytes}. Ensuite, nous calculerons les différentes valeurs de coefficient de corrélation entre les traces de puissance capturées à l'oscilloscope et le poids de Hamming obtenu par simulation (sur ordinateur). Sur base de cette étude de la corrélation, nous serons (en principe) capable de déterminer la clé secrète, c'est-à-dire casser l'algorithme AES et ainsi exploiter les données confidentielles. La figure \ref{fig:CPA} présente vulgairement le principe général d'une attaque CPA.
+On parle d'attaque par analyse de la consommation de puissance or avec l'oscilloscope, on mesure une tension et non une puissance. Cela est juste car comme le démontre l'équation \ref{eqn:oscillo}, la puissance consommée ($p(t)$) est bien proportionnelle à la tension consommée ($V(t)$). En effet, en supposant que la tension d'alimentation $V_{DD}$ est constante et par simple application de la loi d'Ohm, on a :
+\begin{gather}
+	\left\{\begin{matrix}
+	u(t) = V_{DD}\\ 
+	i(t) = \frac{V(t)}{R}
+	\end{matrix}\right.
+	\intertext{En reprenant la définition de la puissance consommée et en y remplaçant les termes $u(t)$ et $i(t)$, on a :}
+	p(t) = u(t).i(t) = V_{DD}.\frac{V(t)}{R} \label{eqn:oscillo}
+\end{gather}
+
+
+En pratique, il existe différents types d'attaques par analyse de la consommation de puissance : Les attaques SPA (\textit{Simple Power Analysis}), les attaques DPA (\textit{Differential Power Analysis}), les attaques CPA (\textit{Correlation Power Analysis}), les attaques par template, etc.
+
+\hspace{-0.5 cm}Nous allons en définir une plus précisément, c'est l'attaque CPA. C'est ce type d'attaque qui a été mis en place durant le stage afin de tenter de casser l'algorithme AES. Ainsi, en continuant l'introduction sur les attaques par analyse de la consommation de puissance, et en prenant le cas particulier d'une attaque dite CPA, nous pouvons dire que : \\ En supposant connu les messages clairs envoyés au device cryptographique et en supposant que ce dernier implémente l'algorithme AES, nous simulerons sur ordinateur le poids de Hamming de chaque donnée binaire obtenue en sortie de l'opération \textit{SubBytes}. Ensuite, nous calculerons les différentes valeurs de coefficient de corrélation entre les traces de puissance capturées à l'oscilloscope et le poids de Hamming obtenu par simulation (sur ordinateur). Sur base de cette étude de la corrélation, nous serons (en principe) capable de déterminer la clé secrète, c'est-à-dire casser l'algorithme AES et ainsi exploiter les données confidentielles. La figure \ref{fig:CPA} présente vulgairement le principe général d'une attaque CPA.
 \begin{figure}[h]
     \hspace{-1.5 cm}
-    \includegraphics[scale=0.55]{image/CPA}
+    \includegraphics[scale=0.73]{image/CPA}
     \caption{Principe générale d'une attaque CPA.}
     \label{fig:CPA} 
 \end{figure}
 
-Le principe d'une attaque par consommation de puissance, et plus particulièrement d'une attaque CPA, ayant été introduit de manière générale, nous allons maintenant revenir sur différentes notions citées ci-dessus afin de mieux les définir et ainsi mieux comprendre le raisonnement qui se cache derrière une attaque par calcul de corrélation (CPA).
+\vspace{-0.3 cm}Le principe d'une attaque par consommation de puissance, et plus particulièrement d'une attaque CPA, ayant été introduit de manière générale, nous allons maintenant revenir sur différentes notions citées ci-dessus afin de mieux les définir et ainsi mieux comprendre le raisonnement qui se cache derrière une attaque par calcul de corrélation (CPA). La section \ref{sec:CPA} définit toutes les notions élémentaires pour réaliser une attaque CPA.
 
 \newpage
 
 \subsection{Attaque CPA (\textit{Correlation Power Analysis})}
+\label{sec:CPA}
 
 \subsubsection{Technologie CMOS}
 \label{sec:CMOS}
@@ -382,7 +386,7 @@ La \textbf{\textit{technologie CMOS}} (pour \textit{Complementary MOS}) est la t
     \label{fig:verite} 
 \end{figure}
 
-\hspace{-0.5 cm}La figure \ref{fig:CMOS} ci-dessous présente le schéma de l'inverseur CMOS :
+\hspace{-0.5 cm}La figure \ref{fig:CMOS} ci-dessous (schéma a) présente le schéma de l'inverseur CMOS :
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.8]{image/CMOS}
@@ -390,7 +394,7 @@ La \textbf{\textit{technologie CMOS}} (pour \textit{Complementary MOS}) est la t
     \label{fig:CMOS} 
 \end{figure}
 
-Si on applique à l'entrée un niveau haut, le transistor N est passant et le P est bloqué. On place ainsi la sortie au potentiel Vss (la masse), c'est-à-dire à l'état bas. Inversement, quand on met l'entrée à l'état bas, le transistor P est passant et le N est bloqué. La sortie est donc à l'état haut. On a donc bien réalisé une fonction inversion.
+Si on applique à l'entrée (E) un état bas, le transistor N est bloqué et le P est passant (schéma b). On place ainsi la sortie au potentiel Vdd (la tension d'alimentation), c'est-à-dire à l'état haut. Inversement, quand on met l'entrée à l'état haut, le transistor P est bloqué et le N est passant (schéma c). La sortie est donc à l'état bas. On a donc bien réalisé une fonction inversion.
 
 
 \subsubsection{Puissance statique et dynamique}
@@ -413,7 +417,7 @@ Mais de façon plus précise, que vaut la puissance statique ? De même, comment
 \underline{\textbf{\textit{Puissance statique :}}} \\ \\
 Les cellules CMOS sont toujours construites de façon à ce que les deux transistors complémentaires ne soient jamais passants au même moment. En effet, si on reprend l'exemple de l'inverseur CMOS (\ref{sec:CMOS}), lorsqu'on met le signal d'entrée à \textit{GND} alors le transistor P1 est passant et N1 est bloqué. Par contre, lorsqu'on met le signal d'entrée à \textit{$V_{DD}$}, le transistor P1 devient bloqué tandis que le transistor N1 devient passant. Ainsi, en théorie, un seul transistor fonctionne et laisse passer du courant. Cependant, en pratique, lorsqu'un transistor MOS est bloqué, le courant qui le traverse n'est pas totalement nul. En effet, une très petite valeur de courant circule dans le canal du transistor. Ce courant, que l'on appelle \textit{courant de fuite} et que l'on note \textit{$I_{fuite}$}, produit une consommation de puissance \textbf{statique} pouvant être calculée de la façon suivante :
 \begin{gather}
-	P_{stat} = I_{pic} . V_{DD}
+	P_{stat} = I_{fuite} . V_{DD}
 \end{gather}
 
 \hspace{-0.5 cm}\fbox{
@@ -431,10 +435,10 @@ La consommation de puissance dynamique apparait typiquement lors d'une commutati
     \label{fig:dyn} 
 \end{figure}
 
-\hspace{-0.5 cm}On constate que pour chaque transition possible, il y a présence de puissance statique. Cependant, il n'y présence de puissance dynamique que dans le cas d'une commutation, c'est-à-dire dans les deux transitions suivantes : 0-1 et 1-0.  En toute logique, la consommation de puissance totale dépend du type de cellule et de la technologie employée. Cependant, en général, on constate que : 
+\hspace{-0.5 cm}On constate que pour chaque transition possible, il y a présence de puissance statique. Cependant, il n'y a présence de puissance dynamique que dans le cas d'une commutation, c'est-à-dire dans les deux transitions suivantes : 0-1 et 1-0.  En toute logique, la consommation de puissance totale dépend du type de cellule et de la technologie employée. Cependant, en général, on constate que : 
 \begin{itemize}
 \item \textbf{\textit{Lorsqu'il n'y a pas de commutation}}(transitions 0-0 et 1-1), la puissance totale reste plus ou moins constante. En effet, la puissance dynamique étant nulle, on ne retrouve dans le calcul de puissance total que la puissance statique. Autrement dit : $P_{total}=P_{stat}$.
-\item \textbf{\textit{Lorsqu'il y a une commutation}} (transitions 0-1 et 1-0), la puissance totale augmente. En effet, en plus de la puissance statique vient s'ajouter la puissance dynamique. Autrement dit : $P_{total}=P_{stat}+P_{dyn}$.
+\item \textbf{\textit{Lorsqu'il y a une commutation}} (transitions 0-1 et 1-0), la puissance totale augmente. En effet, en plus de la puissance statique, vient s'ajouter la puissance dynamique. Autrement dit : $P_{total}=P_{stat}+P_{dyn}$.
 \end{itemize}
 
 \vspace{+0.5 cm}\hspace{-0.5 cm}\fbox{
@@ -446,7 +450,7 @@ Ainsi, on peut conclure que la consommation de puissance dynamique des circuits 
 Le calcul de la consommation de puissance dynamique se divise en deux parties. Pour mieux comprendre pourquoi, reprenons l'exemple de l'inverseur CMOS.
 
 \begin{enumerate}
-\vspace{-0.2 cm}\item \textbf{\textit{Puissance moyenne de chargement de la capacité}} : La figure \ref{fig:transitors} présente le schéma de l'inverseur CMOS lorsqu'il y a une commutation de sa sortie de l'état 0 à l'état 1 (partie gauche du shéma) et lorsqu'il y a une commutation de sa sortie de l'état 1 à l'état 0 (partie droite du schéma). Pour rappel, le fonctionnement de l'inverseur est le suivant : Lorsque le signal d'entrée est à 1 (ou 0), la transistor du dessous est passant (ou bloqué) alors que celui du haut est bloqué (ou passant), la sortie est donc à 0 (ou 1). Maintenant, il faut regarder dans le cas d'une commutation à la sortie de l'inverseur CMOS. Si il y a une commutation de l'état 0 à l'état 1 en sortie, l'inverseur dessine un courant provenant de l'alimentation ($V_{DD}$) et venant charger le condensateur $C_L$. Ce courant est appelé \textit{courant de charge}. À contrario, lors d'une commutation de l'état 1 à l'état 0, l'inverseur décharge le courant du condensateur $C_L$ vers la masse ($GND$). Ainsi, on constate bien que la commutation à la sortie de l'inverseur génère un courant qui produira une partie de la consommation de puissance dynamique. La consommation de puissance moyenne de chargement de la capacité durant un temps T peut être calculé de la façon suivante (\ref{eqn:charge}) :
+\vspace{-0.2 cm}\item \textbf{\textit{Puissance moyenne de chargement de la capacité}} : La figure \ref{fig:CMOS} présente le schéma de l'inverseur CMOS lorsqu'il y a une commutation de sa sortie de l'état 0 à l'état 1 (shéma b) et lorsqu'il y a une commutation de sa sortie de l'état 1 à l'état 0 (schéma c). Pour rappel, le fonctionnement de l'inverseur est le suivant : Lorsque le signal d'entrée est à 1 (ou 0), la transistor du dessous est passant (ou bloqué) alors que celui du haut est bloqué (ou passant), la sortie est donc à 0 (ou 1). Maintenant, il faut regarder dans le cas d'une commutation à la sortie de l'inverseur CMOS. Si il y a une commutation de l'état 0 à l'état 1 en sortie, l'inverseur dessine un courant provenant de l'alimentation ($V_{DD}$) et venant charger le condensateur $C_L$. Ce courant est appelé \textit{courant de charge}. À contrario, lors d'une commutation de l'état 1 à l'état 0, l'inverseur décharge le courant du condensateur $C_L$ vers la masse ($GND$). Ainsi, on constate bien que la commutation à la sortie de l'inverseur génère un courant qui produira une partie de la consommation de puissance dynamique. La consommation de puissance moyenne de chargement de la capacité durant un temps T peut être calculé de la façon suivante (\ref{eqn:charge}) :
 \begin{gather}
 	P_{chrg} = \frac{1}{T}\int_{0}^{T}p_{chrg}(t)dt=\alpha.f.C_{L}.V_{DD}^{2}\label{eqn:charge}
 \end{gather}
