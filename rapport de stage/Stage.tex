@@ -274,21 +274,22 @@ La figure \ref{fig:colonne} ci-dessous présente le principe de fonctionnement d
 \end{figure}
 
 \item[4. AddRoundKey] : La gestion des clés se fait au travers des fonctions \textit{AddRoundKey} et \textit{KeySchedule}. Comme précisé précédemment dans le fonctionnement initial, l'opération \textit{AddRoundKey} réalise un simple XOR entre la matrice STATE et la matrice de clé. Le résultat de ce XOR est placé dans la nouvelle matrice STATE.\\ 
-On sait que la matrice STATE est modifiée après chaque opération exécutée. Ce qu'on ne sait pas encore, c'est que la matrice clé est également modifiée à chaque round afin d'éviter d'utiliser toujours la même valeur. Cela permet ainsi de complexifier le chiffrement des données. L'opération qui modifie la matrice de clé initiale en une nouvelle matrice de clé est appelée \textbf{\textit{KeySchedule}}. Cette opération génère une nouvelle clé sur base de la clé précédemment employée. Ainsi, pour générer la première nouvelle clé, l'opération \textit{KeySchedule} emploiera la clé initialement donnée. Étant donné que pour l'AES-128, nous avons un total de dix rounds à exécuter, cela signifie que l'opération \textit{KeySchedule} s'exécute neuf fois afin de générer neuf nouvelles clés de 128 bits. En rajoutant la clé initiale, nous aurons alors dix clés de chiffrement différentes permettant d'exécuter les dix rounds. \\ \\
-Ainsi, pour résumer le fonctionnement : L'opération \textit{KeySchedule} est exécutée en tout premier lieu pour générer neufs clés. De cette façon, en comptant la clé initialement donnée, nous sommes en possession de dix clés. Ces dix clés seront utilisées pour chacun des dix rounds de l'algorithme AES-128. Lors du premier round, c'est donc la clé initiale qui est utilisée avec la matrice STATE durant l'exécution de l'opération \textit{AddRoundKey}. Lors du second round, c'est la seconde clé qui est utilisée avec la matrice STATE durant l'exécution de l'opération \textit{AddRoundKey}. Et ceci se répète jusqu'à la dixième clé. \\
-La figure \ref{fig:XOR} reste ainsi inchangée pour décrire le principe de fonctionnement de l'opération \textit{AddRoundKey}. Nous noterons toutefois que la matrice clé est bien modifiée lors de chaque exécution de cette opération.
+On sait que la matrice STATE est modifiée après chaque opération exécutée. Ce qu'on ne sait pas encore, c'est que la matrice clé est également modifiée à chaque round afin d'éviter d'utiliser toujours la même valeur de clé. Cela permet ainsi de complexifier le chiffrement des données. L'opération qui modifie la matrice de clé initiale en une nouvelle matrice de clé est appelée \textbf{\textit{KeySchedule}}. Cette opération génère une nouvelle clé sur base de la clé précédemment employée. Ainsi, pour générer la première nouvelle clé, l'opération \textit{KeySchedule} emploiera la clé initialement donnée. Étant donné que pour l'AES-128, nous avons un total de dix rounds à exécuter, cela signifie que l'opération \textit{KeySchedule} s'exécute dix fois afin de générer dix nouvelles clés de 128 bits. En rajoutant la clé initiale, nous aurons alors onze clés de chiffrement différentes permettant d'exécuter les onze opérations \textit{AddRoundKey} présentes dans l'algorithme AES-128. Ainsi, comme présenté à l'annexe \ref{ann:AES}, l'opération \textit{KeySchedule} s'exécute en premier lieu dans le code afin de générer dix nouvelles clés. En comptant la clé initialement donnée, il y a donc onze clés. Chacune de ces onze clés sera utilisée lors de l'appel de la fonction \textit{AddRoundKey}.\\ 
+
+La figure \ref{fig:XOR} reste inchangée pour décrire le principe de fonctionnement de l'opération \textit{AddRoundKey}. Nous rappelons toutefois que la matrice clé est bien modifiée lors de chaque exécution de cette opération. \\
 L'annexe \ref{ann:KeySchedule} permet quant à elle de comprendre le principe de fonctionnement de l'opération \textit{KeySchedule}, utilisée afin de générer les nouvelles clés. Plus précisément, cette annexe présente un exemple pour générer la première nouvelle clé. \\ \\
-Le fonctionnement est le suivant : l'opération s'exécute colonne par colonne. On va d'abord générer la première colonne de la nouvelle clé, ensuite on générera les colonnes 2, 3 et 4. C'est la première colonne qui est la plus compliquée à générer. Les 3 autres colonnes réalisent simplement un XOR pour générer la nouvelle colonne.
-Ainsi, pour la 1ère colonne, on va : 
+Le fonctionnement est le suivant : l'opération \textit{KeySchedule} s'exécute colonne par colonne (sur la matrice clé de taille 4x4). On va d'abord générer la première colonne de la nouvelle clé, ensuite on générera les colonnes 2, 3 et 4. C'est la première colonne qui est la plus compliquée à générer. Les 3 autres colonnes réalisent simplement un XOR pour générer la nouvelle colonne.
+Ainsi, pour obtenir la 1ère colonne de la nouvelle clé (soit les quatre 1ers bytes), on va prendre 3 vecteurs colonnes (taille 4x1) : 
 \begin{enumerate}
 \item Prendre la 4ème colonne de la clé initiale.
-\item Décaler chaque élément de cette colonne de une position vers le dessus.
+\begin{enumerate}
+\item Décaler chaque élément de cette colonne d'une position vers le haut.
 \item Appliquer l'opération \textit{SubBytes} sur chaque élément de la colonne.
-\item Prendre la première colonne de la matrice RCON.
-\item Prendre la première colonne de la clé initiale.
-\item Réaliser un XOR entre la 1ère colonne de la clé initiale, la 1ère colonne de la matrice RCON et la colonne résultant des opérations appliquées à la 4ème colonne.
 \end{enumerate}
-
+\item Prendre la 1ère colonne de la clé initiale.
+\item Prendre la 1ère colonne de la matrice RCON.
+\end{enumerate}
+Une fois ces trois vecteurs colonnes obtenus, on réaliser un XOR entre eux. Le résultat de ce XOR représente la 1ère colonne de la nouvelle matrice clé. Une fois ce
 
 
 
