@@ -332,6 +332,7 @@ En effet, les fonctions cryptographiques, bien que pouvant être extrêmement 
 Dans la suite de cet ouvrage, on se concentrera sur un type précis d'attaque passive : l'attaque sur \textbf{l'analyse de la consommation de puissance}. Les sections suivantes décrivent le principe de fonctionnement de ce type d'attaque. 
 
 \subsubsection{Introduction aux attaques par analyse de la consommation de puissance}
+\label{subsec:CPAIntroduc}
 
 Nous allons donc étudier un cas précis d'attaque passive : l'attaque par \textbf{l'analyse de la consommation de puissance}. Comme son nom l'indique, ce type d'attaque analyse la consommation de puissance du device cryptographique attaqué pour retrouver des informations sensibles. En effet, la consommation de courant d'un circuit électronique dépend de deux facteurs : 
 \begin{itemize}
@@ -394,7 +395,7 @@ La \textbf{\textit{technologie CMOS}} (pour \textit{Complementary MOS}) est la t
     \label{fig:CMOS} 
 \end{figure}
 
-Si on applique à l'entrée (E) un état bas, le transistor N est bloqué et le P est passant (schéma b). On place ainsi la sortie au potentiel Vdd (la tension d'alimentation), c'est-à-dire à l'état haut. Inversement, quand on met l'entrée à l'état haut, le transistor P est bloqué et le N est passant (schéma c). La sortie est donc à l'état bas. On a donc bien réalisé une fonction inversion.
+Si on applique à l'entrée (E) un état bas, le transistor N est bloqué et le P est passant (schéma b). On place ainsi la sortie au potentiel Vdd (la tension d'alimentation), c'est-à-dire à l'état haut. Inversement, quand on met l'entrée à l'état haut, le transistor P est bloqué et le N est passant (schéma c). La sortie est donc à l'état bas. On a donc bien réalisé une fonction inversion. Dans la suite de cet ouvrage, on considérera toujours que les circuits attaqués sont réalisés en technologie CMOS.
 
 
 \subsubsection{Puissance statique et dynamique}
@@ -437,7 +438,7 @@ La consommation de puissance dynamique apparait typiquement lors d'une commutati
 
 \hspace{-0.5 cm}On constate que pour chaque transition possible, il y a présence de puissance statique. Cependant, il n'y a présence de puissance dynamique que dans le cas d'une commutation, c'est-à-dire dans les deux transitions suivantes : 0-1 et 1-0.  En toute logique, la consommation de puissance totale dépend du type de cellule et de la technologie employée. Cependant, en général, on constate que : 
 \begin{itemize}
-\item \textbf{\textit{Lorsqu'il n'y a pas de commutation}}(transitions 0-0 et 1-1), la puissance totale reste plus ou moins constante. En effet, la puissance dynamique étant nulle, on ne retrouve dans le calcul de puissance total que la puissance statique. Autrement dit : $P_{total}=P_{stat}$.
+\item \textbf{\textit{Lorsqu'il n'y a pas de commutation}} (transitions 0-0 et 1-1), la puissance totale reste plus ou moins constante. En effet, la puissance dynamique étant nulle, on ne retrouve dans le calcul de puissance total que la puissance statique. Autrement dit : $P_{total}=P_{stat}$.
 \item \textbf{\textit{Lorsqu'il y a une commutation}} (transitions 0-1 et 1-0), la puissance totale augmente. En effet, en plus de la puissance statique, vient s'ajouter la puissance dynamique. Autrement dit : $P_{total}=P_{stat}+P_{dyn}$.
 \end{itemize}
 
@@ -492,7 +493,8 @@ Les attaques basées sur l'analyse de la consommation de puissance exploitent le
 De plus, une troisième composante doit également être prise en compte. Cette composante fait référence au \textbf{bruit électrique} (aussi appelé bruit de fond) et sera notée \textbf{$P_{noise}$}. En effet, un signal est toujours affecté de petites fluctuations plus ou moins importantes. Ces fluctuations, dont les origines peuvent être diverses, sont appelées bruit électrique (ou simplement bruit). Le bruit est considéré comme un élément parasite aléatoire, c'est-à-dire qu'on ne sait pas le déterminer à l'avance. Au plus cette composante sera élevée et au plus l'analyse de la consommation de puissance sera difficile.
 
 Ainsi, chaque point d'une trace de puissance peut être modélisé comme la somme des 3 composantes définies ci-dessus, soit : 
-$P_{total} = P_{op} + P_{data} + P_{noise}$.
+$P_{total} = P_{op} + P_{data} + P_{noise}$. De plus, en reprenant les équations définies dans la section \ref{sec:puissance}, nous pouvons conclure que :
+$P_{total} = P_{op} + P_{data} + P_{noise} = P_{stat} + P_{dyn} \cong  P_{dyn} = P_{chrg} + P_{cc}$
 
 \subsubsection{Modèles de puissance}
 
@@ -510,7 +512,7 @@ La figure \ref{fig:CPAconcrete} ci-dessous présente le principe de fonctionneme
 
 Afin de bien assimiler une attaque par canal auxiliaire, il m'a été demandé de tester, par des simulation sur le logiciel MATLAB, les notions théoriques développées précédemment. Deux exercices différents ont ainsi été réalisés. 
 \begin{enumerate}
-\item \textbf{Simuler un point d'une trace et ensuite réaliser une attaque CPA sur ce point}. La première phase de la simulation a pour objectif de génèrer un point particulier d'une trace sur base de l'algorithme AES. La seconde phase de la simulation a pour but de réaliser une attaque par canal auxiliaire. Plus précisément, il s'agit d'une attaque CPA. Pour cette raison, seules les 2 premières étapes de l'algorithme AES sont nécessaires et seront donc simulées (\textit{AddRoundKey}, \textit{SubBytes}). À noter que, pour simplifier, cette attaque n'est réalisée que sur un seul byte de données et donc aussi un seul byte de clé.
+\item \textbf{Simuler un point d'une trace et ensuite réaliser une attaque CPA sur ce point}. La première phase de la simulation a pour objectif de génèrer un point particulier d'une trace sur base de l'algorithme AES-128. La seconde phase de la simulation a pour but de réaliser une attaque par canal auxiliaire. Plus précisément, il s'agit d'une attaque CPA. Pour cette raison, seules les 2 premières étapes de l'algorithme AES-128 sont nécessaires et seront donc simulées (\textit{AddRoundKey}, \textit{SubBytes}). À noter que, pour simplifier, cette attaque n'est réalisée que sur un seul byte de données et donc aussi un seul byte de clé.
 \item \textbf{Réaliser une attaque CPA à partir de traces réelles}. Dans ce cas de figure, on connait 4 paramètres : les messages clairs envoyés (plaintexts), les traces capturées à l'oscilloscope, le nombre de traces ainsi que le nombre d'échantillons. Ainsi, sur base des traces qui nous sont fournies, l'objectif est de tenter de retrouver la clé secrète en réalisant une attaque CPA. La différence majeure avec l'exercice précédent est que l'on étudie une trace selon l'ensemble de points (les échantillons) qui la caractérise. Cet ensemble de traces étant par ailleurs fournit sur base de mesures réalisées à l'oscilloscope. \\
 \end{enumerate}
 
@@ -546,7 +548,7 @@ Concrètement, sur MATLAB, tous ces calculs vont être opérés sur des matrices
 \vspace{-0.3 cm}Comme vu à la section \ref{sec:AES}, l'algorithme AES implémente deux matrices en entrée : la matrice STATE et la matrice clé. Ces deux matrices contiennent 16 éléments correspondants aux 16 octet de données (pour la matrice STATE) et aux 16 octets de clé (pour la matrice clé). Autrement dit, ces deux matrices sont de tailler 4x4. Pour le test, nous allons simplifier le procédé. En effet, en pratique les opérations s'exécutent octect par octet. Dans notre cas, on ne va s'intéresser qu'au premier octet de la matrice STATE et donc, par la même occasion, au premier octet de la matrice clé. \textbf{\textit{Le but final de la simulation sera donc de retrouver le premier octet de la clé connaissant le premier octet des N messages clairs devant être chiffrés.}}
 Ainsi :
 \begin{itemize}
-\item La matrice STATE est représentée par une matrice de taille Nx1. N représente le nombre de messages clairs envoyés.
+\item La matrice STATE est représentée par une matrice de taille Nx1. N représente le nombre de messages clairs envoyés et "1" représente le nombre d'octets analysés, i.e 1 octet (sur les 16).
 \item La matrice clé, dans le cas de la génération d'un point de la trace, est représentée par une matrice de taille 1x1. Un seul octet de l'unique clé secrète est en effet utilisé.
 \item La matrice clé, dans le cas de la simulation par ordinateur, est représentée par une matrice de taille 1x256. En effet, le but étant de retrouver la valeur du premier octet de la clé secrète, il existe $2^8$ soit 256 valeurs possibles.
 \item $Y_1$ et $Y_2$ sont des matrices de taille Nx1 etNx256 respectivement. En effet, pour $Y_1$, une seul clé est utilisée alors que pour $Y_2$, 256 valeurs de clé sont utilisées.
@@ -595,13 +597,13 @@ Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent
 \begin{itemize}
 \item Premièrement, la prise de mesures à l'oscilloscope. Cette prise de mesure nous fournit un ensemble de traces. Plus précisément, l'oscilloscope a enregistré N traces différentes.
 \item Deuxièmement, des calculs de simulation de la consommation de puissance à partir du modèle du \textit{poids de Hamming}. Pour chaque texte clair envoyé et pour chaque clé possible, on va calculer le poids de Hamming du résultat obtenu en sortie de l'opération \textit{SubBytes}. Ce bloc est identique à la figure \ref{fig:simul2}.
-\item Dernièrement, le calcul du coefficient de corrélation. Cette corrélation est effectuée pour chaque trace capturée avec chaque résultat du poids de Hamming. 
+\item Troisièmement, le calcul du coefficient de corrélation. Cette corrélation est effectuée pour chaque trace capturée avec chaque résultat du poids de Hamming. 
 \end{itemize}
 
 \hspace{-0.5 cm}Voici les données dont nous disposons pour l'exercice :
 \begin{itemize}
-\item On connait le nombre de traces enregistrées à l'oscilloscope. Il y en a 2380.
-\item On connait le nombre d'échantillons pris dans une seule trace. Il y en a 16384.
+\item On connait le nombre de traces (N) enregistrées à l'oscilloscope. Il y en a 2380.
+\item On connait le nombre d'échantillons pris dans une seule trace, i.e le nombre de points présents dans une trace. Il y en a 16384.
 \item On connait tous les textes clairs envoyés au device cryptographique en vue d'être chiffrés. On a donc 2380 textes clairs connus. Chaque texte possédant une taille de 128 bits, soit 16 octets. Néanmoins, comme précisé précédemment, on ne s'intéresse qu'au premier octet.
 \item On connait toutes les traces mesurées à l'oscilloscope. 2380 traces ont été enregistrées. Chaque trace contient 16384 points (échantillons). \\
 \end{itemize}
@@ -656,7 +658,7 @@ Pour rappel, les attaques par analyse de la consommation de puissance étudient 
 \item \textbf{Les contre-mesures de type \textit{Masking}} : Le principe des contre-mesures de type Masking est de générer des valeurs intermédiaires aléatoires. Ainsi, on accepte que la consommation de puissance du device cryptographique dépende des données manipulées. Cependant, on modifie (on masque) ces valeurs intermédiaires afin que les traces de puissance obtenues à l'oscilloscope soient faussées. On va donc construire des devices cryptographique dont la consommation de puissance est liée aux données manipulées mais ces données sont faussées (modifiées) volontairement. \\
 \end{enumerate}
 
-\vspace{-0.2 cm}Il faut noter que les traces de puissance sont en pratique vulgairement caractérisées par des traces en tension. Ainsi, sur un graphe, une trace de puissance est représentée par une courbe indiquant la tension mesurée en fonction du temps. Les contre-mesures développées pour les attaques par analyse de la consommation de puissance ont donc pour objectif de modifier l'allure de ces traces de puissances afin de compliquer la tâche de l'attaquant. Il existe deux façons de modifier une trace de puissance : 
+\vspace{-0.2 cm}Il faut noter que les traces de puissance sont en pratique caractérisées par des traces en tension (voir section \ref{subsec:CPAIntroduc}). Ainsi, sur un graphe, une trace de puissance est représentée par une courbe indiquant la tension mesurée en fonction du temps. Les contre-mesures développées pour les attaques par analyse de la consommation de puissance ont donc pour objectif de modifier l'allure de ces traces de puissances afin de compliquer la tâche de l'attaquant. Il existe deux façons de modifier une trace de puissance : 
 \begin{itemize}
 \item \textbf{En agissant sur \textit{l'amplitude} de la trace}, on parlera \textbf{\textit{d'intensité du leakage.}}
 \item \textbf{En agissant sur \textit{la position dans le temps} de la trace}, on parlera \textbf{\textit{d'instant du leakage.}} \\
@@ -678,7 +680,7 @@ Pour rappel, les attaques par analyse de la consommation de puissance étudient 
 \item $P_{noise}$ représente la puissance du bruit (en \textit{Watt}). \\
 \end{itemize}
 
-\vspace{-0.2 cm}Ainsi, le calcul du SNR permet de savoir si le signal de transmission que l'on étudie est fortement bruité ou non. Selon l'équation (\ref{eqn:SNR}), cet indicateur SNR est d'autant plus élevé que la puissance du signal est élevée ou est d'autant plus élevé que la puissance du bruit est faible. Dans une transmission idéale, on désirera toujours un SNR très grand, signifiant que la trace obtenue représente majoritairement le signal et minoritairment le bruit. \\
+\vspace{-0.2 cm}Ainsi, le calcul du SNR permet de savoir si le signal de transmission que l'on étudie est fortement bruité ou non. Selon l'équation (\ref{eqn:SNR}), cet indicateur SNR est d'autant plus élevé que la puissance du signal est élevée ou est d'autant plus élevé que la puissance du bruit est faible. Dans une transmission idéale, on désirera toujours un SNR très grand, signifiant que la trace obtenue représente majoritairement le signal et minoritairment le bruit (qui pour rappel est un élément parasite aléatoire). \\
 Pour une trace de puissance, si le SNR d'une opération est élevé, cela signifie que la puissance du signal est plus élevée que la puissance du bruit, c'est-à-dire qu'il est plus facile de détecter des fuites d'information. Idéalement, il faut donc que le SNR soit proche de 0. De cette façon, le bruit recouvre tellement le signal qu'il est impossible de détecter du leakage. En pratique, cela peut être réalisé en diminuant la variance du signal vers 0 ou en augmentant la variance du bruit vers l'infini.
 \begin{itemize}
 \item Pour réduire la variance du signal, la consommation de puissance a besoin d'être exactement égale pour toutes les opérations exécutées et données manipulées. En pratique, cela se traduira par de petites valeurs de variances pour le signal.
@@ -694,13 +696,13 @@ Pour une trace de puissance, si le SNR d'une opération est élevé, cela signif
 \item Faire en sorte que la consommation de puissance du device cryptographique soit \textbf{\textit{aléatoire}}. Cela signifie qu'à chaque coup de clock, une certaine quantité aléatoire de puissance est consommée. Le but est donc de \textbf{modifier l'instant du leakage} ou bien de \textbf{modifier l'intensité du leakage} dans la trace de puissance.
 \begin{itemize}
 \item \textit{La modification de l'instant du leakage peut être réalisée par un désalignement des traces}. Cela va compliquer la tâche de l'attaquant. En effet, celui-ci doit, dans un premier temps, procéder à l'alignement de ses traces pour pouvoir les analyser correctement. Si celles-ci ne sont pas alignées, il ne pourra rien en tirer de concret. Ce désalignement des traces peut s’obtenir de différentes façons : utiliser des horloges de fréquences différentes, utiliser des interruptions aléatoires lors de l’exécution du programme, changer l’ordre des instructions, etc.
-\item \textit{La modification de l'intensité du leakage peut être réalisée par une modification du rapport signal à bruit}. Nous avons vu que pour modifier le SNR, il suffisait d'augmenter le bruit ou de diminuer le signal. Dans ce cas-ci, nous allons augmenter la variance du bruit. En effet, en ajoutant du bruit de façon indépendante à l'exécution de l'algorithme, on va diminuer le SNR, ce qui va avoir pour conséquence de diminuer le leakage d'une opération : L'attaquant aura dès lors plus de mal à retrouver la clé secrète. 
+\item \textit{La modification de l'intensité du leakage peut être réalisée par une modification du rapport signal à bruit}. Nous avons vu que pour modifier le SNR, il suffisait d'augmenter le bruit ou de diminuer le signal. Dans ce cas-ci, nous allons augmenter la variance du bruit. En effet, en ajoutant du bruit de façon indépendante à l'exécution de l'algorithme, on va diminuer le SNR, ce qui va avoir pour conséquence de diminuer le leakage d'une opération : L'attaquant aura dès lors plus de mal à retrouver la clé secrète. On peut, pour ce faire, utiliser un filtre afin de ne laisser passer que certaines composantes de puissance ou encore utiliser ce qu'on appelle des \textit{noise engines}, systèmes fonctionnant en parallèle du device cryptographique et ayant pour but de générer du bruit.
 \end{itemize}
 \item Faire en sorte que la consommation de puissance du device cryptographique soit \textbf{\textit{identique}}. Cela signifie qu'à chaque coup de clock, une quantité égale de puissance est consommée pour toutes les opérations exécutées et pour toutes les données manipulées. Le but est donc de \textbf{modifier l'intensité du leakage}. Autrement dit, on souhaite uniformiser l'amplitude de la trace. 
-\textit{Pour ce faire, on va à nouveau modifier le rapport signal à bruit}. Comme dit précédemment, l'idéal serait d'avoir un SNR proche de 0. Si on n'augmente pas la variance du bruit, la deuxième approche consiste à diminuer la variance du signal. 
+\textit{Pour ce faire, on va à nouveau modifier le rapport signal à bruit}. L'idéal étant d'avoir un SNR proche de 0, si on n'augmente pas la variance du bruit, la deuxième approche consiste à diminuer la variance du signal. Pour ce faire, on va modifier de façon physique les cellules CMOS. En effet, le but est de faire en sorte que chaque cellule logique consomme la même consommation de puissance pour toute opération demandée.
 \end{enumerate}
 
-La figure \ref{fig:hiding} ci-dessous présente les mesures possibles selon l'approche suivie tandis que la figure \ref{fig:resume_hiding} page suivante reprend l'ensemble des contre-mesures de type hiding.
+La figure \ref{fig:hiding} ci-dessous présente les possibilités de contre-mesures mises en oeuvre selon le type d'approche suivie tandis que l'annexe \ref{ann:resume_hiding} reprend l'ensemble des contre-mesures de type hiding.
 
 \begin{figure}[htbp]
     \centering
@@ -709,14 +711,7 @@ La figure \ref{fig:hiding} ci-dessous présente les mesures possibles selon l'ap
     \label{fig:hiding} 
 \end{figure}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.66, angle=90]{image/resume_hiding}
-    \caption{Ce schéma présente une partie des contre-mesures de types hiding possibles.}
-    \label{fig:resume_hiding} 
-\end{figure}
-
-\vspace{-0.4 cm}\hspace{-0.5 cm}Sur base de la figure \ref{fig:resume_hiding}, nous pouvons expliquer le principe de certains exemples de contre-mesures :
+\hspace{-0.5 cm}Sur base de l'annexe \ref{ann:resume_hiding}, nous pouvons expliquer le principe de certains exemples de contre-mesures :
 \begin{itemize}
 \item Concernant la manipulation d’horloge, nous pouvons :
 \begin{itemize}
@@ -753,8 +748,8 @@ Le principe des contre-mesures de type masking est de générer des valeurs inte
 
 \underline{Définition du masque}
 
-Une valeur intermédiaire masquée $v_m$ est une valeur intermédiaire $v$ cachée par une valeur aléatoire $m$ : $v_m = v * m$. Ne connaissant pas la valeur aléatoire $m$, l'attaquant ne peut pas retrouver la valeur intermédiaire $v$. Ainsi, la consommation de puissance du device cryptographique dépend des valeurs intermédiaires masquées $v_m$ qui ne fournissent aucune information sur les valeurs intermédiaires $v$. Autrement dit, un masque cache les valeurs intermédiaires et il n'est donc plus possible de retrouver la clé de chiffrement. Bien évidemment, les masques ont besoin d'être supprimés à la fin des opérations algorithmiques afin d'obtenir le message chiffré. \\
-L'opération $*$ représente les opérations exécutées par l'algorithme de chiffrement. Il peut s'agir d'une fonction booléenne ou d'une fonction arithmétique. Ainsi, on définit : 
+Une valeur intermédiaire masquée $v_m$ est une valeur intermédiaire $v$ cachée par une valeur aléatoire $m$ : $v_m = v * m$. Ne connaissant pas la valeur aléatoire $m$, l'attaquant ne peut pas retrouver la valeur intermédiaire $v$. Ainsi, la consommation de puissance du device cryptographique dépend des valeurs intermédiaires masquées $v_m$ qui ne fournissent aucune information sur les valeurs intermédiaires $v$. Autrement dit, un masque cache les valeurs intermédiaires et il n'est donc plus possible de retrouver la clé de chiffrement. Bien évidemment, les masques ont besoin d'être supprimés à la fin des opérations algorithmiques afin d'obtenir le \textit{vrai} message chiffré. \\
+L'opération $*$ représente le type d'opération réalisé pour appliquer le masque (sur les valeurs intermédiaires). Il peut s'agir d'une fonction booléenne ou d'une fonction arithmétique. Ainsi, on définit : 
 \begin{enumerate}
 \item \textbf{\textit{Un masque booléen}} : l'opération $*$ est alors remplacée par la fonction booléenne XOR (\oplus). Dans ce cas, le masque devient : $v_m = v \oplus m$.
 \item \textbf{\textit{Un masque arithmétique}} : l'opération $*$ est alors remplacée par une addition modulaire ($+$) ou par une multiplication modulaire (\times ). Dans ce cas, le masque devient : $v_m = v + m$ $(mod$ $n)$ ou $v_m = v \times m$ $(mod$ $n)$ où \textit{modulo n} est définit en fonction de l'algorithme de chiffrement.
@@ -768,9 +763,15 @@ Les algorithmes de chiffrement utilisent des fonctions linéaires mais aussi des
 \textit{Par exemple}, dans l'algorithme AES, on retrouve l'opération XOR. Dans ce cas, l'opération est dite linéaire car la propriété $f(x\oplus m) = f(x) \oplus f(m)$ est respectée. On remarque donc qu'il est facile de calculer un masque booléen pour une fonction linéaire. \\
 Un contre-exemple, dans l'algorithme AES, concerne l'opération \textit{SubBytes}. Il s'agit d'une opération non-linéaire. Autrement dit, $f(x\oplus m) \neq f(x) \oplus f(m)$. On remarque donc qu'il n'est pas facile de calculer un masque booléen pour une fonction non-linéaire. Dans ce cas, une alternative est de calculer un masque arithmétique. En effet, la relation $f(x \times m) = (x \times m)^{-1} = f(x) \times f(m)$ est respectée.
 
+Comme dit précédemment, chaque masque appliqué doit ensuite être retiré afin d'obtenir \textit{in fine} le vrai message chiffré. Nous retiendrons donc ici que pour l'algorithme AES, si l'on souhaite appliquer un masque booléen (et c'est en général le cas le plus fréquent), il sera toujours plus facile de le réaliser sur des opérations linéaires (telles que \textit{AddRoundKey, ShiftRows, MixColumns}) plutôt que sur des opérations non-linéaires (telles que \textit{SubBytes}).
+
 
 
 \subsubsection{Contre-mesures \textit{Faking}}
+
+Après plusieurs recherches sur \textit{Internet}, j'ai découvert l'existence d'un nouveau type de contre-mesure : les contre-mesures de type \textbf{\textit{Faking}}. Les articles définissant ce type de contre-mesure ont été rédigés fin 2016 au plus tôt, il s'agit donc d'une contre-mesure assez récente. Ce type de contre-mesure s'appuie sur une partie du concept de contre-mesure de type Masking. \\ Le but est le suivant : Dès le départ, on va venir masquer la vraie valeur de clé ($Key_{Real}$) par un masque ($Key_{Mask}$) produisant ainsi une fausse clé ($Key_{Fake}$). On a donc la relation : $Key_{Fake} = Key_{Real} \oplus Key_{Mask}$. À partir de cette fausse clé, on va appliquer l'opération \textit{KeySchedule} générant ainsi d'autres fausses clés pour l'exécution de l'algorithme AES. L'algorithme AES est exécuté comme décrit à la section \ref{sec:AES}, i.e avec ses quatre opérations élémentaires (\textit{AddRoundKey, SubBytes, ShiftRows, MixColumns}) appliquées sur les données intermédiaires. C'est là que ce type de contre-mesure prend tout son sens. En effet, c'est la fausse clé qui va être utilisée pour chiffrer les données et non la vraie clé. De cette manière, si un attaquant opère une attaque de type CPA (ou autre), en supposant qu'il ne connaisse pas le masque ($Key_{Mask}$) appliqué sur la vraie clé, il obtiendra bien une valeur de clé. Cependant, cette clé sera non pas la vraie clé initiale mais plutôt la fausse clé générée au départ. De cette manière, l'attaquant ne sera pas en mesure de déchiffrer les données.
+
+Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque sur les données intermédiaires, il faut ensuite le retirer de façon à obtenir \textit{in fine} le vrai texte chiffré. Pour le cas des contre-mesures de type \textit{Faking}, le principe est identique. Pour ce faire, on va utiliser un co-processeur dont le rôle est d'annuler l'emploi du masque afin d'obtenir le vrai texte chiffré. L'annexe \ref{ann:Faking} présente le principe de fonctionnement d'une contre-mesure de type Faking. On y retrouve les opérations élémentaires de l'algorithme AES (\textit{AddRoundKey, SubBytes, ShiftRows, MixColumns}) ainsi que deux opérations spéciales exécutées par le co-processeur (\textit{SubBytesTrans, MixColumns}) et définies de façon à annuler l'utilisation de la fausse clé sur les données.
 
 
 \newpage
@@ -831,9 +832,20 @@ Un contre-exemple, dans l'algorithme AES, concerne l'opération \textit{SubBytes
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.45]{image/KeySchedule1}
-     \includegraphics[scale=0.65]{image/KeySchedule2}
+    \includegraphics[scale=0.65]{image/KeySchedule2}
     \caption{Principe de fonctionnement de l'opération \textit{KeySchedule}.}
     \label{fig:KeySchedule1}
+\end{figure}
+
+\newpage
+
+\section{Contre-mesures \textit{Hiding}}
+\label{ann:resume_hiding}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=1.2\linewidth, angle=90]{image/resume_hiding}
+    \caption{Ce schéma présente les différentes sortes de contre-mesures de types hiding.}
+    \label{fig:resume_hiding} 
 \end{figure}
 
 
