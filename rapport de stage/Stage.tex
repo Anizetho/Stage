@@ -489,7 +489,7 @@ En conclusion, les systèmes informatiques modernes (comme le FPGA) possèdent d
 \item Une \textbf{\textit{puissance statique}} de faible valeur, requise pour garder le device en fonctionnement continu. Elle dépend du nombre de transistors dans la cellule. Elle est \textbf{négligée}.
 \item Une \textbf{\textit{puissance dynamique}} de haute valeur, qui apparait lors d'une commutation. Elle dépend du type de transition. Elle n'est \textbf{pas négligée}.
 \end{itemize}
-Ceci nous conduit donc à l'équation suivante \ref{eqn:puissance}: 
+Ceci nous conduit donc à l'équation suivante (\ref{eqn:puissance}) : 
 \begin{gather}
 	P_{total}=P_{stat}+P_{dyn}\cong P_{dyn} = P_{chrg} + P_{cc} \label{eqn:puissance}
 \end{gather}
@@ -630,40 +630,13 @@ Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent
 
 \hspace{-0.5 cm}Les 4 figures suivantes permettent de mieux comprendre, en pratique, l'objectif de l'exercice :
 \begin{enumerate}
-\item La figure \ref{fig:traces} présente les quatre premières traces, parmi les 2380, mesurées à l'oscilloscope.
-\item La figure \ref{fig:cle} présente les valeurs de coefficient de corrélation obtenues pour quatre clés possibles, à savoir les clés 128, 129, 130 et 131. Chaque valeur de corrélation est calculée pour chacun des 16384 points (échantillons) des 2380 traces. 
-\item La figure \ref{fig:3D} présente en trois dimensions les valeurs de coefficient de corrélation obtenues pour les 256 valeurs de clé possibles. On remarque qu'il existe un coefficient de corrélation maximum, marqué par une étoile rouge sur la figure. Ce coefficient correspond à la clé 8 (en décimal). Cela signifie que le premier octet de la clé secrète vaut 8. 
-\item La figure \ref{fig:cle8} présente les valeurs de coefficient de corrélation obtenues pour une valeur de clé correspondant à 8. Cette valeur présente le plus grand coefficient de corrélation et correspond donc au premier octet de la clé secrète. Le coefficient de corrélation maximum vaut effectivement 0,5099.
+\item L'annexe \ref{ann:Traces} présente les quatre premières traces, parmi les 2380, mesurées à l'oscilloscope.
+\item L'annexe \ref{ann:corrélation} présente les valeurs de coefficient de corrélation obtenues pour quatre clés possibles, à savoir les clés 128, 129, 130 et 131. Chaque valeur de corrélation est calculée pour chacun des 16384 points (échantillons) des 2380 traces. 
+\item L'annexe \ref{ann:Corrélations_3D} présente en trois dimensions les valeurs de coefficient de corrélation obtenues pour les 256 valeurs de clé possibles. On remarque qu'il existe un coefficient de corrélation maximum, marqué par une étoile rouge sur la figure. Ce coefficient correspond à la clé 8 (en décimal). Cela signifie que le premier octet de la clé secrète vaut 8. 
+\item L'annexe \ref{ann:cle8} présente les valeurs de coefficient de corrélation obtenues pour une valeur de clé correspondant à 8. Cette valeur présente le plus grand coefficient de corrélation et correspond donc au premier octet de la clé secrète. Le coefficient de corrélation maximum vaut effectivement 0,5099.
 \end{enumerate}
 
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.45, angle=90]{image/traces}
-    \caption{Les 4 premières traces mesurées à l'oscilloscope.}
-    \label{fig:traces} 
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.56, angle=90]{image/cle}
-    \caption{Les valeurs de coefficient de corrélation obtenues pour les valeurs de clé : 128, 129, 130 et 131 respectivement.}
-    \label{fig:cle} 
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.54, angle=90]{image/3D2}
-    \caption{Affichage en 3D de toutes les valeurs de corrélation obtenues pour chaque valeur de clé possible.}
-    \label{fig:3D} 
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[scale=0.44, angle=90]{image/cle8}
-    \caption{Valeurs de corrélation obtenue pour la clé secrète 8 (bonne clé).}
-    \label{fig:cle8} 
-\end{figure}
 
 \newpage
 
@@ -862,6 +835,21 @@ Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque s
     \caption{Principe de fonctionnement de l'opération \textit{KeySchedule}.}
     \label{fig:KeySchedule1}
 \end{figure}
+
+\newpage
+
+\includepdf[pagecommand=\section{Traces}, angle=90]{image/traces.pdf}\label{ann:Traces}
+%\caption{Les 4 premières traces mesurées à l'oscilloscope.}
+
+\includepdf[pagecommand=\section{Corrélation pour les clés 1 à 4}, angle=90]{image/cle.pdf}\label{ann:corrélation}
+%     \caption{Les valeurs de coefficient de corrélation obtenues pour les valeurs de clé : 128, 129, 130 et 131 respectivement.}
+
+\includepdf[pagecommand=\section{Corrélations 3D}, angle=90]{image/correlation3D.pdf}\label{ann:Corrélations_3D}
+%     \caption{Affichage en 3D de toutes les valeurs de corrélation obtenues pour chaque valeur de clé possible.}
+
+\includepdf[pagecommand=\section{Corrélation pour la clé 8}, angle=90]{image/cle8.pdf}\label{ann:cle8}
+%     \caption{Valeurs de corrélation obtenue pour la clé secrète 8 (bonne clé).}
+
 
 \newpage
 
