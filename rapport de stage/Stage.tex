@@ -339,7 +339,7 @@ Nous allons donc étudier un cas précis d'attaque passive : l'attaque par \text
 \item Les opérations qui sont exécutées.
 \item Les données qui sont manipulées.
 \end{itemize}
-Ainsi, en mesurant un certain nombre de fois la consommation de puissance d'un circuit, il est possible de retrouver certaines informations telles que les opérations exécutées (afin d'identifier un algorithme par exemple) ou les informations secrètes (clé de chiffrement). Pour ce faire, un oscilloscope est utilisé afin de capturer et d'enregistrer des données, appelées \textbf{\textit{traces}}, mesurées à partir des canaux auxiliaires du circuit électronique (dans notre cas, un FPGA). Pour réaliser la mesure, une résistance est placée en série entre la tension d'alimentation du circuit ($V_{DD}$) et un canal du device cryptographique. L'oscilloscope est alors en mesure d'enregistrer une différence de potentielle (notée $V(t)$) aux bornes de la résistance. Étant donné que les courants circulant dans le device cryptographique sont de valeurs très faibles (\si{\micro}A), la tension $V(t)$ est également très faible. Ainsi, un amplificateur est utilisé afin d'amplifier cette différence de potentielle. La figure \ref{fig:oscillo} ci-dessous présente le principe de mesure à l'oscilloscope.
+Ainsi, en mesurant un certain nombre de fois la consommation de puissance d'un circuit, il est possible de retrouver certaines informations telles que les opérations exécutées (afin d'identifier un algorithme par exemple) ou les informations secrètes (clé de chiffrement). Pour ce faire, un oscilloscope est utilisé afin de capturer et d'enregistrer des données, appelées \textbf{\textit{traces}}, mesurées à partir des canaux auxiliaires du circuit électronique (dans notre cas, un FPGA). Pour réaliser la mesure, une résistance est placée en série avec le canal (la PIN) connecté à la tension d'alimentation du device cryptographique ($V_{DD}$). L'oscilloscope est alors en mesure d'enregistrer une différence de potentielle (notée $V(t)$) aux bornes de la résistance. Étant donné que les courants circulant dans le device cryptographique sont de valeurs très faibles (\si{\micro}A), la tension $V(t)$ est également très faible. Ainsi, un amplificateur est utilisé afin d'amplifier cette différence de potentielle. La figure \ref{fig:oscillo} ci-dessous présente le principe de mesure à l'oscilloscope.
 \begin{figure}[htbp]
     \centering
     \includegraphics[scale=0.4]{image/oscillo}
@@ -482,6 +482,20 @@ Où :
 
 \end{enumerate}
 
+\hspace{-0.5 cm}\fbox{
+\begin{minipage}{\textwidth}
+En conclusion, les systèmes informatiques modernes (comme le FPGA) possèdent deux composantes en puissance : 
+\begin{itemize}
+\item Une \textbf{\textit{puissance statique}} de faible valeur, requise pour garder le device en fonctionnement continu. Elle dépend du nombre de transistors dans la cellule. Elle est \textbf{négligée}.
+\item Une \textbf{\textit{puissance dynamique}} de haute valeur, qui apparait lors d'une commutation. Elle dépend du type de transition. Elle n'est \textbf{pas négligée}.
+\end{itemize}
+Ceci nous conduit donc à l'équation suivante \ref{eqn:puissance}: 
+\begin{gather}
+	P_{total}=P_{stat}+P_{dyn}\cong P_{dyn} = P_{chrg} + P_{cc} \label{eqn:puissance}
+\end{gather}
+\end{minipage}
+}
+
 
 
 \subsubsection{Composition des traces de puissance}
@@ -493,14 +507,20 @@ Les attaques basées sur l'analyse de la consommation de puissance exploitent le
 De plus, une troisième composante doit également être prise en compte. Cette composante fait référence au \textbf{bruit électrique} (aussi appelé bruit de fond) et sera notée \textbf{$P_{noise}$}. En effet, un signal est toujours affecté de petites fluctuations plus ou moins importantes. Ces fluctuations, dont les origines peuvent être diverses, sont appelées bruit électrique (ou simplement bruit). Le bruit est considéré comme un élément parasite aléatoire, c'est-à-dire qu'on ne sait pas le déterminer à l'avance. Au plus cette composante sera élevée et au plus l'analyse de la consommation de puissance sera difficile.
 
 Ainsi, chaque point d'une trace de puissance peut être modélisé comme la somme des 3 composantes définies ci-dessus, soit : 
-$P_{total} = P_{op} + P_{data} + P_{noise}$. De plus, en reprenant les équations définies dans la section \ref{sec:puissance}, nous pouvons conclure que :
+$P_{total} = P_{op} + P_{data} + P_{noise}$. De plus, en reprenant l'équation \ref{eqn:puissance} définie dans la section \ref{sec:puissance}, nous pouvons conclure que :
 $P_{total} = P_{op} + P_{data} + P_{noise} = P_{stat} + P_{dyn} \cong  P_{dyn} = P_{chrg} + P_{cc}$
 
 \subsubsection{Modèles de puissance}
+Dans une attaque CPA, l'attaquant doit utiliser ce qu'on appelle un \textbf{\textit{modèle de puissance}} afin de prédire la consommation de puissance du device cryptographique attaqué. Une fois ces prédictions réalisées, celles-ci sont comparées aux mesures réelles de consommation de puissance du device (prises à l'oscilloscope) dans le but de retrouver la clé secrète. La qualité du modèle employé a un impact important sur l'efficacité de l'attaque. Deux modèles sont généralement définis et utilisés : Il s'agit des modèles de \textit{Poids de Hamming} (\textit{Hamming Weight} - HW) et de \textit{Distance de Hamming} (\textit{Hamming Distance} - HD).
 
-Distance de Hamming...
+\begin{enumerate}
+\item \textbf{Poids de Hamming} (HW) : Le poids de Hamming est le modèle de consommation de puissance le plus basique. C'est celui le plus utilisé par un attaquant lorsqu'il s'agit d'estimer la consommation de puissance d'un circuit dont on ne connait pas certaines valeurs intermédiaires consécutives calculées durant l'exécution de l'algorithme. Ce modèle considère qu'un 0 ne mène pas à un excès de consommation de puissance tandis qu'un 1 implique une quantité significative de puissance consommée. Ainsi, pour ce modèle, on assume que la consommation de puissance est proportionnelle au nombre de bits à 1 d'une exécution de traitement de données. \\
+Exemple : HW(100110) = 3
+\item \textbf{Distance de Hamming} (HD) : \\
+Exemple : HD(110110 ; 100100) = 2
+\end{enumerate}
 
-Poids de Hamming ...
+
 
 \subsubsection{L'attaque CPA en concret}
 
@@ -759,20 +779,26 @@ L'opération $*$ représente le type d'opération réalisé pour appliquer le ma
 
 \underline{Fonctions linéaires et non-linéaires}
 
-Les algorithmes de chiffrement utilisent des fonctions linéaires mais aussi des fonctions non-linéaires. \textbf{Une fonction est dite \textit{linéaire} si elle respecte la propriété suivante : $f(x*y) = f(x)*f(y)$. À l'inverse, une fonction est dite \textit{non-linéaire} si elle ne respecte pas la propriété}.\\ \\
-\textit{Par exemple}, dans l'algorithme AES, on retrouve l'opération XOR. Dans ce cas, l'opération est dite linéaire car la propriété $f(x\oplus m) = f(x) \oplus f(m)$ est respectée. On remarque donc qu'il est facile de calculer un masque booléen pour une fonction linéaire. \\
-Un contre-exemple, dans l'algorithme AES, concerne l'opération \textit{SubBytes}. Il s'agit d'une opération non-linéaire. Autrement dit, $f(x\oplus m) \neq f(x) \oplus f(m)$. On remarque donc qu'il n'est pas facile de calculer un masque booléen pour une fonction non-linéaire. Dans ce cas, une alternative est de calculer un masque arithmétique. En effet, la relation $f(x \times m) = (x \times m)^{-1} = f(x) \times f(m)$ est respectée.
+Les algorithmes de chiffrement utilisent des fonctions linéaires mais aussi des fonctions non-linéaires. \textbf{Une fonction est dite \textit{linéaire} si elle respecte la propriété suivante : $f(x*y) = f(x)*f(y)$. À l'inverse, une fonction est dite \textit{non-linéaire} si elle ne respecte pas la propriété}.
+
+\hspace{-0.5 cm} Exemple : Dans l'algorithme AES, on retrouve l'opération XOR. Cette opération est dite linéaire car la propriété $f(x\oplus m) = f(x) \oplus f(m)$ est respectée. On remarque donc qu'il est facile de calculer un masque booléen pour une fonction linéaire. \textit{ShiftRows} et \textit{MixColumns} sont également linéaires. \\
+Un contre-exemple, dans l'algorithme AES, concerne l'opération \textit{SubBytes}. Il s'agit d'une opération non-linéaire car $f(x\oplus m) \neq f(x) \oplus f(m)$. On remarque donc qu'il n'est pas facile de calculer un masque booléen pour une fonction non-linéaire. 
 
 Comme dit précédemment, chaque masque appliqué doit ensuite être retiré afin d'obtenir \textit{in fine} le vrai message chiffré. Nous retiendrons donc ici que pour l'algorithme AES, si l'on souhaite appliquer un masque booléen (et c'est en général le cas le plus fréquent), il sera toujours plus facile de le réaliser sur des opérations linéaires (telles que \textit{AddRoundKey, ShiftRows, MixColumns}) plutôt que sur des opérations non-linéaires (telles que \textit{SubBytes}).
 
 
-
 \subsubsection{Contre-mesures \textit{Faking}}
 
-Après plusieurs recherches sur \textit{Internet}, j'ai découvert l'existence d'un nouveau type de contre-mesure : les contre-mesures de type \textbf{\textit{Faking}}. Les articles définissant ce type de contre-mesure ont été rédigés fin 2016 au plus tôt, il s'agit donc d'une contre-mesure assez récente. Ce type de contre-mesure s'appuie sur une partie du concept de contre-mesure de type Masking. \\ Le but est le suivant : Dès le départ, on va venir masquer la vraie valeur de clé ($Key_{Real}$) par un masque ($Key_{Mask}$) produisant ainsi une fausse clé ($Key_{Fake}$). On a donc la relation : $Key_{Fake} = Key_{Real} \oplus Key_{Mask}$. À partir de cette fausse clé, on va appliquer l'opération \textit{KeySchedule} générant ainsi d'autres fausses clés pour l'exécution de l'algorithme AES. L'algorithme AES est exécuté comme décrit à la section \ref{sec:AES}, i.e avec ses quatre opérations élémentaires (\textit{AddRoundKey, SubBytes, ShiftRows, MixColumns}) appliquées sur les données intermédiaires. C'est là que ce type de contre-mesure prend tout son sens. En effet, c'est la fausse clé qui va être utilisée pour chiffrer les données et non la vraie clé. De cette manière, si un attaquant opère une attaque de type CPA (ou autre), en supposant qu'il ne connaisse pas le masque ($Key_{Mask}$) appliqué sur la vraie clé, il obtiendra bien une valeur de clé. Cependant, cette clé sera non pas la vraie clé initiale mais plutôt la fausse clé générée au départ. De cette manière, l'attaquant ne sera pas en mesure de déchiffrer les données.
+Après plusieurs recherches sur \textit{Internet}, j'ai découvert l'existence d'un nouveau type de contre-mesure : les contre-mesures de type \textbf{\textit{Faking}}. Les articles définissant ce type de contre-mesure ont été rédigés fin 2016 au plus tôt, il s'agit donc d'une contre-mesure assez récente. Cette contre-mesure s'appuie sur une partie du concept de contre-mesure par \textit{Masking}. \\ Le but est le suivant : Dès le départ, on va venir masquer la vraie valeur de clé ($Key_{Real}$) en réalisant un XOR avec un masque ($Key_{Mask}$) produisant ainsi une fausse clé ($Key_{Fake}$). On a donc la relation : $Key_{Fake} = Key_{Real} \oplus Key_{Mask}$. À partir de cette fausse clé, on va exécuter normalement l'algorithme AES (comme décrit à la section \ref{sec:AES}): C'est-à-dire qu'on va tout d'abord appliquer l'opération \textit{KeySchedule} générant ainsi d'autres fausses clés et ensuite on va exécuter les quatre opérations élémentaires (\textit{AddRoundKey, SubBytes, ShiftRows, MixColumns}) afin de chiffrer les données. On constate ainsi que c'est la fausse clé qui est utilisée pour chiffrer les données et non la vraie clé. De cette manière, si un attaquant opère une attaque de type CPA (ou autre), en supposant qu'il ne connaisse pas le valeur du masque ($Key_{Mask}$) appliqué sur la vraie clé, il sera bien en mesure de retrouver une valeur de clé. Cependant, cette clé sera non pas la vraie clé initiale mais plutôt la fausse clé générée au départ. En conclusion, l'attaquant ne sera pas capable de déchiffrer les données.
 
-Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque sur les données intermédiaires, il faut ensuite le retirer de façon à obtenir \textit{in fine} le vrai texte chiffré. Pour le cas des contre-mesures de type \textit{Faking}, le principe est identique. Pour ce faire, on va utiliser un co-processeur dont le rôle est d'annuler l'emploi du masque afin d'obtenir le vrai texte chiffré. L'annexe \ref{ann:Faking} présente le principe de fonctionnement d'une contre-mesure de type Faking. On y retrouve les opérations élémentaires de l'algorithme AES (\textit{AddRoundKey, SubBytes, ShiftRows, MixColumns}) ainsi que deux opérations spéciales exécutées par le co-processeur (\textit{SubBytesTrans, MixColumns}) et définies de façon à annuler l'utilisation de la fausse clé sur les données.
+Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque sur les données intermédiaires, il faut ensuite le retirer de façon à obtenir \textit{in fine} le \textit{vrai} texte chiffré. Pour le cas des contre-mesures de type \textit{Faking}, le principe est identique. Pour ce faire, on va utiliser un co-processeur dont le rôle est d'annuler l'emploi du masque afin d'obtenir les vraies données intermédiaires à chaque fin de round et donc \textit{in fine} les vraies données chiffrées. L'annexe \ref{ann:ConceptFaking} présente le principe de fonctionnement d'une contre-mesure de type Faking. On y retrouve les opérations élémentaires de l'algorithme AES (\textit{AddRoundKey, SubBytes, ShiftRows, MixColumns}) ainsi que deux opérations spéciales exécutées par le co-processeur (\textit{SubBytesTrans, MixColumns}). SubBytesTrans est définie de façon à annuler l'utilisation de la fausse clé sur les données alors que MixColumns réalise la même opération que d'habitude. À l'aide de MATLAB, j'ai réalisé une simulation dans laquelle le device cryptographique est protégé par une contre-mesure de type \textit{Faking}. Ensuite, j'ai simulé une attaque de type CPA sur ce device. Le résultat, observé à la figure \ref{fig:faking} ci-dessous, montre clairement qu'un attaquant est capable de retrouver la clé de chiffrement. Néanmoins, il s'agit de la fausse clé ! La vrai clé quant à elle ne laisse fuiter aucune information.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{image/faking}
+    \caption{On voit qu'au plus le nombre de traces augmente au plus une clé se distingue des 255 autres. Il s'agit de la fausse clé. La vraie clé ne laisse fuiter aucune information.}
+    \label{fig:faking} 
+\end{figure}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%% Partie 4 - Conclusion %%%%%%%%%%%%%%%
@@ -847,6 +873,18 @@ Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque s
     \caption{Ce schéma présente les différentes sortes de contre-mesures de types hiding.}
     \label{fig:resume_hiding} 
 \end{figure}
+
+\newpage
+
+\section{Contre-mesure \textit{Faking}}
+\label{ann:ConceptFaking}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\linewidth]{image/ConceptFaking}
+    \caption{Ce schéma-bloc présente le principe de fonctionnement de la contre-mesure de type Faking. On remarque que la clé manipulée par l'algorithme AES (pour chaque round exécuté) est une fausse clé ($Key_{Fake}$), dissimulée sous un masque ($Key_{Mask}$).}
+    \label{fig:ConceptFaking} 
+\end{figure}
+
 
 
 \end{document}
