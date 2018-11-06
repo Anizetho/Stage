@@ -523,6 +523,7 @@ Exemple : HD(110110 ; 100100) = 2
 
 
 \subsubsection{L'attaque CPA en concret}
+\label{sec:CPAEntire}
 
 La figure \ref{fig:CPAconcrete} ci-dessous présente le principe de fonctionnement d'une attaque CPA comme décrite ci-avant.
 
@@ -586,22 +587,38 @@ Ainsi :
 \end{figure}
 
 \newpage
-Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent les résultats obtenus. Il s'agit de graphes indiquant les valeurs de coefficient de corrélation en fonction des 256 valeurs de clé testées. En toute logique, le coefficient de corrélation est maximum (en valeur absolue) pour la clé réellement utilisée pour le chiffrement des données. Cependant, on sait qu'en fonction du nombres de traces analysées, les valeurs du facteur de corrélation fluctuent dans un intervalle plus ou moins grand. Ainsi, au plus le nombre de traces sera grand, au plus l'intervalle des valeurs de corrélation sera petit et au plus ce sera facile de repérer la clé de chiffrement. En effet, si on observe les trois graphes ci-dessous, on peut remarquer que pour 10 traces, le coefficient de corrélation varie entre -0,83 et 0,8 ; pour 100 traces, le coefficient de corrélation varie entre -0,26 et 0,34 ; pour 1000 traces, le coefficient de corrélation varie entre -0,24 et 0,21. Pour chacun des trois graphes, on peut néanmoins distinguer la valeur de la clé secrète dont la valeur du coefficient de corrélation culmine à 0,98. Dans l'exemple, la clé secrète qui était utilisée valait 200 (en décimal).
+
+Les graphes \ref{fig:10}, \ref{fig:100} et \ref{fig:1000} ci-dessous présentent les résultats obtenus. Il s'agit de graphes indiquant les valeurs de coefficient de corrélation pour chacune des 256 valeurs de clé testées. À noter que la clé secrète utilisée pour chiffrer les données lors de la simulation vaut 200 (en décimal). Comme vu à la section \ref{sec:CPAEntire}, en toute logique, le coefficient de corrélation est maximum (en valeur absolue) pour la clé réellement utilisée pour le chiffrement des données. Cependant, on sait qu'en fonction du nombre de traces analysées, les valeurs du facteur de corrélation fluctuent dans un intervalle plus ou moins grand. Ainsi, au plus le nombre de traces sera élevé, au plus l'intervalle des valeurs de corrélation sera faible et au plus ce sera facile de repérer la clé de chiffrement. En effet, si on observe les trois graphes ci-dessous, on peut remarquer que pour 10 traces, le coefficient de corrélation varie entre -0,66 et 0,73 ; pour 100 traces, le coefficient de corrélation varie entre -0,33 et 0,24 ; pour 1000 traces, le coefficient de corrélation varie entre -0,22 et 0,18. En observant ces 3 figures, on remarque que 10 traces ne suffisent pas à retrouver la valeur exacte de la clé secrète (indiquée à 125). Par contre, avec 100 traces et 1000 traces, la valeur du coefficient de corrélation maximum culmine à 0.54 et à 0.58 respectivement et permet de retrouver la bonne clé secrète utilisée pour le chiffrement (200).
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.95\textwidth]{image/10}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 10 traces.}    \label{fig:10}
+    \hspace{-1.2 cm}
+    \includegraphics[scale=0.25]{image/10.eps}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 10 traces.}    \label{fig:10}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.95\textwidth]{image/100}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 100 traces.}    \label{fig:100}
+    \hspace{-1.2 cm}
+    \includegraphics[scale=0.25]{image/100.eps}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 100 traces.}    \label{fig:100}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.05\textwidth]{image/1000}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 1000 traces.}    \label{fig:1000}
+    \hspace{-1.2 cm}   
+    \includegraphics[scale=0.25]{image/1000.eps}    \caption{Coefficient de corrélation en fonction de la valeur de la clé lorsqu'on analyse 1000 traces.}    \label{fig:1000}
 \end{figure}
+
+\newpage
+
+En général, pour montrer que l'augmentation du nombre de traces permet de trouver plus facilement la valeur de la clé secrète, on utilise un graphe comme celui présenté ci-dessous (figure \ref{fig:nb_traces}).
+\begin{figure}[htb]
+    \centering
+    \hspace{-1.2 cm} 
+    \includegraphics[width=1\linewidth]{image/nb_traces}
+    \caption{Graphe présentant la valeur du coefficient de corrélation en fonction du nombre de traces. Plus le nombre de traces est élevé, plus la valeur de la clé secrète employée pour le chiffrement des données se distingue des autres clés. La vraie clé est 200.} 
+    \label{fig:nb_traces} 
+\end{figure}
+
 
 \newpage
 
@@ -812,7 +829,7 @@ Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque s
 \label{ann:AES}
 \begin{figure}[!ht]
     \includegraphics[width=\linewidth]{image/CodeAES}
-    \caption{Code définissant l'ordres des opérations exécutées par l'algorithme AES-128.}
+    \caption{Code définissant l'ordre des opérations exécutées par l'algorithme AES-128.}
     \label{fig:AESCode}
 \end{figure}
 
@@ -838,18 +855,17 @@ Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque s
 
 \newpage
 
-\includepdf[pagecommand=\section{Traces}, angle=90]{image/traces.pdf}\label{ann:Traces}
+\includepdf[pagecommand=\section{Traces}\label{ann:Traces}, angle=90]{image/traces.pdf}
 %\caption{Les 4 premières traces mesurées à l'oscilloscope.}
 
-\includepdf[pagecommand=\section{Corrélation pour les clés 1 à 4}, angle=90]{image/cle.pdf}\label{ann:corrélation}
+\includepdf[pagecommand=\section{Corrélation pour les clés 1 à 4}\label{ann:corrélation}, angle=90]{image/cle.pdf}
 %     \caption{Les valeurs de coefficient de corrélation obtenues pour les valeurs de clé : 128, 129, 130 et 131 respectivement.}
 
-\includepdf[pagecommand=\section{Corrélations 3D}, angle=90]{image/correlation3D.pdf}\label{ann:Corrélations_3D}
+\includepdf[pagecommand=\section{Corrélations 3D}\label{ann:Corrélations_3D}, angle=90]{image/correlation3D.pdf}
 %     \caption{Affichage en 3D de toutes les valeurs de corrélation obtenues pour chaque valeur de clé possible.}
 
-\includepdf[pagecommand=\section{Corrélation pour la clé 8}, angle=90]{image/cle8.pdf}\label{ann:cle8}
+\includepdf[pagecommand=\section{Corrélation pour la clé 8}\label{ann:cle8}, angle=90]{image/cle8.pdf}
 %     \caption{Valeurs de corrélation obtenue pour la clé secrète 8 (bonne clé).}
-
 
 \newpage
 
