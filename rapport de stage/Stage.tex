@@ -487,7 +487,7 @@ Où :
 En conclusion, les systèmes informatiques modernes (comme le FPGA) possèdent deux composantes en puissance : 
 \begin{itemize}
 \item Une \textbf{\textit{puissance statique}} de faible valeur, requise pour garder le device en fonctionnement continu. Elle dépend du nombre de transistors dans la cellule. Elle est \textbf{négligée}.
-\item Une \textbf{\textit{puissance dynamique}} de haute valeur, qui apparait lors d'une commutation. Elle dépend du type de transition. Elle n'est \textbf{pas négligée}.
+\item Une \textbf{\textit{puissance dynamique}} de haute valeur, qui apparait lors d'une commutation. Elle dépend des opérations exécutées et des données manipulées. Elle n'est \textbf{pas négligée}.
 \end{itemize}
 Ceci nous conduit donc à l'équation suivante (\ref{eqn:puissance}) : 
 \begin{gather}
@@ -497,33 +497,65 @@ Ceci nous conduit donc à l'équation suivante (\ref{eqn:puissance}) :
 }
 
 
-
+\vspace{-0.2 cm}
 \subsubsection{Composition des traces de puissance}
-Les attaques basées sur l'analyse de la consommation de puissance exploitent le fait que la consommation de puissance d'un device cryptographique dépend des \textbf{opérations qu'il exécute} et des \textbf{données qu'il manipule}. Ces deux informations vont ainsi permettre de définir différentes propriétés intéressantes. Pour chaque point analysé dans une trace de puissance, on notera :
+\vspace{-0.1 cm}Les attaques basées sur l'analyse de la consommation de puissance exploitent le fait que la consommation de puissance d'un device cryptographique dépend des \textbf{opérations qu'il exécute} et des \textbf{données qu'il manipule}. Ces deux informations vont ainsi permettre de définir différentes propriétés intéressantes. Pour chaque point analysé dans une trace de puissance, on notera :
 \begin{itemize}
 \item \textbf{$P_{op}$ la composante dépendante de l'opération exécutée} ;
 \item \textbf{$P_{data}$ la composante dépendante de la donnée manipulée}. \\
 \end{itemize}
-De plus, une troisième composante doit également être prise en compte. Cette composante fait référence au \textbf{bruit électrique} (aussi appelé bruit de fond) et sera notée \textbf{$P_{noise}$}. En effet, un signal est toujours affecté de petites fluctuations plus ou moins importantes. Ces fluctuations, dont les origines peuvent être diverses, sont appelées bruit électrique (ou simplement bruit). Le bruit est considéré comme un élément parasite aléatoire, c'est-à-dire qu'on ne sait pas le déterminer à l'avance. Au plus cette composante sera élevée et au plus l'analyse de la consommation de puissance sera difficile.
+\vspace{-0.2 cm}De plus, une troisième composante doit également être prise en compte. Cette composante fait référence au \textbf{bruit électrique} (aussi appelé bruit de fond) et sera notée \textbf{$P_{noise}$}. En effet, un signal est toujours affecté de petites fluctuations plus ou moins importantes. Ces fluctuations, dont les origines peuvent être diverses, sont appelées bruit électrique (ou simplement bruit). Le bruit est considéré comme un élément parasite aléatoire, c'est-à-dire qu'on ne sait pas le déterminer à l'avance. Au plus cette composante sera élevée et au plus l'analyse de la consommation de puissance sera difficile.
 
 Ainsi, chaque point d'une trace de puissance peut être modélisé comme la somme des 3 composantes définies ci-dessus, soit : 
-$P_{total} = P_{op} + P_{data} + P_{noise}$. De plus, en reprenant l'équation \ref{eqn:puissance} définie dans la section \ref{sec:puissance}, nous pouvons conclure que :
-$P_{total} = P_{op} + P_{data} + P_{noise} = P_{stat} + P_{dyn} \cong  P_{dyn} = P_{chrg} + P_{cc}$
+$P_{total} = P_{op} + P_{data} + P_{noise}$. De plus, en reprenant l'équation (\ref{eqn:puissance}) définie dans la section \ref{sec:puissance}, nous pouvons conclure que (équation \ref{eqn:conclusion}) :
+\begin{gather}
+	P_{total} = P_{op} + P_{data} + P_{noise} = P_{stat} + P_{dyn} \cong  P_{dyn} = P_{chrg} + P_{cc}\label{eqn:conclusion}
+\end{gather}
+
 
 \subsubsection{Modèles de puissance}
-Dans une attaque CPA, l'attaquant doit utiliser ce qu'on appelle un \textbf{\textit{modèle de puissance}} afin de prédire la consommation de puissance du device cryptographique attaqué. Une fois ces prédictions réalisées, celles-ci sont comparées aux mesures réelles de consommation de puissance du device (prises à l'oscilloscope) dans le but de retrouver la clé secrète. La qualité du modèle employé a un impact important sur l'efficacité de l'attaque. Deux modèles sont généralement définis et utilisés : Il s'agit des modèles de \textit{Poids de Hamming} (\textit{Hamming Weight} - HW) et de \textit{Distance de Hamming} (\textit{Hamming Distance} - HD).
+\label{sec:modelpuissance}
+\vspace{-0.1 cm}Dans une attaque CPA, l'attaquant doit utiliser ce qu'on appelle un \textbf{\textit{modèle de puissance}} afin de prédire la consommation de puissance du device cryptographique attaqué. Une fois ces prédictions obtenues, celles-ci sont comparées aux mesures réelles de consommation de puissance du device (prises à l'oscilloscope). Plus précisément, comme nous le verrons à la section \ref{sec:CPAEntire}, on calcule la corrélation qu'il existe entre les prédictions et les mesures réelles afin de déterminer la valeur de la clé secrète. La qualité du modèle employé a un impact important sur l'efficacité de l'attaque. Deux modèles sont généralement définis et utilisés : Il s'agit des modèles de \textit{Poids de Hamming} (\textit{Hamming Weight} - HW) et de \textit{Distance de Hamming} (\textit{Hamming Distance} - HD).
 
-\begin{enumerate}
-\item \textbf{Poids de Hamming} (HW) : Le poids de Hamming est le modèle de consommation de puissance le plus basique. C'est celui le plus utilisé par un attaquant lorsqu'il s'agit d'estimer la consommation de puissance d'un circuit dont on ne connait pas certaines valeurs intermédiaires consécutives calculées durant l'exécution de l'algorithme. Ce modèle considère qu'un 0 ne mène pas à un excès de consommation de puissance tandis qu'un 1 implique une quantité significative de puissance consommée. Ainsi, pour ce modèle, on assume que la consommation de puissance est proportionnelle au nombre de bits à 1 d'une exécution de traitement de données. \\
-Exemple : HW(100110) = 3
-\item \textbf{Distance de Hamming} (HD) : \\
-Exemple : HD(110110 ; 100100) = 2
-\end{enumerate}
+\underline{\textbf{Poids de Hamming} (HW)} : Le poids de Hamming est le modèle de consommation de puissance le plus basique. C'est celui le plus utilisé par un attaquant lorsqu'il s'agit d'estimer la consommation de puissance d'un circuit dont on ne connait pas certaines valeurs intermédiaires consécutives calculées durant l'exécution de l'algorithme. Ce modèle considère qu'un 0 ne mène à aucune quantité significative de consommation de puissance tandis qu'un 1 implique une quantité significative de puissance consommée. Ainsi, pour ce modèle, on assume que la consommation de puissance prédite est proportionnelle au nombre de bits à 1 d'une donnée traitée. Dit vulgairement, le HW calcule le nombre de bits à 1 présent dans un nombre binaire. Exemple : HW(100110) = 3.
+
+\underline{\textbf{Distance de Hamming} (HD)}: La distance de Hamming est un modèle de consommation de puissance proposé par Brier et Al. Il est basé sur la relation entre la consommation de puissance et l'activité de commutation dans les circuits en technologie CMOS. En effet, comme indiqué en conclusion de la section \ref{sec:puissance}, la consommation de puissance d'un device en technologie CMOS est principalement d'ordre dynamique, c'est-à-dire due aux activité de commutation des cellules dans le circuit. Ainsi, ce modèle assume que la puissance totale consommée par un circuit CMOS (définit selon l'équation \ref{eqn:puissance}) est équivalente à la consommation de puissance lors de commutations (transitions 0-1 et 1-0). Ce modèle est donc proportionnel au nombre de transitions 0-1 et 1-0. La HD entre 2 nombres binaires se calcule en comptant le nombre de transitions (0-1 et 1-0) entre ces 2 nombres. Exemple : HD(110110 ; 100100) = 2.
 
 
+\subsubsection{Fonctions linéaires et non-linéaires}
+\label{lineaire}
+Les algorithmes de chiffrement utilisent des fonctions dites linéaires mais également des fonctions non-linéaires. \textbf{Une fonction est dite \textit{linéaire} si elle respecte la propriété suivante} : 
+\begin{gather}
+	f(x*y) = f(x)*f(y)\label{eqn:lineaire}
+\end{gather}
+À l'inverse, une fonction est dite \textit{non-linéaire} si elle ne respecte pas cette propriété (équation (\ref{eqn:lineaire})). \\ \\
+\hspace{-0.5 cm} \textbf{Exemple} : Dans l'algorithme AES, on retrouve l'opération \textit{AddRoundKey} qui correspond à un XOR. Cette opération est dite linéaire car la propriété $f(x\oplus m) = f(x) \oplus f(m)$ est respectée. On notera que les opérations \textit{ShiftRows} et \textit{MixColumns} sont également linéaires. \\
+\textbf{Contre-exemple} : L'opération \textit{SubBytes} dans l'algorithme AES. Il s'agit d'une opération non-linéaire car $Sbox(x\oplus m) \neq Sbox(x) \oplus Sbox(m)$. 
+
+\subsubsection{Coefficient de corrélation}
+\label{subsec:correlation}
+Par définition, le \textbf{\textit{coefficient de corrélation}} est un coefficient statistique permettant de mettre en évidence une liaison entre deux types de séries de données statistiques. La valeur du coefficient de corrélation est comprise entre -1 et 1. Le coefficient de corrélation se calcule de façon suivante (\ref{eqn:formcorrelation}) :
+\begin{gather}
+	r(X;Y) = \frac{\sum(X-\bar{X}).(Y-\bar{Y}) }{\sqrt{\sum(X-\bar{X})^2}.\sqrt{\sum(Y-\bar{Y})^2}}\label{eqn:formcorrelation}
+\end{gather}
+Où 
+\begin{itemize}
+\item $X$ et $Y$ sont deux séries de données statistiques.
+\item $\bar{X}$ et $\bar{Y}$ sont les moyennes respectives des variables X et Y.\vspace{0.4 cm}
+\end{itemize}
+Sur base de la valeur du coefficient de corrélation, on peut conclure que :
+\begin{itemize}
+\item Si la valeur absolue du coefficient de corrélation est élevée (proche de 1) alors c'est qu'il y a une forte liaison entre les deux séries analysées.
+\item Si la valeur absolue du coefficient de corrélation est faible (proche de 0) alors c'est qu'il y a une faible liaison entre les deux séries analysées.
+\end{itemize}
 
 \subsubsection{L'attaque CPA en concret}
 \label{sec:CPAEntire}
+En 1999, Paul Kocher a révolutionné le monde de la sécurité matérielle en publiant une nouvelle attaque sur canaux cachés exploitant la mesure de la consommation de puissance d’un circuit au cours d’un chiffrement. La faille utilisée est la corrélation dans les circuits électroniques de technologie CMOS entre la consommation de puissance dynamique et le nombre de transistors qui commutent (de 0-1 et de 1-0). Ainsi, il est possible de corréler la consommation de puissance (obtenues par des prises de mesures à l'oscilloscope) aux résultats des opérations réalisées dans le circuit (obtenus par des simulations sur ordinateurs). Comme précisé dans la section \ref{subsec:CPAIntroduc}, il existe différents types d'attaques par analyse de la consommation de puissance. Celle définie par Kocher en 1999 est une attaque de type DPA (elle ne sera pas abordée dans cet ouvrage). En 2004, l'attaque DPA fut améliorée par des chercheurs qui décidèrent de lui donner un nom : \textbf{\textit{Attaque CPA}} pour \textit{Correlation Power Analysis}. Ce nom se justifie par le fait que cette attaque calcule la corrélation qu'il existe entre la consommation de puissance mesurée à l'oscilloscope et la consommation de puissance simulée par logiciels informatiques (et plus précisément pas des modèles de puissance, comme définit à la section \ref{sec:modelpuissance}). \\
+
+
+Par exemple, comme nous venons de le voir, dans l’algorithme de chiffrement symétrique AES, les valeurs successives de la sortie d’une opération non-linéaire telle que SubBytes [4] sont liées à la clé secrète utilisée dans le chiffrement. Cela entraine une corrélation entre la consommation de puissance lors du calcul de cette fonction et la clé secrète. La méthode d’attaque différentielle proposée par Kocher, la DPA (Differential Power Analysis), utilise cette caractéristique pour trouver la clé secrète en ciblant des sous-clés de la longueur d’un octet. L’attaque sur les sous- clés est possible car durant les deux premières étapes de l’algorithme AES, AddRoundKey et SubBytes, les octets du texte en entrée ne sont pas mélangés.
+
 
 La figure \ref{fig:CPAconcrete} ci-dessous présente le principe de fonctionnement d'une attaque CPA comme décrite ci-avant.
 
@@ -630,11 +662,11 @@ En général, pour montrer que l'augmentation du nombre de traces permet de trou
     \label{fig:simulEx2} 
 \end{figure}
 
-\vspace{-0.3 cm}On distingue 3 grands blocs sur le schéma ci-dessus :
+\hspace{-0.5 cm}On distingue 3 grands blocs sur le schéma ci-dessus :
 \begin{itemize}
-\item Premièrement, la prise de mesures à l'oscilloscope. Cette prise de mesure nous fournit un ensemble de traces. Plus précisément, l'oscilloscope a enregistré N traces différentes.
+\item Premièrement, la prise de mesures à l'oscilloscope. Cette prise de mesures nous fournit un ensemble de traces. Plus précisément, l'oscilloscope a enregistré N traces différentes.
 \item Deuxièmement, des calculs de simulation de la consommation de puissance à partir du modèle du \textit{poids de Hamming}. Pour chaque texte clair envoyé et pour chaque clé possible, on va calculer le poids de Hamming du résultat obtenu en sortie de l'opération \textit{SubBytes}. Ce bloc est identique à la figure \ref{fig:simul2}.
-\item Troisièmement, le calcul du coefficient de corrélation. Cette corrélation est effectuée pour chaque trace capturée avec chaque résultat du poids de Hamming. 
+\item Troisièmement, le calcul du coefficient de corrélation. Cette corrélation est effectuée pour chaque trace capturée avec chaque résultat du poids de Hamming. \\
 \end{itemize}
 
 \hspace{-0.5 cm}Voici les données dont nous disposons pour l'exercice :
@@ -656,13 +688,10 @@ En général, pour montrer que l'augmentation du nombre de traces permet de trou
 
 
 \newpage
-
 \subsection{Contre-mesures}
 \label{sec:contre-mesures}
 
-\vspace{-0.2 cm}Une fois que les attaques par analyse de la consommation de puissance ont été reconnues comme fonctionnelles, certaines entreprises (comme les banques par exemple) devaient trouver des moyens de contrer ces attaques afin d'assurer la confidentialité des données sensibles qu'elles manipulaient. Par conséquent, une série de contre-mesures a été développée à partir du début du deuxième millénaire. Cette section a pour objectif de présenter ces contre-mesures. 
-
-Pour rappel, les attaques par analyse de la consommation de puissance étudient des traces dont l'allure dépend essentiellement de deux facteurs : les opérations exécutées et les données manipulées. Pour protéger un appareil cryptographique de telles attaques, il faut donc casser les relations entre la consommation de puissance et les données sensibles manipulées et entre la consommation de puissance et les opérations exécutées. Les contre-mesures existantes sont divisées en deux catégories différentes : 
+\vspace{-0.2 cm}Une fois que les attaques par analyse de la consommation de puissance ont été reconnues comme fonctionnelles, certaines entreprises (comme les banques par exemple) se devaient de trouver des moyens de contrer ces attaques afin d'assurer la confidentialité des données sensibles qu'elles manipulaient. Par conséquent, une série de contre-mesures a été développée à partir du début du deuxième millénaire. Cette section a pour objectif de présenter ces contre-mesures. \\ Pour rappel, les attaques par analyse de la consommation de puissance étudient des traces dont l'allure dépend essentiellement de deux facteurs : les opérations exécutées et les données manipulées. Pour protéger un appareil cryptographique de telles attaques, il faut donc casser les relations entre la consommation de puissance et les données sensibles manipulées et entre la consommation de puissance et les opérations exécutées. Les contre-mesures existantes sont divisées en deux catégories différentes : 
 \begin{enumerate}
 \item \textbf{Les contre-mesures de type \textit{Hiding}} : Le principe des contre-mesures de type Hiding est de rendre la consommation de puissance du device cryptographique indépendante des opérations exécutées et des données manipulées. Pour ce faire, on verra (section \ref{sec:hiding}) qu'il existe deux approches différentes possibles.
 \item \textbf{Les contre-mesures de type \textit{Masking}} : Le principe des contre-mesures de type Masking est de générer des valeurs intermédiaires aléatoires. Ainsi, on accepte que la consommation de puissance du device cryptographique dépende des données manipulées. Cependant, on modifie (on masque) ces valeurs intermédiaires afin que les traces de puissance obtenues à l'oscilloscope soient faussées. On va donc construire des devices cryptographique dont la consommation de puissance est liée aux données manipulées mais ces données sont faussées (modifiées) volontairement. \\
