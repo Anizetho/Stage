@@ -528,7 +528,7 @@ Les algorithmes de chiffrement utilisent des fonctions dites linéaires mais ég
 \begin{gather}
 	f(x*y) = f(x)*f(y)\label{eqn:lineaire}
 \end{gather}
-À l'inverse, une fonction est dite \textit{non-linéaire} si elle ne respecte pas cette propriété (équation (\ref{eqn:lineaire})). \\ \\
+À l'inverse, une fonction est dite \textit{non-linéaire} si elle ne respecte pas cette propriété (équation (\ref{eqn:lineaire})). \vspace{0.2 cm} \\
 \hspace{-0.5 cm} \textbf{Exemple} : Dans l'algorithme AES, on retrouve l'opération \textit{AddRoundKey} qui correspond à un XOR. Cette opération est dite linéaire car la propriété $f(x\oplus m) = f(x) \oplus f(m)$ est respectée. On notera que les opérations \textit{ShiftRows} et \textit{MixColumns} sont également linéaires. \\
 \textbf{Contre-exemple} : L'opération \textit{SubBytes} dans l'algorithme AES. Il s'agit d'une opération non-linéaire car $Sbox(x\oplus m) \neq Sbox(x) \oplus Sbox(m)$. 
 
@@ -551,17 +551,37 @@ Sur base de la valeur du coefficient de corrélation, on peut conclure que :
 
 \subsubsection{L'attaque CPA en concret}
 \label{sec:CPAEntire}
-En 1999, Paul Kocher a révolutionné le monde de la sécurité matérielle en publiant une nouvelle attaque sur canaux cachés exploitant la mesure de la consommation de puissance d’un circuit au cours d’un chiffrement. La faille utilisée est la corrélation dans les circuits électroniques de technologie CMOS entre la consommation de puissance dynamique et le nombre de transistors qui commutent (de 0-1 et de 1-0). Comme précisé dans la section \ref{subsec:CPAIntroduc}, il existe différents types d'attaques par analyse de la consommation de puissance. Celle définie par Kocher en 1999 est une attaque de type DPA (elle ne sera pas abordée dans cet ouvrage). En 2004, cette attaque DPA fut améliorée par des chercheurs qui décidèrent de lui donner un nouveau nom : \textbf{\textit{Attaque CPA}} pour \textit{Correlation Power Analysis}. Ce nom se justifie par le fait que cette attaque calcule la corrélation qu'il existe entre la consommation de puissance mesurée à l'oscilloscope et la consommation de puissance simulée par logiciels informatiques (et plus précisément pas des modèles de puissance, comme définit à la section \ref{sec:modelpuissance}). La figure \ref{fig:CPAconcrete} ci-dessous présente le principe de fonctionnement d'une attaque CPA.\vspace{0.3 cm} \\
+En 1999, Paul Kocher a révolutionné le monde de la sécurité matérielle en publiant une nouvelle attaque sur canaux cachés exploitant la mesure de la consommation de puissance d’un circuit au cours d’un chiffrement. La faille utilisée est la corrélation, dans les circuits électroniques de technologie CMOS, entre la consommation de puissance dynamique et le nombre de transistors qui commutent (de 0-1 et de 1-0). Comme précisé dans la section \ref{subsec:CPAIntroduc}, il existe différents types d'attaques par analyse de la consommation de puissance. Celle définie par Kocher en 1999 est une attaque de type DPA (elle ne sera pas abordée dans cet ouvrage). En 2004, cette attaque DPA fut améliorée par des chercheurs qui décidèrent de lui donner un nouveau nom : \textbf{\textit{Attaque CPA}} pour \textit{Correlation Power Analysis}. Ce nom se justifie par le fait que cette attaque calcule la corrélation qu'il existe entre la consommation de puissance mesurée à l'oscilloscope et la consommation de puissance simulée par logiciels informatiques (et plus précisément pas des modèles de puissance, comme définit à la section \ref{sec:modelpuissance}). L'annexe \ref{ann:CPAconcrete} présente le principe de fonctionnement d'une attaque CPA.\vspace{0.25 cm} \\
 \hspace{-0.5 cm}Pour réaliser une attaque CPA, nous avons  principalement besoin de deux éléments :
 \begin{description}
-\item[Un oscilloscope] : L'oscilloscope est utilisé pour enregistrer des traces. C'est-à-dire des mesures de tension en fonction du temps représentant la consommation de puissance du device cryptographique lorsqu'il chiffre une donnée (\textit{plaintext}). Plusieurs plaintexts conduisent donc à plusieurs traces.
-\item[Un ordinateur] : L'ordinateur est utilisé pour réaliser toute une série de calculs. Plus précisément, il réalise 3 grands types de calculs : calculs de simulation de l'algorithme de chiffrement, calculs de simulation de modèle de puissance et calculs de coefficients de corrélation.
+\item[Un oscilloscope] : L'oscilloscope est utilisé pour enregistrer des traces de puissance. C'est-à-dire des mesures de tension en fonction du temps représentant la consommation de puissance du device cryptographique lorsqu'il chiffre une donnée (un \textit{plaintext}). Plusieurs plaintexts mènent donc à plusieurs traces.
+\item[Un ordinateur] : L'ordinateur est utilisé pour réaliser toute une série de calculs. Plus précisément, il réalise 3 grands types de calculs : calculs de simulation de l'algorithme de chiffrement, calculs de simulation du modèle de puissance et calculs des coefficients de corrélation.
 \end{description}
 Pour la suite de la description, on utilisera l'algorithme AES-128 comme algorithme de chiffrement et le modèle poids de Hamming comme modèle de puissance.
 
-\underline{Principe de fonctionnement :} 
+\underline{Principe de fonctionnement :} \vspace{0.4 cm}\\
+Comme le montre l'annexe \ref{ann:CPAconcrete}, avant de pouvoir calculer la corrélation, deux études doivent être réalisées : 
+\begin{enumerate}
+\item Bloc 1 = oscilloscope : Une étude qui concerne la prise de mesures afin d'analyser la consommation de puissance du device cryptographique lorsqu'il chiffre différents plaintexts.
+\item Bloc 2 = ordinateur : Une étude qui concerne la simulation de l'algorithme AES ainsi que la simulation de la puissance consommée.
+\end{enumerate}
 
-Par exemple, comme nous venons de le voir, dans l’algorithme de chiffrement symétrique AES, les valeurs successives de la sortie d’une opération non-linéaire telle que SubBytes [4] sont liées à la clé secrète utilisée dans le chiffrement. Cela entraine une corrélation entre la consommation de puissance lors du calcul de cette fonction et la clé secrète. La méthode d’attaque différentielle proposée par Kocher, la DPA (Differential Power Analysis), utilise cette caractéristique pour trouver la clé secrète en ciblant des sous-clés de la longueur d’un octet. L’attaque sur les sous- clés est possible car durant les deux premières étapes de l’algorithme AES, AddRoundKey et SubBytes, les octets du texte en entrée ne sont pas mélangés.
+\hspace{-0.5 cm}Le bloc 1 est simple à réaliser. À l'aide d'un oscilloscope, on va venir enregistrer différentes traces, représentant la consommation de puissance du device lorsqu'il chiffre différents plaintexts. Ainsi, pour N plaintexts, on enregistre N traces de puissance.
+ 
+\hspace{-0.5 cm}Le bloc 2 est plus complexe. Il est composé de deux parties importantes :
+\begin{enumerate}
+\item Simulation de l'algorithme AES : Comme vu à la section \ref{sec:AES}, l'algorithme AES-128 exécute quatre opérations, à savoir \textit{AddRoundKey, SubBytes, ShiftRows} et \textit{MixColumns}, répétées dix fois en raison des dix rounds. Parmi ces quatre opérations, trois sont des fonctions linéaires (\textit{AddRoundKey, ShiftRows} et \textit{MixColumns}) et une est une fonction non-linéaire (\textit{SubBytes}). Comme le montre l'annexe \ref{ann:CPAconcrete}, l'attaque CPA exploite les valeurs intermédiaires en sortie de l'opération \textit{SubBytes} lors du premier round. En pratique, l'attaque CPA peut exploiter les valeurs intermédiaires en sortie des trois autres opérations cependant, de part sa propriété de fonction non-linéaire, l'opération \textit{SubBytes} nécessite moins de traces pour retrouver la valeur de la clé. C'est pourquoi, il ne faut simuler que les deux premières opérations de l'algorithme AES-128 (\textit{AddRoundKey - SubBytes}) pour réaliser une attaque CPA. \\Rappelons que les opérations de l'AES-128 s'exécutent byte par byte sur les 16 bytes (128 bits) de la matrice STATE et de la matrice clé. Ainsi, on peut étudier chaque byte de façon séparée. Prenons le cas simple de l'étude du premier byte, i.e que l'on ne considère que le premier byte de notre plaintext et que le premier byte de notre clé. La problématique consiste alors à retrouver la valeur du premier byte de la clé connaissant la valeur du premier byte des différents plaintexts. Étant donné qu'un byte correspond à 8 bits, il existe $2^8$ soit 256 valeurs possibles pour le premier byte de le clé. De cette façon, lors de de la simulation, si l'on souhaite retrouver le premier byte de la clé, on va devoir simuler pour chaque plaintext, 256 valeurs de clé.
+\item Simulation de la puissance consommée : Comme vu à la section \ref{sec:modelpuissance}, l'attaquant doit utiliser ce qu'on appelle un modèle de puissance afin de prédire la consommation de puissance du device cryptographique attaqué. Pour une attaque CPA, le modèle de puissance privilégié est le poids de Hamming. Ainsi, comme le montre l'annexe \ref{ann:CPAconcrete}, on calcule le poids de Hamming des valeurs intermédiaires obtenues en sortie de l'opération \textit{SubBytes}. Ce poids de Hamming représente la puissance consommée par la device lorsqu'il chiffre un plaintext. Il sera ensuite comparé (par calcul de corrélation) à la puissance réellement consommée et mesurée à l'aide de l'oscilloscope. \\
+\end{enumerate}
+
+Une fois que les traces de puissance ont été sauvegardées et une fois que les calculs de simulation du bloc 2 sont obtenus, nous pouvons calculer la corrélation (bloc 3) qu'il existe entre les données résultantes du bloc 1 et les données résultantes du bloc 2. Plus précisément, ce calcul de coefficient de corrélation va permettre de mettre en évidence la liaison  qu'il existe entre les traces de puissance et les poids de Hamming. \\ 
+Reprenons le cas simple où l'on cherche uniquement à retrouver le premier byte de la clé. Pour un plaintext donné, nous allons obtenir une trace de puissance d'une part et un calcul de poids de Hamming d'autre part. En pratique, la trace de puissance est présentée sous forme d'une matrice de taille NxS où N représente le nombre de plaintexts et S représente le nombre d'échantillons dans la trace (voir annexe \ref{ann:traceExplain} pour mieux visualiser). Parallèlement, le résultat du calcul du poids de Hamming est présenté sous forme d'une matrice de taille 1x256 où '1' représente le premier byte du 'premier' plaintext et '256' représente les '256' valeurs de clé possibles à tester. Ainsi, pour N plaintexts, le résultat HW sera une matrice de taille Nx256. Le calcul du coefficient de corrélation va alors être réalisé pour chaque résultat poids de Hamming (256 résultats différents) avec chaque trace enregistrée. Le résultat de cette corrélation sera représenté sous forme d'une matrice de taille Sx256. En effet, Si on a 500 échantillons dans une trace alors le résultat de la corrélation sera de taille 500x256. On peut voir ce résultat comme la corrélation entre les 256 valeurs de clé testées pour chacune des traces caractérisées par 500 points (échnantillons).
+
+Afin de mieux appréhender le fonctionnement d'une attaque CPA, la section \ref{sec:simulCPA} présente deux exemples de simulation sur MATLAB.
+
+
+
+
 
 
 
@@ -569,6 +589,7 @@ Par exemple, comme nous venons de le voir, dans l’algorithme de chiffrement sy
 \newpage
 
 \subsection{Simulations sur MATLAB}
+\label{sec:simulCPA}
 
 Afin de bien assimiler une attaque par canal auxiliaire, il m'a été demandé de tester, par des simulation sur le logiciel MATLAB, les notions théoriques développées précédemment. Deux exercices différents ont ainsi été réalisés. 
 \begin{enumerate}
@@ -792,10 +813,12 @@ La figure \ref{fig:hiding} ci-dessous présente les possibilités de contre-mesu
 Le principe des contre-mesures de type masking est de générer des valeurs intermédiaires aléatoires. Autrement dit, lors de l'exécution d'un algorithme, différentes opérations sont exécutées conduisant à différentes valeurs intermédiaires calculées. Si aucune protection n'est mise en place, la consommation de puissance du device cryptographique dépendra des données intermédiaires qui sont manipulées par le device cryptographique (par l'algorithme pour être plus précis). L'attaquant peut alors potentiellement retrouver la clé secrète en analysant la consommation de puissance du device cryptographique. Par contre, si chaque valeur intermédiaire est dissimulée sous une nouvelle valeur intermédiaire aléatoire dite \textbf{masquée}, alors l'attaquant pourra toujours analyser la consommation de puissance, les traces qu'il obtiendra fourniront des informations faussées (par le masque). En d'autres mots, ce type de contre-mesure accepte que la consommation de puissance du device cryptographique dépendante des données manipulées et des opérations exécutées. Cependant, on va modifier les valeurs intermédiaires de façon aléatoire pour que les traces mesurées à l'oscilloscope n'aient plus de sens. Un avantage de cette approche est qu'elle peut être implémentée au niveau de l'algorithme, c'est-à-dire sans changer les caractéristiques de consommation de puissance du device cryptographique (ce qui est plus complexe) comme c'est le cas pour le contre-mesures Hiding.
 
 
-\underline{Définition du masque}
-
-Une valeur intermédiaire masquée $v_m$ est une valeur intermédiaire $v$ cachée par une valeur aléatoire $m$ : $v_m = v * m$. Ne connaissant pas la valeur aléatoire $m$, l'attaquant ne peut pas retrouver la valeur intermédiaire $v$. Ainsi, la consommation de puissance du device cryptographique dépend des valeurs intermédiaires masquées $v_m$ qui ne fournissent aucune information sur les valeurs intermédiaires $v$. Autrement dit, un masque cache les valeurs intermédiaires et il n'est donc plus possible de retrouver la clé de chiffrement. Bien évidemment, les masques ont besoin d'être supprimés à la fin des opérations algorithmiques afin d'obtenir le \textit{vrai} message chiffré. \\
-L'opération $*$ représente le type d'opération réalisé pour appliquer le masque (sur les valeurs intermédiaires). Il peut s'agir d'une fonction booléenne ou d'une fonction arithmétique. Ainsi, on définit : 
+\underline{Définition du masque} : Une valeur intermédiaire masquée $v_m$ est une valeur intermédiaire $v$ cachée par une valeur aléatoire $m$. On obtient donc la relation suivante (\ref{eqn:masking}) : 
+\begin{gather}
+	v_m = v * m\label{eqn:masking}
+\end{gather}
+Ne connaissant pas la valeur aléatoire $m$, l'attaquant ne peut pas retrouver la valeur intermédiaire $v$. Ainsi, la consommation de puissance du device cryptographique dépend des valeurs intermédiaires masquées $v_m$ qui ne fournissent aucune information sur les valeurs intermédiaires $v$. Autrement dit, un masque cache les valeurs intermédiaires et il n'est donc plus possible de retrouver la clé de chiffrement. Bien évidemment, les masques ont besoin d'être supprimés à la fin des opérations algorithmiques afin d'obtenir \textit{in fine} le \textit{vrai} message chiffré. \\
+L'opération $*$ (dans (\ref{eqn:masking})) représente le type d'opération réalisé pour appliquer le masque (sur les valeurs intermédiaires). Il peut s'agir d'une fonction booléenne ou d'une fonction arithmétique. Ainsi, on définit : 
 \begin{enumerate}
 \item \textbf{\textit{Un masque booléen}} : l'opération $*$ est alors remplacée par la fonction booléenne XOR (\oplus). Dans ce cas, le masque devient : $v_m = v \oplus m$.
 \item \textbf{\textit{Un masque arithmétique}} : l'opération $*$ est alors remplacée par une addition modulaire ($+$) ou par une multiplication modulaire (\times ). Dans ce cas, le masque devient : $v_m = v + m$ $(mod$ $n)$ ou $v_m = v \times m$ $(mod$ $n)$ où \textit{modulo n} est définit en fonction de l'algorithme de chiffrement.
@@ -803,28 +826,26 @@ L'opération $*$ représente le type d'opération réalisé pour appliquer le ma
 
 \newpage
 
-\underline{Fonctions linéaires et non-linéaires}
-
-Les algorithmes de chiffrement utilisent des fonctions linéaires mais aussi des fonctions non-linéaires. \textbf{Une fonction est dite \textit{linéaire} si elle respecte la propriété suivante : $f(x*y) = f(x)*f(y)$. À l'inverse, une fonction est dite \textit{non-linéaire} si elle ne respecte pas la propriété}.
-
-\hspace{-0.5 cm} Exemple : Dans l'algorithme AES, on retrouve l'opération XOR. Cette opération est dite linéaire car la propriété $f(x\oplus m) = f(x) \oplus f(m)$ est respectée. On remarque donc qu'il est facile de calculer un masque booléen pour une fonction linéaire. \textit{ShiftRows} et \textit{MixColumns} sont également linéaires. \\
-Un contre-exemple, dans l'algorithme AES, concerne l'opération \textit{SubBytes}. Il s'agit d'une opération non-linéaire car $f(x\oplus m) \neq f(x) \oplus f(m)$. On remarque donc qu'il n'est pas facile de calculer un masque booléen pour une fonction non-linéaire. 
-
-Comme dit précédemment, chaque masque appliqué doit ensuite être retiré afin d'obtenir \textit{in fine} le vrai message chiffré. Nous retiendrons donc ici que pour l'algorithme AES, si l'on souhaite appliquer un masque booléen (et c'est en général le cas le plus fréquent), il sera toujours plus facile de le réaliser sur des opérations linéaires (telles que \textit{AddRoundKey, ShiftRows, MixColumns}) plutôt que sur des opérations non-linéaires (telles que \textit{SubBytes}).
-
-
 \subsubsection{Contre-mesures \textit{Faking}}
 
-Après plusieurs recherches sur \textit{Internet}, j'ai découvert l'existence d'un nouveau type de contre-mesure : les contre-mesures de type \textbf{\textit{Faking}}. Les articles définissant ce type de contre-mesure ont été rédigés fin 2016 au plus tôt, il s'agit donc d'une contre-mesure assez récente. Cette contre-mesure s'appuie sur une partie du concept de contre-mesure par \textit{Masking}. \\ Le but est le suivant : Dès le départ, on va venir masquer la vraie valeur de clé ($Key_{Real}$) en réalisant un XOR avec un masque ($Key_{Mask}$) produisant ainsi une fausse clé ($Key_{Fake}$). On a donc la relation : $Key_{Fake} = Key_{Real} \oplus Key_{Mask}$. À partir de cette fausse clé, on va exécuter normalement l'algorithme AES (comme décrit à la section \ref{sec:AES}): C'est-à-dire qu'on va tout d'abord appliquer l'opération \textit{KeySchedule} générant ainsi d'autres fausses clés et ensuite on va exécuter les quatre opérations élémentaires (\textit{AddRoundKey, SubBytes, ShiftRows, MixColumns}) afin de chiffrer les données. On constate ainsi que c'est la fausse clé qui est utilisée pour chiffrer les données et non la vraie clé. De cette manière, si un attaquant opère une attaque de type CPA (ou autre), en supposant qu'il ne connaisse pas le valeur du masque ($Key_{Mask}$) appliqué sur la vraie clé, il sera bien en mesure de retrouver une valeur de clé. Cependant, cette clé sera non pas la vraie clé initiale mais plutôt la fausse clé générée au départ. En conclusion, l'attaquant ne sera pas capable de déchiffrer les données.
+Après plusieurs recherches sur \textit{Internet}, j'ai découvert l'existence d'un nouveau type de contre-mesure : les contre-mesures de type \textbf{\textit{Faking}}. Les articles définissant ce type de contre-mesure ont été rédigés fin 2016 au plus tôt, il s'agit donc d'une contre-mesure assez récente. Cette contre-mesure s'appuie sur une partie du concept de contre-mesure par \textit{Masking}. 
 
-Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque sur les données intermédiaires, il faut ensuite le retirer de façon à obtenir \textit{in fine} le \textit{vrai} texte chiffré. Pour le cas des contre-mesures de type \textit{Faking}, le principe est identique. Pour ce faire, on va utiliser un co-processeur dont le rôle est d'annuler l'emploi du masque afin d'obtenir les vraies données intermédiaires à chaque fin de round et donc \textit{in fine} les vraies données chiffrées. L'annexe \ref{ann:ConceptFaking} présente le principe de fonctionnement d'une contre-mesure de type Faking. On y retrouve les opérations élémentaires de l'algorithme AES (\textit{AddRoundKey, SubBytes, ShiftRows, MixColumns}) ainsi que deux opérations spéciales exécutées par le co-processeur (\textit{SubBytesTrans, MixColumns}). SubBytesTrans est définie de façon à annuler l'utilisation de la fausse clé sur les données alors que MixColumns réalise la même opération que d'habitude. À l'aide de MATLAB, j'ai réalisé une simulation dans laquelle le device cryptographique est protégé par une contre-mesure de type \textit{Faking}. Ensuite, j'ai simulé une attaque de type CPA sur ce device. Le résultat, observé à la figure \ref{fig:faking} ci-dessous, montre clairement qu'un attaquant est capable de retrouver la clé de chiffrement. Néanmoins, il s'agit de la fausse clé ! La vrai clé quant à elle ne laisse fuiter aucune information.
+\hspace{-0.5 cm}Le but est le suivant : Dès le départ, on va venir masquer la vraie valeur de clé ($Key_{Real}$) en réalisant un XOR avec un masque ($Key_{Mask}$) produisant ainsi une fausse clé ($Key_{Fake}$). On a donc la relation (\ref{eqn:faking}) : 
+\begin{gather}
+	Key_{Fake} = Key_{Real} \oplus Key_{Mask}\label{eqn:faking}
+\end{gather}
+À partir de cette fausse clé, on va exécuter normalement l'algorithme AES (comme décrit à la section \ref{sec:AES}): C'est-à-dire qu'on va tout d'abord appliquer l'opération \textit{KeySchedule} générant ainsi d'autres fausses clés et ensuite on va exécuter les quatre opérations élémentaires (\textit{AddRoundKey, SubBytes, ShiftRows, MixColumns}) afin de chiffrer les données. On constate ainsi que c'est la fausse clé qui est utilisée pour chiffrer les données et non la vraie clé. De cette manière, si un attaquant opère une attaque de type CPA (ou autre), en supposant qu'il ne connaisse pas le valeur du masque ($Key_{Mask}$) appliqué sur la vraie clé, il sera capable de retrouver une valeur de clé. Cependant, cette clé sera non pas la vraie clé initiale mais plutôt la fausse clé générée au départ. En conclusion, l'attaquant ne pourra, à partir de la fausse clé, déchiffrer les données.
 
+Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque sur les données intermédiaires, il faut ensuite le retirer de façon à obtenir \textit{in fine} le \textit{vrai} texte chiffré. Pour le cas des contre-mesures de type \textit{Faking}, le principe est identique. Pour ce faire, on va utiliser un co-processeur dont le rôle est d'annuler l'emploi du masque afin d'obtenir les vraies données intermédiaires à chaque fin de round et donc \textit{in fine} les vraies données chiffrées. L'annexe \ref{ann:ConceptFaking} présente le principe de fonctionnement d'une contre-mesure de type Faking. On y retrouve les opérations élémentaires de l'algorithme AES (\textit{AddRoundKey, SubBytes, ShiftRows, MixColumns}) ainsi que deux opérations spéciales exécutées par le co-processeur (\textit{SubBytesTrans, MixColumns}). SubBytesTrans est définie de façon à annuler l'utilisation de la fausse clé sur les données alors que MixColumns réalise la même opération que d'habitude. 
+
+À l'aide de MATLAB, j'ai réalisé une simulation dans laquelle le device cryptographique est protégé par une contre-mesure de type \textit{Faking}. Ensuite, j'ai simulé une attaque de type CPA sur ce device. Le résultat, observable à la figure \ref{fig:faking}, montre clairement qu'un attaquant est capable de retrouver la clé de chiffrement. Néanmoins, il s'agit de la fausse clé ! La vrai clé quant à elle ne laisse fuiter aucune information !
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{image/faking}
-    \caption{On voit qu'au plus le nombre de traces augmente au plus une clé se distingue des 255 autres. Il s'agit de la fausse clé. La vraie clé ne laisse fuiter aucune information.}
+    \caption{On voit qu'au plus le nombre de traces augmente au plus une clé se distingue des 255 autres. Il s'agit de la fausse clé (en rouge). La vraie clé (en vert) ne laisse fuiter aucune information.}
     \label{fig:faking} 
 \end{figure}
+
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%% Partie 4 - Conclusion %%%%%%%%%%%%%%%
@@ -891,6 +912,27 @@ Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque s
 
 \newpage
 
+\section{Principe de fonctionnement d'une attaque CPA.}
+\label{ann:CPAconcrete}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.45, angle=90]{image/CPAconcrete}
+    \label{fig:CPAconcrete}
+\end{figure}
+
+\newpage
+
+\section{Représentation des traces de puissance prises à l'oscilloscope.}
+\label{ann:traceExplain}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.65]{image/Sampling}
+    \caption{La figure du haut représente une trace de puissance (i.e 1 plaintext utilisé) dans laquelle on retrouve 9 échantillons. La figure du bas représente N traces de puissance dans lesquelles on retrouve également 9 échantillons. En pratique, le nombre d'échantillons dans une trace de puissance est beaucoup plus élevé (de l'ordre de 10000) et sera noté par la lettre S (pour \textit{Sampling}).}
+    \label{fig:traceExplain}
+\end{figure}
+
+\newpage
+
 \includepdf[pagecommand=\section{Traces}\label{ann:Traces}, angle=90]{image/traces.pdf}
 %\caption{Les 4 premières traces mesurées à l'oscilloscope.}
 
@@ -924,6 +966,7 @@ Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque s
     \caption{Ce schéma-bloc présente le principe de fonctionnement de la contre-mesure de type Faking. On remarque que la clé manipulée par l'algorithme AES (pour chaque round exécuté) est une fausse clé ($Key_{Fake}$), dissimulée sous un masque ($Key_{Mask}$).}
     \label{fig:ConceptFaking} 
 \end{figure}
+
 
 
 
