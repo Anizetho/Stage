@@ -130,7 +130,7 @@ La liste ci-dessous reprend l'ensemble des objectifs fixés et réalisés durant
 \item[4. Cas spécifique des \textit{Side-Channel Attacks} : Attaques \textit{CPA}] 
 \item[5. Simulation d'une attaque CPA sur MATLAB] 
 \item[6. Contre-mesures] 
-\item[7. Simulation contre-mesures sur MATLAB] 
+\item[7. Simulation d'une contre-mesure de type \textit{Faking} sur MATLAB] 
 \end{description}
 Ces différents objectifs sont décrits dans la section \ref{sec:Projet} \textit{"Projet du stage"}.
 
@@ -850,6 +850,14 @@ Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque s
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%% Partie 4 - Conclusion %%%%%%%%%%%%%%%
 \section{Conclusion}
+
+Nous vivons dans une société de consommation où les technologies évoluent à la vitesse de l’éclair. Il y a 40 ans, la gestion des signaux relevait de la science-fiction ; il y a 25 ans, les GSM constituaient une innovation majeure ; aujourd’hui, tout le monde se demande comment il était possible de vivre à cette époque sans toutes ces nouvelles technologies ! Le sujet qu'il m'a été proposé d'étudier durant ces 6 semaines de stage en immersion fut, à première vue, aussi complexe qu'inconnu. En effet, ce sujet (les attaques par canaux cachés) est encore assez peu connu à ce jour dans le domaine de l'ingénierie. Tenter d'expliquer à quiconque qu'il est possible de subtiliser des données sensibles précautionneusement chiffrées par divers algorithmes, à partir de simples moyens (oscilloscope, ordinateurs, ...) et calculs comme ceux évoqués dans ce rapport, semble au premier abord, assez invraisemblable. 
+
+Depuis ces découvertes à la fin des années 90, la sécurité matérielle a pris une tournure particulière pour les grandes industries comme Thales. C'est désormais sur un nouvel axe de recherche, sortant des domaines traditionnels, que se porte la problématique de protection de données sensibles. Imaginez qu'un algorithme utilisé pour chiffrer des données bancaires puisse être cassé par simple application d'une attaque par canaux cachés ... !? Ainsi, il n'est pas anormal de voir certaines industries développer leurs propres contre-mesures pour s'affranchir contre ce type d'attaque. Certes, avant de développer des contre-mesures, il est nécessaire, dans un premier temps, de bien comprendre les fondements des attaques par canaux cachés. Certes, la compréhension des notions théoriques et de leurs mises en pratique est une tâche longue, qui demande certaines connaissances, parfois assez poussées. Néanmoins, je suis convaincu que ce type d'attaque va, au fils des années, devenir une piste d'enseignement sérieuse et nécessaire aux futurs ingénieurs en électronique.
+
+À titre personnel, je tire un bilan très positif de ce stage d'immersion. Il fut très enrichissant. Ces 6 semaines de stage sont passées à la vitesse de l'éclair : plongeant à certains moments dans les articles scientifiques ou livres de références rédigés sur le sujet ; à d'autres dans les simulations MATLAB afin de mieux assimiler les concepts ; ou encore à discuter avec les étudiants stagiaires afin de partager une certaine expérience de stage. 6 semaines, c'est assez court mais c'est suffisant pour une introduction complète sur les attaques par canaux cachés et les contre-mesures qu'il est possible d'implémenter. L'ensemble des objectifs fixés avant le début de stage (et repris à la section \ref{sec:objectifs}) ont pu être atteints. Étant donc désormais convaincu de la puissance de ce type d'attaque, développer des contre-mesures me paraît être essentiel. Je vais donc désormais pouvoir m'attaquer à la continuité de ce stage : mon Travail de Fin d'Étude. Ce TFE consistera à développer une contre-mesure contre les attaques par canaux cachés.
+
+
 
 
 \newpage
