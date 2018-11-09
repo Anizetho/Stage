@@ -32,13 +32,21 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhead[R]{}
-\fancyfoot[L]{Thomas Anizet}
 \fancyfoot[C]{}
 \fancyfoot[R]{\thepage}
 
 \usepackage{rotating}
 \usepackage{tikz}
 
+
+\makeatletter
+\let\original@addcontentsline\addcontentsline
+\newcommand{\dummy@addcontentsline}[3]{}
+\newcommand{\DeactivateToc}{\let\addcontentsline\dummy@addcontentsline}
+\newcommand{\ActivateToc}{\let\addcontentsline\original@addcontentsline}
+\makeatother
+
+\usepackage{listings}             % Include the listings-package
 
 % Keep lasts
 \usepackage[french]{babel}
@@ -60,14 +68,21 @@
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%% Introduction
-
+%\fancyhead[L]{INTRODUCTION}
 \phantomsection
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
 
 Candidat "Officier de carrière" à l’\textbf{\textit{École Royale Militaire}} (ERM), je suis actuellement ma formation académique à l’\textbf{\textit{École Centrale des Arts et Métiers}} (ECAM) en option électronique. \\ \\
-Durant notre 2ème année de Master, les étudiants doivent réaliser un stage d’immersion en entreprise d’une durée de six semaines. Ce stage consiste, entre autres, à s’insérer dans une entreprise afin d’y découvrir différents aspects tels que l’organisation générale d’une entreprise, son vécu, sa structure interne et ses domaines d'activité. Il a également pour but de se familiariser au travail quotidien de l’ingénieur en participant de façon autonome à diverses activités. \\ \\
-Ayant réalisé mon stage de 3ème Bachelier chez \textbf{\textit{AIRBUS DS SLC}} sur le site de Diegem et de Elancourt, il était important pour moi de saisir la chance et l’opportunité de découvrir une nouvelle entreprise renommée à travers le monde. C'est ainsi que je décidai d'envoyer ma candidature de stage chez \textit{\textbf{THALES} Telecommunications Belgium} sur le site de Tubize. L'objectif principal de ce stage de six semaines fut essentiellement d'introduire et de parcourir l'ensemble des notions théoriques et pratiques sur un sujet peu connu à l'heure actuelle : les \textit{"Side Channel Attacks"} (SCA). En effet, devant réaliser par la suite mon \textit{Travail de Fin d'Étude} (TFE) chez Thales, ce stage devait me permettre d'apprendre et de développer le bagage nécessaire pour la mise en oeuvre de mon sujet de TFE, à savoir : \textit{"Développer une contre-mesure pour les attaques par analyse de la consommation de puissance"}.
+Durant notre 2ème année de Master, les étudiants doivent réaliser un stage d’insertion en entreprise d’une durée de six semaines. Ce stage consiste, entre autres, à s’insérer dans une entreprise afin d’y découvrir différents aspects tels que l’organisation générale d’une entreprise, son vécu, sa structure interne et ses domaines d'activité. Il a également pour but de se familiariser au travail quotidien de l’ingénieur en participant de façon autonome à diverses activités. \\ \\
+Ayant réalisé mon stage de 3ème Bachelier chez \textbf{\textit{AIRBUS DS SLC}} sur le site de Diegem et de Elancourt, il était important pour moi de saisir la chance et l’opportunité de découvrir une nouvelle entreprise renommée à travers le monde. C'est ainsi que je décidai d'envoyer ma candidature de stage chez \textit{\textbf{THALES} Telecommunications Belgium} sur le site de Tubize. L'objectif principal de ce stage de six semaines fut essentiellement d'introduire et de parcourir l'ensemble des notions théoriques et pratiques sur un sujet peu connu à l'heure actuelle : les \textit{"Side Channel Attacks"} (SCA). En effet, devant réaliser par la suite mon \textit{Travail de Fin d'Étude} (TFE) chez Thales, ce stage devait me permettre d'apprendre et de développer le bagage nécessaire pour la mise en oeuvre de mon sujet de TFE, à savoir : \textit{"Développer une contre-mesure pour les attaques par analyse de la consommation de puissance"}. \vspace{0.3 cm}
+
+La page suivante présente la \textit{note d'activité} rédigée au début du stage. Cette note d'activité détaille les différents objectifs fixés, devant être réalisés durant les six semaines imparties. Néanmoins, la section \ref{sec:objectifs} redéfinit clairement les objectifs recherchés.
+
+\newpage
+
+\includepdf[pagecommand=\section*{}\label{ann:Note_d'activité}]{image/Note_d'activité.pdf}
+
 
 \newpage
 
@@ -111,7 +126,7 @@ Comme dit précédemment, \textit{Thales Group} est spécialisée dans cinq doma
 \begin{itemize}
 \item Systèmes de communication : équipements radio HF et VHF robustes et sécurisés (boîtes d’antennes, amplificateurs de puissance, coupleurs d’antennes) pour les communications terrestres, navales ou aéronautique, qu’elles soient civiles ou militaires.
 \item Systèmes d’information : dispositifs de gestion d’urgence, d’information aux usagers de transports, BMS (\textit{Battlefield Management System}), soldat modernisé, vétronique (systèmes électroniques de navigation et de communication des véhicules militaires).
-\item Protection de l’information : sécurisation des échanges de données et protection contre le vol et la publication de données confidentielles. \\
+\item Protection de l’information : sécurisation des échanges de données et protection contre le vol et la publication de données confidentielles. C'est dans cette branche que j'ai pris place durant le stage.\\
 \end{itemize}
 
 
@@ -126,7 +141,7 @@ La liste ci-dessous reprend l'ensemble des objectifs fixés et réalisés durant
 \begin{description}
 \item[1. Chiffrement] 
 \item[2. L'algorithme AES (\textit{Advanced Encryption Standard})]
-\item[3. Introduction aux \textit{Side-Channel Attacks} (attaques par canal auxiliaire)]
+\item[3. Introduction aux \textit{Side-Channel Attacks} (attaques par canaux cachés)]
 \item[4. Cas spécifique des \textit{Side-Channel Attacks} : Attaques \textit{CPA}] 
 \item[5. Simulation d'une attaque CPA sur MATLAB] 
 \item[6. Contre-mesures] 
@@ -151,7 +166,7 @@ Les systèmes de sécurité modernes utilisent des algorithmes de chiffrement po
 Le procédé transformant les données claires en entrée en données chiffrées en sortie est appelé le \textbf{\textit{chiffrement}}.
 Ce procédé est réalisé grâce à un \textbf{\textit{algorithme de chiffrement}} utilisant une clé de chiffrement et diverses opérations mathématiques. Il est important de préciser que tous les détails décrivant le fonctionnement d'un algorithme sont disponibles publiquement, seule la clé de chiffrement doit rester secrète. En effet, la sécurité offerte par un algorithme de chiffrement ne doit pas dépendre du secret de son implémentation. Un bon algorithme est un algorithme dont on ne parviendra pas à déchiffrer les données chiffrées. Lorsque la clé d'un algorithme est trouvée, le déchiffrement des données confidentielles peut être réalisé. On dit que l'algorithme de chiffrement est \textbf{\textit{cassé}}.
 
-La figure \ref{fig:chiffrement} ci-dessous présente le principe de fonctionnement d'un algorithme de chiffrement.
+\hspace{-0.5 cm}La figure \ref{fig:chiffrement} ci-dessous présente le principe de fonctionnement d'un algorithme de chiffrement.
 
 \begin{figure}[htbp]
     \centering
@@ -165,7 +180,7 @@ La figure \ref{fig:chiffrement} ci-dessous présente le principe de fonctionneme
 Nous distinguons 2 types d'algorithmes de chiffrement : 
 \begin{itemize}
 \item \textbf{\textit{Chiffrement symétrique}} : Le chiffrement est dit symétrique lorsque le procédé de chiffrement (algorithme) utilise une seule clé, appelée \textit{clé secrète}. Par convention, ce type de chiffrement permet à la fois de chiffrer et de déchiffrer des messages à partir d'une seule et unique clé. Le désavantage de ce type de chiffrement est que si une personne parvient à subtiliser la clé, elle sera en mesure de déchiffrer tout message qu'elle intercepte.  \\
-\textit{Exemple} : L'algorithme AES (\textit{Advanced Encryption Standard}). Une explication plus détaillée de cet algorithme est reprise à la section \ref{sec:AES}
+\textit{Exemple} : L'algorithme AES (\textit{Advanced Encryption Standard}). Une explication plus détaillée de cet algorithme est reprise à la section \ref{sec:AES}.
 \item \textbf{\textit{Chiffrement asymétrique}} : Le chiffrement est dit asymétrique lorsque le procédé de chiffrement (algorithme) utilise 2 clés : une \textit{clé publique} et une \textit{clé privée}. Par convention, la clé publique est la clé de chiffrement du message clair, elle peut être communiquée sans aucune restriction tandis que la clé privée est la clé de déchiffrement du message chiffré, elle ne doit être communiquée sous aucun prétexte. Le fonctionnement est le suivant : Avec une clé publique, l'expéditeur code, dans un algorithme de chiffrement donné, un message. Ce message, une fois transmis, ne pourra être déchiffré que par le destinataire, détenteur de la clé privée. \\
 \textit{Exemple} : L'algorithme RSA (\textit{Rivest Shamir Adleman}). \\
 \end{itemize}
@@ -674,7 +689,7 @@ En général, pour montrer que l'augmentation du nombre de traces permet de trou
 \begin{figure}[htb]
     \centering
     \hspace{-1.2 cm} 
-    \includegraphics[width=1\linewidth]{image/nb_traces}
+    \includegraphics[scale=0.25]{image/nb_traces}
     \caption{Graphe présentant la valeur du coefficient de corrélation en fonction du nombre de traces. Plus le nombre de traces est élevé, plus la valeur de la clé secrète employée pour le chiffrement des données se distingue des autres clés. La vraie clé est 200.} 
     \label{fig:nb_traces} 
 \end{figure}
@@ -841,7 +856,8 @@ Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque s
 À l'aide de MATLAB, j'ai réalisé une simulation dans laquelle le device cryptographique est protégé par une contre-mesure de type \textit{Faking}. Ensuite, j'ai simulé une attaque de type CPA sur ce device. Le résultat, observable à la figure \ref{fig:faking}, montre clairement qu'un attaquant est capable de retrouver la clé de chiffrement. Néanmoins, il s'agit de la fausse clé ! La vrai clé quant à elle ne laisse fuiter aucune information !
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{image/faking}
+    \hspace{-1 cm}
+    \includegraphics[scale=0.24]{image/faking}
     \caption{On voit qu'au plus le nombre de traces augmente au plus une clé se distingue des 255 autres. Il s'agit de la fausse clé (en rouge). La vraie clé (en vert) ne laisse fuiter aucune information.}
     \label{fig:faking} 
 \end{figure}
@@ -851,11 +867,11 @@ Dans les contre-mesures de type \textit{Masking}, lorsqu'on applique un masque s
 %%%%%%%%%%%%%%%%%%%%%%%% Partie 4 - Conclusion %%%%%%%%%%%%%%%
 \section{Conclusion}
 
-Nous vivons dans une société de consommation où les technologies évoluent à la vitesse de l’éclair. Il y a 40 ans, la gestion des signaux relevait de la science-fiction ; il y a 25 ans, les GSM constituaient une innovation majeure ; aujourd’hui, tout le monde se demande comment il était possible de vivre à cette époque sans toutes ces nouvelles technologies ! Le sujet qu'il m'a été proposé d'étudier durant ces 6 semaines de stage en immersion fut, à première vue, aussi complexe qu'inconnu. En effet, ce sujet (les attaques par canaux cachés) est encore assez peu connu à ce jour dans le domaine de l'ingénierie. Tenter d'expliquer à quiconque qu'il est possible de subtiliser des données sensibles précautionneusement chiffrées par divers algorithmes, à partir de simples moyens (oscilloscope, ordinateurs, ...) et calculs comme ceux évoqués dans ce rapport, semble au premier abord, assez invraisemblable. 
+Nous vivons dans une société de consommation où les technologies évoluent sans cesse. Il y a 40 ans, la gestion des signaux relevait de la science-fiction. Il y a 25 ans, les GSM constituaient une innovation majeure. Aujourd’hui, tout le monde se demande comment il était possible de vivre à cette époque sans toutes ces nouvelles technologies ! Le sujet qu'il m'a été proposé d'étudier durant ces 6 semaines de stage en immersion fut, à première vue, aussi complexe qu'inconnu. En effet, ce sujet, les attaques par canaux cachés, est encore assez méconnu à ce jour dans le domaine de l'ingénierie. Tenter d'expliquer à quiconque qu'il est possible de subtiliser des données sensibles précautionneusement chiffrées par divers algorithmes, à partir de moyens simples (oscilloscope, ordinateurs, ...) et de calculs élémentaires, semble au premier abord, difficilement concevable. 
 
-Depuis ces découvertes à la fin des années 90, la sécurité matérielle a pris une tournure particulière pour les grandes industries comme Thales. C'est désormais sur un nouvel axe de recherche, sortant des domaines traditionnels, que se porte la problématique de protection de données sensibles. Imaginez qu'un algorithme utilisé pour chiffrer des données bancaires puisse être cassé par simple application d'une attaque par canaux cachés ... !? Ainsi, il n'est pas anormal de voir certaines industries développer leurs propres contre-mesures pour s'affranchir contre ce type d'attaque. Certes, avant de développer des contre-mesures, il est nécessaire, dans un premier temps, de bien comprendre les fondements des attaques par canaux cachés. Certes, la compréhension des notions théoriques et de leurs mises en pratique est une tâche longue, qui demande certaines connaissances, parfois assez poussées. Néanmoins, je suis convaincu que ce type d'attaque va, au fils des années, devenir une piste d'enseignement sérieuse et nécessaire aux futurs ingénieurs en électronique.
+Depuis ces découvertes à la fin des années 90, la sécurité matérielle a pris une tournure particulière pour les grandes industries telles que Thales. C'est désormais sur un nouvel axe de recherche, s'écartant des sentiers traditionnels, que se porte la problématique de protection de données sensibles. Imaginez qu'un algorithme utilisé pour chiffrer des données bancaires puisse être cassé par simple application d'une attaque par canaux cachés ? Il n'est donc pas anormal de voir certaines industries développer leurs propres contre-mesures pour s'affranchir contre ce type d'attaque. Certes, avant de développer des contre-mesures, il est nécessaire, dans un premier temps, de bien comprendre les fondements des attaques par canaux cachés. Certes, la compréhension des notions théoriques et leurs mises en pratique est une tâche ardue qui nécessite la compréhension et l'intégration de concepts très spécifiques. Néanmoins, je suis convaincu que ce type d'attaque va, au fils des années, devenir une piste d'enseignement sérieuse et nécessaire aux futurs ingénieurs en électronique.
 
-À titre personnel, je tire un bilan très positif de ce stage d'immersion. Il fut très enrichissant. Ces 6 semaines de stage sont passées à la vitesse de l'éclair : plongeant à certains moments dans les articles scientifiques ou livres de références rédigés sur le sujet ; à d'autres dans les simulations MATLAB afin de mieux assimiler les concepts ; ou encore à discuter avec les étudiants stagiaires afin de partager une certaine expérience de stage. 6 semaines, c'est assez court mais c'est suffisant pour une introduction complète sur les attaques par canaux cachés et les contre-mesures qu'il est possible d'implémenter. L'ensemble des objectifs fixés avant le début de stage (et repris à la section \ref{sec:objectifs}) ont pu être atteints. Étant donc désormais convaincu de la puissance de ce type d'attaque, développer des contre-mesures me paraît être essentiel. Je vais donc désormais pouvoir m'attaquer à la continuité de ce stage : mon Travail de Fin d'Étude. Ce TFE consistera à développer une contre-mesure contre les attaques par canaux cachés.
+À titre personnel, je tire un bilan très positif de ce stage d'immersion. Il fut très enrichissant. Ces 6 semaines de stage sont passées à la vitesse de l'éclair : plongeant à certains moments dans les articles scientifiques et livres de références rédigés sur le sujet ; à d'autres dans les simulations MATLAB afin de mieux assimiler les concepts ; ou encore à discuter avec les étudiants stagiaires afin de partager notre expérience de stage. 6 semaines, c'est assez court mais déjà suffisant pour une première introduction sur les attaques par canaux cachés et les contre-mesures qu'il est possible d'implémenter. L'ensemble des objectifs fixés avant le début de stage (énoncés à la section \ref{sec:objectifs}) a pu être traité et atteint. Étant désormais convaincu de la puissance de ce type d'attaque, développer des contre-mesures me paraît constituer un challenge intéressant et très utile dans le cadre de la protection des données sensibles. Je vais donc désormais pouvoir m'attaquer à la phase consécutive à ce stage, mon Travail de Fin d'Étude. Ce TFE consistera à développer une contre-mesure contre les attaques par canaux cachés.
 
 
 
@@ -871,6 +887,9 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
 
 \item Figure~\ref{fig:thales} provenant du site internet :
 \url{http://monipag.com/victoria-petitier/wp-content/uploads/sites/1363/Thales-Group-1.png}
+
+\item Figure~\ref{fig:CMOS} provenant du site internet :
+\url{https://hal.archives-ouvertes.fr/hal-00753215/document}
 
 \item Annexe~\ref{ann:Sbox} provenant du site internet de J.M. Dutertre \textit{"Synthèse AES 128"} :
 \url{https://www.emse.fr/~dutertre/documents/synth_AES128.pdf}
@@ -890,13 +909,32 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
 %%%%%%%%%%%%%%%%%%%%%%%% ANNEXES %%%%%%%%%%%%%%%%%%%%
 \appendix
 \clearpage
-\section{Code algorithme AES-128}
+\addcontentsline{toc}{section}{Annexes}
+\DeactivateToc
+\lhead{}
+
+\rhead{ANNEXES \ref{ann:AES} et \ref{ann:Sbox}}
+\section{Code algorithme AES-128 - Ordre d'exécution des opérations.}
 \label{ann:AES}
-\begin{figure}[!ht]
-    \includegraphics[width=\linewidth]{image/CodeAES}
-    \caption{Code définissant l'ordre des opérations exécutées par l'algorithme AES-128.}
-    \label{fig:AESCode}
-\end{figure}
+\lstset{language=Pascal}          % Set your language (you can change the language for each code-block optionally)
+\begin{lstlisting}[frame=single]  % Start your code-block
+
+Require : STATE, Key
+Ensure : STATE
+
+KeySchedule(Key)
+AddRoundKey(STATE, ExpandedKey[0])
+for i=1 < 10 do
+	SubBytes(STATE)
+	ShiftRows(STATE)
+	MixColumns(STATE)
+	AddRoundKey(STATE, ExpandedKey[i])
+	i = i + 1
+end for
+SubBytes(STATE)
+ShiftRows(STATE)
+AddRoundKey(STATE, ExpandedKey[10])
+\end{lstlisting}
 
 \section{Sbox - Table de substitution}
 \label{ann:Sbox}
@@ -908,6 +946,7 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
 
 \newpage
 
+\rhead{ANNEXE \ref{ann:KeySchedule}}
 \section{Opération \textit{KeySchedule}}
 \label{ann:KeySchedule}
 \begin{figure}[htbp]
@@ -920,6 +959,7 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
 
 \newpage
 
+\rhead{ANNEXE \ref{ann:CPAconcrete}}
 \section{Principe de fonctionnement d'une attaque CPA.}
 \label{ann:CPAconcrete}
 \begin{figure}[htbp]
@@ -930,6 +970,7 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
 
 \newpage
 
+\rhead{ANNEXE \ref{ann:traceExplain}}
 \section{Représentation des traces de puissance prises à l'oscilloscope.}
 \label{ann:traceExplain}
 \begin{figure}[htbp]
@@ -941,20 +982,25 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
 
 \newpage
 
+\rhead{ANNEXE \ref{ann:Traces}}
 \includepdf[pagecommand=\section{Traces}\label{ann:Traces}, angle=90]{image/traces.pdf}
 %\caption{Les 4 premières traces mesurées à l'oscilloscope.}
 
+\rhead{ANNEXE \ref{ann:corrélation}}
 \includepdf[pagecommand=\section{Corrélation pour les clés 1 à 4}\label{ann:corrélation}, angle=90]{image/cle.pdf}
 %     \caption{Les valeurs de coefficient de corrélation obtenues pour les valeurs de clé : 128, 129, 130 et 131 respectivement.}
 
+\rhead{ANNEXE \ref{ann:Corrélations_3D}}
 \includepdf[pagecommand=\section{Corrélations 3D}\label{ann:Corrélations_3D}, angle=90]{image/correlation3D.pdf}
 %     \caption{Affichage en 3D de toutes les valeurs de corrélation obtenues pour chaque valeur de clé possible.}
 
+\rhead{ANNEXE \ref{ann:cle8}}
 \includepdf[pagecommand=\section{Corrélation pour la clé 8}\label{ann:cle8}, angle=90]{image/cle8.pdf}
 %     \caption{Valeurs de corrélation obtenue pour la clé secrète 8 (bonne clé).}
 
 \newpage
 
+\rhead{ANNEXE \ref{ann:resume_hiding}}
 \section{Contre-mesures \textit{Hiding}}
 \label{ann:resume_hiding}
 \begin{figure}[htb]
@@ -966,6 +1012,7 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
 
 \newpage
 
+\rhead{ANNEXE \ref{ann:ConceptFaking}}
 \section{Contre-mesure \textit{Faking}}
 \label{ann:ConceptFaking}
 \begin{figure}[htb]
@@ -975,7 +1022,15 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
     \label{fig:ConceptFaking} 
 \end{figure}
 
+\newpage
 
+\rhead{ANNEXE \ref{ann:lettre}}
+\includepdf[pagecommand=\section{Lettre de motivation}\label{ann:lettre}]{image/lettre.pdf}
+
+\newpage
+
+\rhead{ANNEXE \ref{ann:certificat}}
+\includepdf[pagecommand=\section{Certificat de stage}\label{ann:certificat}]{image/certificat.pdf}
 
 
 \end{document}
