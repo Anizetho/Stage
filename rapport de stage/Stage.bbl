@@ -58,6 +58,14 @@ MICHAL~VARCHOLA MAREK~REPKA, JOZEF~TOMECEK.
   \url{http://www.wseas.us/e-library/conferences/2014/Istanbul/TELEDU/TELEDU-06.pdf}},
   2014.
 
+\bibitem{Faking}
+Mariano López-García Rubén Lumbiarres-López and Enrique
+  Cantó-Navarro.
+\newblock Faking countermeasure against side-channel attacks.
+\newblock {\em
+  \url{https://upcommons.upc.edu/bitstream/handle/2117/112973/Advances_in_Microelectronics_V_1_chapter19.pdf;jsessionid=62B833C8C8C140B9EE46F0279D3E0B61?sequence=1}},
+  Décembre 2017.
+
 \bibitem{owen}
 Douglas~Carson Owen~Lo, William J.~Buchanan.
 \newblock Power analysis attacks on the aes-128 s-box using differential power

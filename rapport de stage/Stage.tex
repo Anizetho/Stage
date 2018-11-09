@@ -72,12 +72,18 @@
 \phantomsection
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
+\pdfbookmark{bookmark}{hyperrefuid}
+
 
 Candidat "Officier de carrière" à l’\textbf{\textit{École Royale Militaire}} (ERM), je suis actuellement ma formation académique à l’\textbf{\textit{École Centrale des Arts et Métiers}} (ECAM) en option électronique. \\ \\
 Durant notre 2ème année de Master, les étudiants doivent réaliser un stage d’insertion en entreprise d’une durée de six semaines. Ce stage consiste, entre autres, à s’insérer dans une entreprise afin d’y découvrir différents aspects tels que l’organisation générale d’une entreprise, son vécu, sa structure interne et ses domaines d'activité. Il a également pour but de se familiariser au travail quotidien de l’ingénieur en participant de façon autonome à diverses activités. \\ \\
 Ayant réalisé mon stage de 3ème Bachelier chez \textbf{\textit{AIRBUS DS SLC}} sur le site de Diegem et de Elancourt, il était important pour moi de saisir la chance et l’opportunité de découvrir une nouvelle entreprise renommée à travers le monde. C'est ainsi que je décidai d'envoyer ma candidature de stage chez \textit{\textbf{THALES} Telecommunications Belgium} sur le site de Tubize. L'objectif principal de ce stage de six semaines fut essentiellement d'introduire et de parcourir l'ensemble des notions théoriques et pratiques sur un sujet peu connu à l'heure actuelle : les \textit{"Side Channel Attacks"} (SCA). En effet, devant réaliser par la suite mon \textit{Travail de Fin d'Étude} (TFE) chez Thales, ce stage devait me permettre d'apprendre et de développer le bagage nécessaire pour la mise en oeuvre de mon sujet de TFE, à savoir : \textit{"Développer une contre-mesure pour les attaques par analyse de la consommation de puissance"}. \vspace{0.3 cm}
 
 La page suivante présente la \textit{note d'activité} rédigée au début du stage. Cette note d'activité détaille les différents objectifs fixés, devant être réalisés durant les six semaines imparties. Néanmoins, la section \ref{sec:objectifs} redéfinit clairement les objectifs recherchés.
+
+%\fancyhead[L]{INTRODUCTION}
+%\fancyhead[L]{NOTE D'ACTIVITÉS}
+
 
 \newpage
 
@@ -878,7 +884,6 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%% CREDITS %%%%%%%%%%%%%%%%%%%%
-\pagebreak
 \phantomsection
 \section*{Crédits}
 \addcontentsline{toc}{section}{Crédits}
@@ -894,6 +899,9 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
 \item Annexe~\ref{ann:Sbox} provenant du site internet de J.M. Dutertre \textit{"Synthèse AES 128"} :
 \url{https://www.emse.fr/~dutertre/documents/synth_AES128.pdf}
 
+\item Annexe~\ref{ann:ConceptFaking} provenant du site internet UPCommons \textit{"Faking Countermeasure Against Side-Channel Attacks"} :
+\url{https://upcommons.upc.edu/bitstream/handle/2117/112973/Advances_in_Microelectronics_V_1_chapter19.pdf?sequence=1}
+
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%% REFERENCES %%%%%%%%%%%%%%%%%%%%
@@ -907,11 +915,34 @@ Depuis ces découvertes à la fin des années 90, la sécurité matérielle a
 
 
 %%%%%%%%%%%%%%%%%%%%%%%% ANNEXES %%%%%%%%%%%%%%%%%%%%
-\appendix
-\clearpage
+\newpage
+
+\phantomsection
+\section*{Liste des annexes}
 \addcontentsline{toc}{section}{Annexes}
+\appendix
 \DeactivateToc
+
+
+\begin{itemize}
+\item Annexe \ref{ann:AES} : Code algorithme AES-128 - Ordre d'exécution des opérations.
+\item Annexe \ref{ann:Sbox} : Sbox - Table de substitution.
+\item Annexe \ref{ann:KeySchedule} : Opération \textit{KeySchedule}.
+\item Annexe \ref{ann:CPAconcrete} : Principe de fonctionnement d'une attaque CPA.
+\item Annexe \ref{ann:traceExplain} : Représentation des traces de puissance prises à l'oscilloscope.
+\item Annexe \ref{ann:Traces} : Traces.
+\item Annexe \ref{ann:corrélation} : Corrélation pour les clés 1 à 4.
+\item Annexe \ref{ann:Corrélations_3D} : Corrélations 3D.
+\item Annexe \ref{ann:cle8} : Corrélation pour la clé 8.
+\item Annexe \ref{ann:resume_hiding} : Contre-mesures \textit{Hiding}.
+\item Annexe \ref{ann:ConceptFaking} : Contre-mesure \textit{Faking}.
+\item Annexe \ref{ann:lettre} : Lettre de motivation.
+\item Annexe \ref{ann:certificat} : Certificat de stage.
+\end{itemize}
+
 \lhead{}
+
+\newpage
 
 \rhead{ANNEXES \ref{ann:AES} et \ref{ann:Sbox}}
 \section{Code algorithme AES-128 - Ordre d'exécution des opérations.}
